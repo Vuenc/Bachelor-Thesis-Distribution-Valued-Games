@@ -1,0 +1,142 @@
+\usepackage{amsfonts} 
+\usepackage{amsmath}
+\usepackage{amsthm} %Proof Environment
+\usepackage{amssymb}
+\usepackage{marvosym}
+\usepackage{stmaryrd} %\lightning
+\usepackage{latexsym} %\leadsto
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel} 
+
+\usepackage{pdfpages} % include pdf pages
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{chngcntr}
+
+\usepackage{xifthen}
+
+\usepackage{listings} % source listings
+\usepackage{xcolor} % defining own colors: \color
+
+\usepackage{dsfont} % \1 for identity functions
+
+\usepackage{etoolbox}
+
+% custom math commands:
+
+% column vectors
+\newcount\xveccount
+\renewcommand*\vec[1]{
+	\global\xveccount#1
+	\begin{pmatrix}
+		\vecnext
+	}
+	\def\vecnext#1{
+		#1
+		\global\advance\xveccount-1
+		\ifnum\xveccount>0
+		\\
+		\expandafter\vecnext
+		\else
+	\end{pmatrix}
+	\fi
+}  
+\newcommand{\vectwo}[3][0pt]{\begin{pmatrix}#2\\[#1] #3\end{pmatrix}}
+\newcommand{\vecthree}[4][0pt]{\begin{pmatrix}#2\\[#1] #3\\[#1] #4\end{pmatrix}}
+\newcommand{\vecfour}[5][0pt]{\begin{pmatrix}#2\\[#1] #3\\[#1] #4\\[#1] #5\end{pmatrix}}
+\newcommand{\vecfive}[6][0pt]{\begin{pmatrix}#2\\[#1] #3\\[#1] #4\\[#1] #5\\[#1] #6\end{pmatrix}}
+
+% * as multiplication dot
+\mathcode`\*="8000
+{\catcode`\*\active\gdef*{\cdot}}
+
+% common number set symbols
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+% useful mathematical operators
+\DeclareMathOperator{\Pot}{\mathcal{P}}
+\DeclareMathOperator{\BigO}{\mathcal{O}}
+\DeclareMathOperator{\inv}{^{-1}}
+\renewcommand{\Re}[1]{\text{Re}\left( #1 \right)}
+\renewcommand{\Im}[1]{\text{Im}\left( #1 \right)}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\DeclareMathOperator{\vspan}{\text{span}}
+\newcommand{\setspan}[1]{\vspan\left(\left\{#1\right\}\right)}
+\DeclareMathOperator{\rang}{\text{rang}}
+\newcommand{\integral}[4]{\int_{#1}^{#2} #3 \, d#4}
+\newcommand{\lintegral}[3]{\int_{#1} #2 \, d#3}
+\newcommand{\comp}{^\complement}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\lra}{\Leftrightarrow} % equivalence arrow
+\newcommand{\1}[1][]{\mathds{1}\ifthenelse{\isempty{#1}}{}{_{#1}}}
+\newcommand{\dummydot}{\,\cdot\,}
+\DeclareMathOperator{\im}{\text{im}}
+\newcommand{\innerprod}[2]{\left\langle #1, #2 \right\rangle}
+
+% switch-case structure
+\newcommand{\ifequals}[4]{\ifthenelse{\equal{#1}{#2}}{#3}{#4}}
+\newcommand{\case}{} % Dummy, so \renewcommand has something to overwrite...
+\newenvironment{switch}[1]{\renewcommand{\case}[3]{\ifequals{#1}{##1}{##2}{##3}}}{} %Usage: \begin{switch}{value}, \case{value}{then}{else}
+
+% shortcut for inline pmatrix
+\newcommand{\pmat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+% brutally enforce centering the contents
+\newcommand{\centerbrutally}[1]
+{
+	\centerline{
+		\begin{minipage}{\linewidth}
+			#1
+	\end{minipage}}
+}
+
+\definecolor{verylightgray}{gray}{0.97}
+
+% norm ||x||
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+% centered inline graphics
+\newcommand{\includegraphicsinline}[2][]{\begingroup\setbox0=\hbox{\includegraphics[#1]{#2}}\parbox{\wd0}{\box0}\endgroup}
+
+% tilde in lstlisting
+\lstset{literate=%
+    {~}{{\textasciitilde}}1
+}
+
+% shortcuts: for limits/series going to infinity
+\newcommand{\liminfty}[1]{\lim\limits_{#1 \rightarrow \infty}}
+\newcommand{\ser}[1]{\sum\limits_{\ifthenelse{\isin{=}{#1}}{#1}{#1=1}}^{\infty}}
+
+% shortcut for multiple cases in math formulas: '"1", falls "2", "3", falls "4"' (bzw. 'sonst', falls leer)
+\newcommand{\twocases}[4]
+{
+    \begin{cases}
+        #1, &\text{if } #2 \\
+        #3, &\ifthenelse{\isempty{#4}}{\text{else}}{\text{if } #4}
+    \end{cases}
+}
+
+% shortcut for brackets and sets
+\newcommand{\br}[1]{\left(#1\right)}
+\newcommand{\set}[1]{\{#1\}}
+
+\newenvironment{correction}[1]{\color{red}\textbf{\underline{#1}}\\}{\ignorespacesafterend}
+
+\makeatletter
+\patchcmd{\upbracefill}{\m@th}{\scriptscriptstyle\m@th}{}{}
+\patchcmd{\upbracefill}{$\braceld$}{$\scriptstyle\braceld$}{}{}
+\patchcmd{\upbracefill}{\bracelu}{\bracelu\mkern-1mu}{}{}
+\patchcmd{\upbracefill}{\hfill\braceru}{\hfill\mkern-1mu\braceru}{}{}
+\makeatother
+
+\newcommand{\smallmat}[1]{\left(\begin{smallmatrix}#1\end{smallmatrix}\right)}
+\newcommand{\undersetbrace}[2]{\underset{#2}{\underbrace{#1}}}
