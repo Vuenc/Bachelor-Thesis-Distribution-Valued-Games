@@ -1,0 +1,4 @@
+*.pdf
+*.synctex.gz
+*/build/
+build/
