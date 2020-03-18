@@ -1,0 +1,248 @@
+% !TeX spellcheck = en_US
+% Dirty hack to disable recompiling the bibliography every time, reducing compilation times. Comment out to re-compile bibliography.
+% !TeX TXS-program:recompile-bibliography = donothing
+
+% Use biber as bibliography tool
+% !TeX TXS-program:bibliography = txs:///biber
+
+\documentclass[a4paper]{scrreprt}
+
+\input{../preamble-en.tex}
+
+\usepackage[citestyle=alphabetic,bibstyle=alphabetic]{biblatex}
+\usepackage{csquotes}
+
+\usepackage{setspace}
+\usepackage[headsepline]{scrlayer-scrpage}
+
+\usepackage{mathtools} % \bigtimes
+
+% no ident, combined with reasonable paragraph spacing
+\onehalfspacing
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.7ex}
+
+\addbibresource{../Bachelor-Thesis.bib}
+
+\DeclareMathOperator{\A}{\mathcal{A}}
+\DeclareMathOperator{\leqtail}{\leq_{\text{tail}}}
+\DeclareMathOperator{\geqtail}{\geq_{\text{tail}}}
+\DeclareMathOperator{\F}{\mathcal{F}}
+\DeclareMathOperator{\RVs}{\mathcal{D}}
+\DeclareMathOperator{\B}{\mathcal{B}}
+
+% Style for displaying source code listings
+\lstset{showspaces=false,
+    keywordstyle=\ttfamily\bfseries\color{purple},
+    basicstyle=\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    commentstyle=\color{gray},
+    breaklines=true,
+    postbreak=\mbox{\textcolor{lightgray}{$\hookrightarrow$}\space},
+    showstringspaces=false,
+    stringstyle=\color{brickred}
+}
+
+\ihead{Vincent Bürgin}
+\ohead{[Work in Progress]}
+
+\begin{document}
+    
+    % TODO the definition of \leqtail should really only depend on the distribution, not on the random variable itself!
+    
+    \setcounter{chapter}{4}
+    \setcounter{section}{1}
+    \section{Distribution-Valued Games}
+    \label{sec:dist-val-games}
+    Let $(\Omega, \A, P)$ be a probability space, let $\RVs$ denote the set of random variables over it.
+    \begin{defn}
+        We define a (single-objective) \emph{distribution-valued game} with $n$ players $\set{1,2,\dots,n}$ by its \emph{action sets} $A_i$, as well as its \emph{payoff functions} $u_i: \bigtimes_j A_j \to \RVs$, for each player $i$.
+    \end{defn}
+    % TODO what about this: we allow u_i to have U_i's signature from the start, and establish the current definition of U_i as special case, where only the pure strategies need to be assigned utilities?
+
+    \begin{defn}
+        A distribution-valued game is \emph{zero-sum} if $\forall a \in \bigtimes_j A_j$: $\sum_{i=1}^n u_i(a) = 0$ almost surely.
+    \end{defn}
+
+    Note that (except for trivial cases) in distribution-valued zero-sum games, the random variables $u_1(a), \dots, u_n(a)$ are not independent.
+    
+    \begin{defn}[Mixed Strategies]
+        We assume that all action sets $A_i$ are finite. % TODO drop this assumption?
+        A \emph{mixed strategy} for player $i$ is a vector $(s_1,\dots,s_{\abs{A_i}}) \in [0, 1]^{\abs{A_i}}$ with $\sum_k s_k = 1$.
+        We denote by $S_i$ the set of mixed strategies for player $i$.
+    \end{defn}
+
+%    From now on, we will assume that the probability space is large enough, such that for each distribution function $F: \R \to [0, 1]$, there exists a random variable $X$ on $(\Omega, \A, P)$ that has $F$ as its distribution function. For example, $\Omega=\R, \A=\B$ will do. 
+    % TODO cite
+    % TODO this needs some taking care... What happens with P?
+    
+    
+    Now consider a tuple of mixed strategies for all players $s = (s_1, \dots, s_n) \in \bigtimes_j S_j$.
+    We model the expected payoff as a two-stage probabilistic experiment, where in the first stage, each player $i$ picks a pure strategy based on the probabilities from $s_i$, and in the second stage, the actual real-valued payoff is determined from the chosen payoff distribution.
+
+    \begin{defn}[Expected Payoff]
+%        We define the \emph{expected payoff distribution} for player $i$ as the distribution with the distribution function 
+%        \begin{equation}
+%            F_{\text{mix}} =  \sum_{i_1=1}^{\abs{A_{i_1}}} \dots \sum_{i_n=1}^{\abs{A_{i_n}}} s_1[i_1] * \dots * s_n[i_n] * u_i(s)
+%        \end{equation}
+        
+%        Consider the product space $(\tilde{\Omega} \times \Omega, \tilde{\A} \times A, \tilde{P} \times P)$ modeling the above experiment.
+        
+        Let the expected payoff $U_i(s)$ of player $i$ be a random variable modeling the two-stage experiment described above.
+        % TODO fix notation. It could make sense to use the same symbol for u_i: \bigtimes A_i \to \RVs as for U_i: \bigtimes S_i \to {whatever?}
+        % TODO formalize this!
+        % TODO does this modleing work? Does the probability space that u(s) is on depend on s, or not?
+    \end{defn}
+
+    \begin{lemma}
+        Consider the case where all payoffs $u_i(a_1, \dots, a_n)$ of the $i$-th player are independent, and each $u_i(a_1, \dots, a_n)$ has the distribution function $F_{(a_1, \dots, a_n)}$.
+        Then the distribution function of $U_i(s)$ is $F_{\text{mix}}$, where
+        \begin{equation}
+            F_{\text{mix}} = \sum_{j_1=1}^{\abs{A_1}} \dots \sum_{j_n=1}^{\abs{A_n}} s_1[j_1] * \dots * s_n[j_n] * F_{(a_{j_1}, \dots, a_{j_n})}
+        \end{equation}
+    \end{lemma}
+    
+    
+    \begin{defn}[Nash equilibrium]
+        An \emph{equilibrium} of a distribution-valued game  w.r.t. a preference ordering $\leqslant$ is a strategy vector $s^\ast = (s_1^\ast, \dots, s_n^\ast)$ where no player can improve their expected payoff by single-handedly deviating from $s$:
+        \begin{equation}
+            \forall i: \forall s_i \in S_i: U_i(s_1^\ast, \dots, s_i^\ast, \dots, s_n^\ast) \leqslant U_i(s_1^\ast, \dots, s_i, \dots, s_n^\ast)
+        \end{equation}
+    \end{defn}
+    
+    \begin{comm}
+        Although we set up the theory of distribution-valued games more generally, we are mainly interested in the special case of two-player zero-sum games.
+        We call the first player the \emph{defender} and the second player the \emph{attacker}.
+        For this particular discussion, we aditionally assume that all payoff distributions involved are discrete with finite support. We identify the common support of all involved distributions as 
+        \begin{equation}
+            \set{x_1, \dots, x_k} = \bigcup_{(a_1, a_2) \in A_1 \times A_2} u_1(a_1, a_2),~\text{ where } x_1 < \dots < x_k.
+        \end{equation}
+        Let $n = \abs{A_1}$ be the number of defender actions, $m = \abs{A_2}$ the number of attacker actions.
+        Then we can think of our game as being represented by a matrix where each payoff distribution is represented as a vector denoting its probability masses assinged to the elements of the common support. Formally, a matrix
+        \begin{gather}
+%            \begin{pmatrix}
+%                (p_{(1, 1, 1)}, \dots, p_{(1,1,k)}) & \dots & (p_{(1, m, 1)}, \dots, p_{(1,m,k)}) \\
+%                 \vdots & \ddots & \vdots \\                
+%                (p_{(n, 1, 1)}, \dots, p_{(n,1,k)}) & \dots & (p_{(n, m, 1)}, \dots, p_{(n, m, k)})
+%            \end{pmatrix}
+                \begin{pmatrix}
+                    d_{1,1} & \dots & d_{1,m} \\
+                        \vdots & \ddots & \vdots \\                
+                    d_{n, 1} & \dots & d_{n,m}
+                \end{pmatrix}
+        \end{gather}
+%        where $p_{(i, j, l)} = P(\set{u_1(a_i, b_j) = x_l})$.
+        where $d_{i,j} = (d_{i,j,1}, \dots, d_{i,j,k})$, and $d_{i,j,k} = P(\set{u_1(a_i, b_j) = x_l})$.
+        
+        We can also represent the defender's expected payoff for a given pair of strategies $(s_1, s_2)$, which is random variable over the common support, as a vector just like above. It is easy to verify that the corresponding vector is the weighted average $\sum_{i=1}^{n} \sum_{j=1}^{m} s_1[i]*s_2[j]*d_{i,j}$.
+        
+        The $\leqtail$-ordering can easily be decided on these vectors by lexicographically comparing from the right.
+        Also note that, once in this form, the exact elements of the common support do not matter for purposes of deciding $\leqtail$ or computing $\leqtail$-equilibria.
+        % TODO notation! We don't have symbols for the actions involved. Here ad-hoc I called them a_i, b_j...
+    \end{comm}
+    
+    \begin{ex}
+        Think of the zero-sum two-player distribution-valued game $G$ with common support $x_1=1, x_2=2, x_3=3$, represented by the matrix
+        \begin{gather*}
+            \begin{pmatrix}
+                (0,\; 0.9,\; 0.1) & (0,\; 0.8,\; 0.2) \\
+                (0.7,\; 0,\; 0.3) & (0.9,\; 0,\; 0.1)
+            \end{pmatrix}
+        \end{gather*}
+        Then for example, if the defender plays the mixed strategy $s_1 = (0.5, 0.5)$, while the attacker plays the pure strategy $s_2 = (1, 0)$, the expected payoff distribution $U_1(s_1, s_2)$ is represented by $0.5 * d_{1,1} + 0.5 * d_{2,1} = (0.35, 0.45, 0.2)$. On the other hand, if the attacker plays $\tilde{s_2} = (0, 1)$, the expected payoff distribution comes out as $(0.45, 0.4, 0.15)$. With respect to the $\leqtail$-ordering, $s_2$ is thus a better response to $s_1$ than $\tilde{s_2}$ is.
+    \end{ex}
+
+    \section{Nash Equilibria in Distribution-Valued Games wrt. $\leqtail$}
+    It is a well-known theorem in standard game theory that every game with real-valued payoffs exhibits at least one Nash equilibrium in mixed strategies (see e.g. \cite{bib:matsumotoGameTheory}).
+    In this section, however, we will show that a similar result does not hold for $\leqtail$-equilibria in distribution-valued games: we will see that if a distribution-valued game has no pure equilibria, it can only exhibit mixed equilibria in very specific cases.
+    
+    \subsection{Multi-Goal Security Strategies in HyRiM}
+    \cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII} establish a similar game model as in \autoref{sec:dist-val-games}, while also considering games with multiple ($d \geq 1$) goals: in their model, payoffs in general are $d$-dimensional vectors of probability distributions.
+    In particular, \cite{bib:rassGameRiskManagII} defines a \emph{multi-goal security strategy with assurance} (\emph{MGSS}), or similarly \cite{bib:rassGameTheoreticNWSecProv} defines a \emph{network provisioning strategy with assurance}, which more or less generalizes the concept of Nash equilibria to multiobjective games. 
+    %TODO mention Pareto-Nash! Or someplace else?
+    
+    \begin{defn}[adopted from \cite{bib:rassGameRiskManagII}]
+        % TODO this is really inaccurate, e.g. does not mention continuity
+        A mixed strategy $s_1$ for the defender is a \emph{multi-goal security strategy with assurance} $v=(V_1,\dots,V_d) \in \RVs^d$ if two criteria are met:
+        \begin{enumerate}
+            \item \emph{Assurance}: The distributions in $v$ are the worst payoffs (from the defender's perspective) that the attacker can enforce, given that the defender plays $s_1$: 
+            \[ V_i = \min\limits_{s_2 \in S_2}{}_{{}_{\leqtail}} U_1^{(i)}(s_1, s_2) \] 
+            
+            % TODO check if min is the correct one. Doesn't \leqtail mean preference instead of non-preference?
+            
+            \item \emph{Effiency}: At least one assurance becomes void if the defender deviates from $s_1$ by playing $\tilde{s_1} \neq s_1$: Then there is an attacker strategy $s_2 \in S_2$ for which the defender's payoff $u_1(\tilde{s_1}, s_2)$ is $\leqtail$-worse than $v$ in at least one coordinate.
+        \end{enumerate}
+    \end{defn}
+
+    In this section, we are not yet interested in multi-objective games. But if we consider the special case of one goal, above definition has obvious similarities to the definition of a Nash equilibrium: in fact, if $s_1$ is a MGSS, it also is a Nash-Equilibrium strategy for the defender (cf. \cite[p.58]{bib:rassGameTheoreticNWSecProv} and \cite{bib:paretoNashEquilibria}).
+    
+    \subsection{Computation of MGSSs in HyRiM: A Counterexample}
+    A well-known numerical method for computing mixed-strategy equilibria in real-valued games is \emph{fictitious play}. 
+    
+%    The basic idea is that the game is simulated repeatedly, with the players,
+    
+    In order to compute MGSSs, which we have seen to be in a certain sense equivalent to Nash equilibria in the previous section, \cite{bib:rassGameRiskManagII} presents an adjusted version of fictitious play, where real numbers in the algorithm are replaced with \emph{hyperreal numbers}, which can be used to represent probability distributions. It is known that the original, real-valued fictitious play algorithm converges (towards a mixed Nash equilibrium strategy).
+    The paper claims that the so-called \emph{transfer principle} (between reals and hyperreals) allows to carry over this result to the modified version operating on hyperreal numbers. But this section will present a counterexample, namely a game which provably does not even have a Nash equilibrium with respect to $\leqtail$. Possibly the reason for this problem is that the convergence proof from \cite{bib:rassGameRiskManagII} itself is correct (i.e. the algorithm always converges), yet the approached limit is not guaranteed to be an equilibrium strategy -- but this is only speculation, as at the time of writing it's not completely clear where the approach goes wrong.
+    
+    Note that the paper itself casts some doubts on whether the algorithm gives correct results, and explicitly gives an example where it converges to a strategy “which is definitely not meaningful”
+%     (actually, the game shown is an example of a game with no $\leqtail$-equilibrium, although this is not explicitly mentioned) 
+    (see \cite[p.15]{bib:rassGameRiskManagII}). But it then claims that the wrong result is due to the involved distributions not sharing a common support, more precisely, some distributions have support ranging further to the right, making them dominate any mix between the distributions. We will see that this alone is not the root of the problem, since the discrete distributions in our counterexample all assign positive probability to each element of their common support.
+    
+    \begin{ex}
+        Consider the distribution-valued zero-sum game $G$ represented by
+        \begin{equation}
+            \begin{pmatrix}
+                (0.1,\; 0.8,\; 0.1) & (0.1,\; 0.7,\; 0.2) \\
+                (0.6,\; 0.1,\; 0.3) & (0.8,\; 0.1,\; 0.1)
+            \end{pmatrix}
+        \end{equation}
+        $G$ has no mixed-strategy equilibrium with respect to $\leqtail$.
+    \end{ex}
+    
+    To see why this is the case, we will first take a closer look at the highest coordinate, projecting the game to it: i.e. consider the \emph{projected game} $G_{\text{proj},3}$ represented by $\smallmat{0.1 & 0.2 \\ 0.3 & 0.1}$, which is a standard real-valued game which can be solved with standard techniques.
+    
+    Computations done with the game-theoretic software package of \texttt{SageMath} % TODO properly reference this
+    shows that $G_{\text{proj},3}$ has exactly one equilibrium, with strategies $s_1 = (\frac{2}{3}, \frac{1}{3})$ for the defender and $s_2 = (\frac{1}{3}, \frac{2}{3})$ for the attacker, yielding an expected payoff of $\frac{1}{6}$. Applying this strategy to our original game $G$ yields an expected payoff of $u = (\frac{14}{45}, \frac{47}{90}, \frac{1}{6})$. Now it is important to keep in mind that any single-handed deviation from the equilibrium in  $G_{\text{proj},3}$ keeps the payoff the same (e.g. if the defender keeps $s_1$, but the attacker switches to $(0, 1)$, this still yields an expected payoff of $\frac{1}{6}$). Therefore there is no incentive for any player to single-handedly deviate, which makes $(s_1, s_2)$ an equilibrium.
+    
+    But on the other hand, this is not true for the original game $G$: Both the defender and the attacker could improve their payoffs by deviating, because the $\leqtail$-ordering is then decided by the second coordinate (since the third, highest coordinate stays the same).
+    For example, if the defender keeps $s_1$, but the attacker switches to $(1, 0)$, now the expected payoff is $(\frac{12}{45}, \frac{51}{90}, \frac{1}{6}) \geqtail u$, improving the outcome for the attacker. On the other hand, if the attacker keeps $s_2$, but the defender switches to $(0, 1)$, now the expected payoff becomes $(\frac{33}{45}, \frac{9}{90}, \frac{1}{6}) \leqtail u$, improving the outcome for the defender!
+    Therefore, $(s_1, s_2)$ is not a Nash equilibrium for $G$.
+    
+    Also, there can be no other equilibria: recall that $(s_1, s_2)$ was the only equilibrium for the projected game $G_{\text{proj},3}$. Now assume there was another set of strategies $(t_1, t_2) \neq (s_1, s_2)$ which \emph{is} an equilibrium for $G$. But since $(t_1, t_2)$ is not an equilibrium for $G_{\text{proj},3}$, there is an incentive for some player to deviate from $(t_1, t_2)$ which improves their outcome for $G$ in the highest coordinate, thus also improving it with respect to $\leqtail$, which is a contradiction.
+    
+    \paragraph{HyRiM's answer}
+    We can test what the HyRiM-implementation of fictitious play on distribution-valued games outputs for this example:
+    
+    % TODO treat this listing somewhat like a figure
+\begin{lstlisting}[language=R]
+library('HyRiM')
+dist = function(data) {lossDistribution(supp = c(1,2,3), discrete = TRUE, dataType = "pdf", dat = data)}
+game = mosg(n=2, m=2, goals=1, losses = list( 
+    dist(c(1/10,8/10,1/10)), dist(c(1/10,7/10,2/10)), 
+    dist(c(6/10,1/10,3/10)), dist(c(8/10,1/10,1/10))))
+equilibrium = mgss(game, T=10000)
+\end{lstlisting}
+
+    The result for 10000 iterations is the mixed strategy pair $(0.6667, 0.3333)$ (defender) vs. $(0.3335666, 0.6664334)$ (attacker).
+    It's clear that the HyRiM solution converges towards the solution $s_1 = (\frac{2}{3}, \frac{1}{3})$, $s_2 = (\frac{1}{3}, \frac{2}{3})$ given above, which is an equilibrium only for the $G_{\text{proj},3}$ game.
+    
+    \paragraph{Constructing More Counterexamples}
+    How was the above counterexample found?
+    The crucial property of the counterexample is that the projection to its highest coordinate only has a mixed Nash equilibrium $(s_1, s_2)$, but the second-highest coordinate does \emph{not} have $(s_1, s_2)$ as a Nash equilibrium.
+    
+    In fact, the same approach should work for all games which have no pure $\leqtail$-equilibria, the highest projection \emph{has} some mixed Nash equilibrium, but for some lower coordinate, the projection \emph{does not} admit said equilibrium. This means that once the highest projection only has a mixed Nash equilibrium, all lower coordinates will need to have very special structure and admit exactly the same equilibrium in order for the whole game to have an equilibrium. This also shows why a similar game with only two coordinates, given by
+    \begin{equation}
+        \begin{pmatrix}
+            (0.9,\; 0.1) & (0.8,\; 0.2) \\
+            (0.7,\; 0.3) & (0.9,\; 0.1)
+        \end{pmatrix}
+    \end{equation}
+    does \textbf{not work} as a counterexample: both projections $\smallmat{0.1 & 0.2 \\ 0.3 & 0.1}$ and $\smallmat{0.9 & 0.8 \\ 0.7 & 0.9}$ have $(s_1, s_2)$ as an equilibrium, which is therefore also a $\leqtail$-equilibrium for the whole game.
+    
+    For games with a least three coordinates, though, it seems that many (if not most) games do not have $\leqtail$-equilibria, since all games that do must either have pure equilibria, or the same mixed equilibrium in all projected games.
+%    If we construct a game with at least three coordinates, though, we suspect that (informally speaking) it is quite likely that 
+    
+%    \nocite{*}
+    \printbibliography
+\end{document}
