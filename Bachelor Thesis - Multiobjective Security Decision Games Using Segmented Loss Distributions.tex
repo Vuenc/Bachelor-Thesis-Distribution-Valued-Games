@@ -1,19 +1,61 @@
-% !BIB TS-program = biber
+% !TeX spellcheck = en_US
+% Dirty hack to disable recompiling the bibliography every time, reducing compilation times. Comment out to re-compile bibliography.
+% !TeX TXS-program:recompile-bibliography = donothing
+
+% Use biber as bibliography tool
+% !TeX TXS-program:bibliography = txs:///biber
 
 \documentclass[a4paper]{scrreprt}
 
 \input{preamble-en.tex}
 
 \usepackage[citestyle=alphabetic,bibstyle=alphabetic]{biblatex}
-\usepackage{csquotes}
+\usepackage{csquotes} % needed for biblatex
 
-%\addbibresource{Bachelor-Thesis.bib}
+\usepackage{setspace}
+\usepackage{mathtools} % \bigtimes
 
-%\newtheorem{theorem}{Theorem}[section]
-%\newtheorem{lemma}[theorem]{Lemma}
+% no ident, combined with reasonable paragraph spacing
+\onehalfspacing
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.7ex}
+
+\addbibresource{Bachelor-Thesis.bib}
+
+
+
+
+\DeclareMathOperator{\A}{\mathcal{A}}
+\DeclareMathOperator{\leqst}{\leq_{\text{st}}}
+\DeclareMathOperator{\F}{\mathcal{F}}
 
 \begin{document}
     \tableofcontents
+    
+    \chapter{Introduction}
+    
+    % TODO make the following one chapter?
+    \chapter{Basic Concepts from Probability and Decision Theory}
+    
+    \section{Probability Theory}
+    
+    \section{Decision Theory}
+    
+    
+    \chapter{Non-Cooperative Game Theory}
+    
+    
+    
+    
+    % TODO part on Game Theory in Network Security: here as a) chapter, b) section, or c) not here but in the application chapter?
+   
+    \chapter{Games with Distributions as Payoffs}
+    
+    
+    \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
+    
+    
+    \chapter{Distribution-Valued Game Theory in Security of Critical Infrastructures}
     
 %    \nocite{*}
 %    \printbibliography
