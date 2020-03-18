@@ -100,6 +100,8 @@
 }
 
 \definecolor{verylightgray}{gray}{0.97}
+\definecolor{purple}{RGB}{127,0,116} % used for keyword coloring in source code listings
+\definecolor{brickred}{rgb}{0.56, 0.175, 0.231} % used for string coloring in source code listing
 
 % norm ||x||
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
@@ -140,3 +142,21 @@
 
 \newcommand{\smallmat}[1]{\left(\begin{smallmatrix}#1\end{smallmatrix}\right)}
 \newcommand{\undersetbrace}[2]{\underset{#2}{\underbrace{#1}}}
+
+% theorem-like environments
+
+\theoremstyle{definition}
+\newtheorem{thm}{Theorem}[chapter] % reset theorem numbering for each chapter
+\newtheorem*{thm*}{Theorem}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem*{defn*}{Definition}
+\newtheorem{ex}[thm]{Example} % same for example numbers
+\newtheorem*{ex*}{Example}
+\newtheorem{lemma}[thm]{Lemma} % same for Lemma numbers
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem*{cor*}{Corollary}
+\newtheorem{comm}[thm]{Comment}
+\newtheorem*{comm*}{Comment}
+\newtheorem{notation}[thm]{Notation}
+\newtheorem*{notation*}{Notation}
