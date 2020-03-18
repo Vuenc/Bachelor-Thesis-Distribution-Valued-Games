@@ -1,0 +1,148 @@
+% !TeX spellcheck = en_US
+% Dirty hack to disable recompiling the bibliography every time, reducing compilation times. Comment out to re-compile bibliography.
+% !TeX TXS-program:recompile-bibliography = donothing
+
+% Use biber as bibliography tool
+% !TeX TXS-program:bibliography = txs:///biber
+
+\documentclass[a4paper]{scrreprt}
+
+\input{../preamble-en.tex}
+
+\usepackage[citestyle=alphabetic,bibstyle=alphabetic]{biblatex}
+\usepackage{csquotes}
+
+\usepackage{setspace}
+\usepackage[headsepline]{scrlayer-scrpage}
+
+\usepackage{mathtools} % \bigtimes
+
+% no ident, combined with reasonable paragraph spacing
+\onehalfspacing
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.7ex}
+
+\addbibresource{../Bachelor-Thesis.bib}
+
+\DeclareMathOperator{\A}{\mathcal{A}}
+\DeclareMathOperator{\leqst}{\leq_{\text{st}}}
+\DeclareMathOperator{\leqtail}{\leq_{\text{tail}}}
+\DeclareMathOperator{\geqtail}{\geq_{\text{tail}}}
+\DeclareMathOperator{\F}{\mathcal{F}}
+\DeclareMathOperator{\RVs}{\mathcal{D}}
+\DeclareMathOperator{\B}{\mathcal{B}}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\leqlex}{\leq_{\textsc{Lex}}}
+
+% Style for displaying source code listings
+\lstset{showspaces=false,
+    keywordstyle=\ttfamily\bfseries\color{purple},
+    basicstyle=\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    commentstyle=\color{gray},
+    breaklines=true,
+    postbreak=\mbox{\textcolor{lightgray}{$\hookrightarrow$}\space},
+    showstringspaces=false,
+    stringstyle=\color{brickred}
+}
+
+%\setlist[enumerate,1]{label=(\roman*)}
+
+\ihead{Vincent Bürgin}
+\ohead{[Work in Progress]}
+
+\begin{document}
+    
+    \setcounter{chapter}{4}
+    
+%    \chapter{Games with Random Variables as Payoffs}
+%    In this chapter, we define games in the game-theoretic sense, where the payoffs are no longer real numbers, but rather real-valued random variables. The description follows the approach found in \cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}. % TODO but deviates!
+
+    \section{The Stochastic Tail Order}
+    
+    We consider real-valued random variables on some probability space $(\Omega, \A, P)$. In order to define a total order on a subset of the real-valued random variables, we make some assumptions about random variables which can be ordered:
+    % TODO write a proper introduction sentence
+    
+    \begin{defn}
+        We call a real-valued random variable $X$ is \emph{tail-orderable} if 
+        it only takes values greater than 1, and
+         one of the following holds:
+        \begin{enumerate}
+            \item $X$ is discrete with finite support.
+            \item $X$ is absolute continuous, and its density $f$ is zero outside a compact interval $[a_1, b_1]$, as well as continuous von $(a_1, b_1)$.
+        \end{enumerate} 
+%    either discrete with finite support, or absolutely continuous with its density $f$ being zero outside a compact interval $[a_1, b_1]$, and continuous on $(a_1, b_1)$. 
+        The set of tail-orderable random variables over $(\Omega, \A, P)$ is denoted by $\F$.
+    \end{defn}
+
+    
+    From now on, we assume that $X, Y$ are real-valued random variables either both discrete or both absolutely continuous, with densities/probability mass functions $f$ and $g$, respectively. % TODO ok if one is discrete, the other AC? relevant to \leqtail being a total ordering on \F...
+    
+    
+    
+    \begin{defn}[Stochastic Tail Order]
+        Let $X, Y$ be tail-orderable. We define the \emph{stochastic tail order} $\leqtail$ by
+        \footnote{\cite{bib:rassTotalOrderingOnLossDistributions,bib:rassGameRiskManagI} use the symbol $\preceq$ for the stochastic tail order. Since we use different stochastic orders in this text, for clarity we instead use $\leqtail$.}
+        \[ X \leqtail Y :\lra \exists K \in \N: \forall k \geq K: E(X^k) \leq E(Y^k)\]
+        \label{def:tailorder}
+    \end{defn}
+    
+    \begin{lemma}
+        $\leqtail$ from definition \ref{def:tailorder} is a transitive and total binary relation on $\F$, i.e. a total preorder.
+    \end{lemma}
+    \begin{proof}
+        % TODO
+    \end{proof}
+    
+    \subsection{Characterization of the Stochastic Tail Order}
+    We want to give a better intuition for what the stochastic tail order $\leqtail$ means.
+    \cite{bib:shakedStochasticOrders} defines a similar ordering $\leqst$, called the \emph{(usual) stochastic order}, which is defined as
+    \footnote{\cite{bib:shakedStochasticOrders} give a slightly different, equivalent definition using plain probabilities instead of distribution functions.}
+    \begin{gather}
+        X \leqst Y \lra \forall x \in \R: F_X(x) \geq F_Y(y)
+    \end{gather}
+    In other words, $X \leqst Y$ if $X$'s distribution is point-wise greater than $Y$'s, so in a certain sense $X$ takes on smaller values with higher probability.
+    We will see that $X \leqtail Y$ can be characterized in a similar, but less strict manner: for $X \leqst Y$ to hold, $F_X$ does not need to be point-wise greater than $F_Y$ everywhere, but only \emph{eventually}, i.e. from a certain point on. The interpretation of this is that from a pessimistic risk-assessment point-of-view, $X$ should be preferred if it reduces the probability of the \emph{highest losses}, no matter what happens in the regions further to the left where the losses are smaller.
+    
+    The same characterization can also be applied to the density or probability mass functions: we will see that $X \leqtail Y$ if $X$'s \emph{vector of probability masses} on the common support is smaller \emph{lexicographically from the right} than $Y$'s, and similarly for density functions.
+    
+    \begin{lemma}
+        Let $X, Y$ be tail-orderable.
+        The following are equivalent:
+        \begin{enumerate}
+            \item $X \leqtail Y$, i.e. $X$'s moment sequence eventually overtakes $Y$'s.
+            \item There exists some $x_0 \in \R$ s.t. $F_Y(x_0) \neq 1$, and $\forall x \geq x_0: F_X(x) \geq F_Y(x)$.
+        \end{enumerate}
+    \end{lemma}
+    \begin{proof}
+        % TODO prove!
+    \end{proof}
+
+    \begin{cor}~
+        \begin{enumerate}
+            \item If both $X$ and $Y$ are discrete, with probability mass functions $f, g$, and $S = \supp(X) \cup \supp(Y) = \set{x_1, \dots, x_n}$ with $x_1 \leq \dots \leq x_n$: Then
+            \begin{alignat}{2}
+                X \leqtail Y 
+                 &\Longleftrightarrow~ (f(x_n), \dots, f(x_1)) \;\leqlex\; (g(x_n), \dots, g(x_1)) \\
+                 &\Longleftrightarrow~ (f = g) \vee (\exists k: f(x_k) < g(x_k) \wedge \forall j > k: f(x_j) = g(x_j))                 
+            \end{alignat}
+            \label{item:leqtailDiscreteLex}
+            
+            \item If both $X$ and $Y$ are absolute continuous with probability density functions, then
+            \begin{gather}
+                X \leqtail Y ~\Longleftrightarrow~ (f = g) \vee (\exists x_0 \in \R: f(x_0) < g(x_0) \wedge \forall x \geq x_0: f(x) \leq g(x))
+            \end{gather}
+            \label{item:leqtailACLex}
+            
+            % TODO check the conditions again. The AC case uses \leq where the discrete case uses =
+        \end{enumerate}
+    \end{cor}
+    \begin{proof}
+        % TODO prove!
+    \end{proof}
+    
+    
+    %    \nocite{*}
+    %    \printbibliography
+\end{document}
