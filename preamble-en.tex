@@ -117,6 +117,7 @@
 % shortcuts: for limits/series going to infinity
 \newcommand{\liminfty}[1]{\lim\limits_{#1 \rightarrow \infty}}
 \newcommand{\ser}[1]{\sum\limits_{\ifthenelse{\isin{=}{#1}}{#1}{#1=1}}^{\infty}}
+\newcommand{\toinfty}[1]{\xrightarrow{\;#1 \to 0\;}}
 
 % shortcut for multiple cases in math formulas: '"1", falls "2", "3", falls "4"' (bzw. 'sonst', falls leer)
 \newcommand{\twocases}[4]
@@ -127,8 +128,10 @@
     \end{cases}
 }
 
-% shortcut for brackets and sets
-\newcommand{\br}[1]{\left(#1\right)}
+% shortcut for parentheses and sets
+\newcommand{\pars}[1]{\left(#1\right)}
+\newcommand{\bigpars}[1]{\big(#1\big)}
+\newcommand{\biggpars}[1]{\bigg(#1\bigg)}
 \newcommand{\set}[1]{\{#1\}}
 
 \newenvironment{correction}[1]{\color{red}\textbf{\underline{#1}}\\}{\ignorespacesafterend}

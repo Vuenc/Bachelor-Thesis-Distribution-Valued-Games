@@ -24,6 +24,7 @@
 
 \addbibresource{../Bachelor-Thesis.bib}
 
+\let\epsilon\varepsilon
 \DeclareMathOperator{\A}{\mathcal{A}}
 \DeclareMathOperator{\leqst}{\leq_{\text{st}}}
 \DeclareMathOperator{\leqtail}{\leq_{\text{tail}}}
@@ -103,44 +104,179 @@
         X \leqst Y \lra \forall x \in \R: F_X(x) \geq F_Y(y)
     \end{gather}
     In other words, $X \leqst Y$ if $X$'s distribution is point-wise greater than $Y$'s, so in a certain sense $X$ takes on smaller values with higher probability.
-    We will see that $X \leqtail Y$ can be characterized in a similar, but less strict manner: for $X \leqst Y$ to hold, $F_X$ does not need to be point-wise greater than $F_Y$ everywhere, but only \emph{eventually}, i.e. from a certain point on. The interpretation of this is that from a pessimistic risk-assessment point-of-view, $X$ should be preferred if it reduces the probability of the \emph{highest losses}, no matter what happens in the regions further to the left where the losses are smaller.
     
-    The same characterization can also be applied to the density or probability mass functions: we will see that $X \leqtail Y$ if $X$'s \emph{vector of probability masses} on the common support is smaller \emph{lexicographically from the right} than $Y$'s, and similarly for density functions.
+    % TODO rethink, -formulate this whole thing. Overtake is somewhat the wrong term I think? But not sure? Try some examples
+    We will see that $X \leqtail Y$ often can be characterized in a similar, but less strict manner: for $X \leqst Y$ to hold, $F_X$ does not need to be point-wise greater than $F_Y$ everywhere, but only \emph{eventually}, i.e. from a certain point on. The interpretation of this is that from a pessimistic risk-assessment point-of-view, $X$ should be preferred if it reduces the probability of the \emph{highest losses}, no matter what happens in the regions further to the left where the losses are smaller. This can be formulated as a sufficient condition, but not an equivalence: there are pathological counter-examples where even on a bounded interval, no distribution function eventually overtakes the other, but both functions cross over infinitely often.
+    % TODO present such an counter-example
     
-    \begin{lemma}
+    
+    \begin{lemma}[Sufficient condition for $\leqtail$]
         Let $X, Y$ be tail-orderable.
-        The following are equivalent:
+%        either both absolutely continuous or both discrete with finite support, with corresponding probability mass or density functions $f, g$, respectively. Suppose that
+%        \begin{gather*}
+%            \exists x_0: f(x_0) < g(x_0), \forall x \geq x_0: f(x) \leq g(x)
+%        \end{gather*}
+%        Then $X \leqtail Y$. % TODO strict?
         \begin{enumerate}
-            \item $X \leqtail Y$, i.e. $X$'s moment sequence eventually overtakes $Y$'s.
-            \item There exists some $x_0 \in \R$ s.t. $F_Y(x_0) \neq 1$, and $\forall x \geq x_0: F_X(x) \geq F_Y(x)$.
+            \item If $X, Y$ are absolutely continuous with densities $f, g$: If there is some $x_0 \in \R$ and a non-degenerate interval $[x_0, x_0 + \delta]$ such that
+            % TODO technically, non-degenerate interval
+            \begin{gather*}
+                \forall x \in [x_0, x_0 + \delta]: f(x) < g(x) ~~ \wedge ~~ \forall x \geq x_0: f(x) \leq g(x),
+            \end{gather*}
+            then $X \leqtail Y$. % TODO strict?
+            \label{item:leqtailSuffCondAC}
+            
+            
+            \item If $X, Y$ are discrete with finite support and probability mass functions $f, g$: If there is some $x_0 \in \R$ such that
+            \begin{gather*}
+            f(x_0) < g(x_0) ~~ \wedge ~~ \forall x \geq x_0: f(x) \leq g(x),
+            \end{gather*}
+            then $X \leqtail Y$. % TODO strict?
+            \label{item:leqtailSuffCondDiscrete}
         \end{enumerate}
     \end{lemma}
     \begin{proof}
-        % TODO prove!
+        \newcommand{\mkx}{m_k^X}
+        \newcommand{\mky}{m_k^Y}
+        We denote the $k$'th moments as $\mkx = E(X^k)$, $\mky = E(Y^k)$, and want to show that $\mkx \leq \mky$ eventually.
+        As $X, Y$ have bounded supports, let $a, b$ 
+        such that $X \in [a, b], Y \in [a, b]$ almost surely.
+        
+        On case \ref{item:leqtailSuffCondAC}: Suppose $X, Y$ are absolutely continuous. Then
+        \begin{multline*}
+            \mky - \mkx 
+            = \lintegral{\R}{t^k g(t)}{\lambda(t)} - \lintegral{\R}{t^k f(t)}{\lambda(t)}
+            = \lintegral{[a, b]}{t^k(g(t) - f(t))}{\lambda(t)} \\
+            = \lintegral{[a, x_0]}{t^k (g(t) - f(t))}{\lambda(t)} + \lintegral{[x_0, b]}{t^k (g(t) - f(t))}{\lambda(t)} 
+        \end{multline*}
+        We simplify the left integral: we use that $g - f \geq -1$ since both are densities, and $\forall t \in [a, x_0]: t^k \leq x_0^k$, hence $t^k*(g(t) - f(t)) > -x_0^k$:
+        % TODO this whole approximation is STILL a bit fishy.... sure it's right? (but possibly yes)
+        \begin{gather*}
+             \lintegral{[a, x_0]}{t^k (g(t) - f(t))}{\lambda(t)} 
+             \geq x_0^k*\lintegral{[a, x_0]}{(-1)}{\lambda(t)} 
+             = - x_0^k*(x_0-a) 
+             =: - x_0 * c_{\text{left}}
+        \end{gather*}
+        For the right integral, we use that $(g - f) > 0$ on $[x_0, x_0 + \delta]$. Let $x_1 := x_0 + \frac{\delta}{2}$.
+        We first identify a subset of $I := [x_1, x_0 + \delta]$ with positive measure where $(g-f)$ is bounded away from zero:
+        Let $A_n := \set{x \in I \mid g(x) - f(x) > \frac{1}{n}}$.
+        % TODO and these sets are Borel
+        Then $I = \bigcup_n A_n$ and by continuity of measures, $\lambda(A_n) \toinfty{n} \lambda(I) > 0$. This way we could construct some $A \subseteq I$, $\epsilon$ for which $\lambda(A) > 0$ and $\forall x \in A: g(x) - f(x) \geq \epsilon$. 
+        Then
+        \begin{multline*}
+            \lintegral{[x_0, b]}{t^k (g(t) - f(t))}{\lambda(t)} 
+            \geq \lintegral{A}{t^k (g(t) - f(t))}{\lambda(t)} \\
+            \geq \lintegral{A}{t^k * \epsilon}{\lambda(t)}
+            \geq x_1^k * (\epsilon * \lambda(A_l))
+            =: x_1^k * c_{\text{right}}
+        \end{multline*}
+        
+        Further,
+        \begin{gather*}
+            \mky - \mkx
+            \geq s_1^k * c_{\text{right}} - x_0^k * c_{\text{left}}
+        \end{gather*}
+        So since both expressions grow exponentially with $k$, and $s_1 > x_0$, it follows that for $k$ large enough, $\mky - \mkx > 0$ and hence $\mky > \mkx$.
+        
+        
+        On case \ref{item:leqtailSuffCondDiscrete}: Suppose that $X, Y$ are discrete with finite support. Let 
+        \begin{gather*}
+            S = \supp(X) \cup \supp(Y) = \set{x_1, \dots, x_n}, \text{ where } x_1 \leq \dots \leq x_n
+        \end{gather*}
+        
+        Let $m$ be the maximal index where $f(x_m) < g(x_m)$, i.e. $f(x_i) = g(x_i) \;\forall m < i \leq n$.
+        Then
+        \begin{multline*}
+            \mky - \mkx
+            = \biggpars{\sum_{i=1}^{n} x_i^k \,g(x_i)} - \biggpars{\sum_{i=1}^{n} x_i^k \,f(x_i)}
+            = \biggpars{\sum_{i=1}^{m} x_i^k \,(g(x_i) - f(x_i))} \\
+            = \biggpars{\sum_{i=1}^{m-1} x_i^k \,(g(x_i) - f(x_i))} + x_m^k \,(g(x_m) - f(x_m))
+        \end{multline*}
+        
+        Similar to above, we use $(g -f) \geq -1$ and $x_i \leq x_{m-1}$ for all $i < m$ to obtain a bound on the sum on the left:
+        \begin{gather*}
+            \biggpars{\sum_{i=1}^{m-1} x_i^k \,(g(x_i) - f(x_i))}
+            \geq x_{m-1}^k * ((m-1) * (-1))
+            =: -x_{m-1}^k * c_{\text{left}}
+        \end{gather*}
+        We set $c_{\text{right}} := (g(x_m) - f(x_m))$. Then
+        \begin{gather*}
+            \mky - \mkx \geq x_m^k * c_{\text{right}} -x_{m-1}^k * c_{\text{left}} > 0 \text{ for $k$ large enough.}
+        \end{gather*}        
     \end{proof}
-
-    \begin{cor}~
-        \begin{enumerate}
-            \item If both $X$ and $Y$ are discrete, with probability mass functions $f, g$, and $S = \supp(X) \cup \supp(Y) = \set{x_1, \dots, x_n}$ with $x_1 \leq \dots \leq x_n$: Then
-            \begin{alignat}{2}
-                X \leqtail Y 
-                 &\Longleftrightarrow~ (f(x_n), \dots, f(x_1)) \;\leqlex\; (g(x_n), \dots, g(x_1)) \\
-                 &\Longleftrightarrow~ (f = g) \vee (\exists k: f(x_k) < g(x_k) \wedge \forall j > k: f(x_j) = g(x_j))                 
-            \end{alignat}
-            \label{item:leqtailDiscreteLex}
-            
-            \item If both $X$ and $Y$ are absolute continuous with probability density functions, then
-            \begin{gather}
-                X \leqtail Y ~\Longleftrightarrow~ (f = g) \vee (\exists x_0 \in \R: f(x_0) < g(x_0) \wedge \forall x \geq x_0: f(x) \leq g(x))
-            \end{gather}
-            \label{item:leqtailACLex}
-            
-            % TODO check the conditions again. The AC case uses \leq where the discrete case uses =
-        \end{enumerate}
-    \end{cor}
-    \begin{proof}
-        % TODO prove!
-    \end{proof}
+    
+    
+    
+    
+    
+    
+    
+%    \begin{lemma}
+%        Let $X, Y$ be tail-orderable.
+%        Suppose there exists some $x_0 \in \R$ such that $F_Y(x_0) < 1$, and $\forall x \geq x_0: F_X(x) \geq F_Y(x)$:
+%        Then $X \leqtail Y$, i.e. $Y$'s moment sequence eventually overtakes $X$'s.
+%        % TODO not actually overtake, but can also stay the same
+%        
+%        
+%%        The following are equivalent:
+%%        \begin{enumerate}
+%%            \item $X \leqtail Y$, i.e. $Y$'s moment sequence eventually overtakes $X$'s.
+%%                        
+%%            \item There exists some $x_0 \in \R$ such that $F_Y(x_0) \neq 1$, and $\forall x \geq x_0: F_X(x) \geq F_Y(x)$.
+%%        \end{enumerate}
+%    \end{lemma}
+%    \begin{proof}
+%        \newcommand{\mkx}{m_k^X}
+%        \newcommand{\mky}{m_k^Y}
+%        We denote the $k$'th moments as $\mkx = E(X^k)$, $\mky = E(Y^k)$, and want to show that $\mkx \leq \mky$ eventually.
+%        As $X, Y$ have bounded supports, there exists some $l > x_0$ where $F_X(l) = F_Y(l) = 1$, i.e. all probability mass lies left of $l$.
+%        
+%        \begin{multline*}
+%            \mkx 
+%            = \lintegral{\R}{x^k}{P^X(x)}
+%            = \lintegral{(-\infty, x_0)}{x^k}{P^X(x)} + \lintegral{[x_0, l]}{x^k}{P^X(x)} \\
+%            \leq \lintegral{(-\infty, x_0)}{x^k}{P^X(x)} + x_0^k * P(\set{X \in (-\infty, x_0)}) \\ % TODO wrong?
+%            = \lintegral{(-\infty, x_0)}{x^k}{P^X(x)} + x_0^k * F_X(x_0)
+%        \end{multline*}
+%        
+%        Now pick a $s \in (x_0, l)$ s.t. $F_y(s) < 1$.
+%        % TODO prove that s exists?
+%        Then $s > x_0$, and $P(\set{Y > s}) > 0$. Similar to above, we get:
+%        \begin{multline*}
+%            \mky = \lintegral{(-\infty, x_0)}{y^k}{P^Y(y)} + \lintegral{[x_0, l]}{y^k}{P^Y(y)} \\
+%            \geq \lintegral{(-\infty, x_0)}{y^k}{P^Y(y)} + \lintegral{[s, l]}{y^k}{P^Y(y)} 
+%            \geq \lintegral{(-\infty, x_0)}{y^k}{P^Y(y)} + s^k*P(\set{Y \in [s, l]}) \\
+%            = \lintegral{(-\infty, x_0)}{y^k}{P^Y(y)} + s^k*(1 - F_Y(s))
+%        \end{multline*}
+%        
+%        % TODO prove!
+%    \end{proof}
+%
+%
+%    The same condition can also be applied to the density or probability mass functions: we will see that $X \leqtail Y$ if $X$'s \emph{vector of probability masses} on the common support is smaller \emph{lexicographically from the right} than $Y$'s, and similarly for density functions.
+%
+%    \begin{cor}~
+%        \begin{enumerate}
+%            \item If both $X$ and $Y$ are discrete with finite support, with probability mass functions $f, g$, and $S = \supp(X) \cup \supp(Y) = \set{x_1, \dots, x_n}$ with $x_1 \leq \dots \leq x_n$: Then
+%            \begin{alignat}{2}
+%                 &&&~ (f(x_n), \dots, f(x_1)) \;\leqlex\; (g(x_n), \dots, g(x_1)) \\
+%                 &\Longleftrightarrow&&~ (f = g) \vee (\exists k: f(x_k) < g(x_k) \wedge \forall j > k: f(x_j) = g(x_j)) \\
+%                 & \Longleftrightarrow&&~ X \leqtail Y            
+%            \end{alignat}
+%            \label{item:leqtailDiscreteLex}
+%            
+%            \item If both $X$ and $Y$ are absolute continuous with probability density functions, then
+%            \begin{gather}
+%                (f = g) \vee (\exists x_0 \in \R: f(x_0) < g(x_0) \wedge \forall x \geq x_0: f(x) \leq g(x)) ~\Longrightarrow~ X \leqtail Y
+%            \end{gather}
+%            \label{item:leqtailACLex}
+%            
+%            % TODO check the conditions again. The AC case uses \leq where the discrete case uses =
+%        \end{enumerate}
+%    \end{cor}
+%    \begin{proof}
+%        % TODO prove!
+%    \end{proof}
     
     
     %    \nocite{*}
