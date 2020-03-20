@@ -34,6 +34,8 @@
 \DeclareMathOperator{\B}{\mathcal{B}}
 \DeclareMathOperator{\supp}{supp}
 \DeclareMathOperator{\leqlex}{\leq_{\textsc{Lex}}}
+\DeclareMathOperator{\notleqlex}{\nleq_{\textsc{Lex}}}
+\DeclareMathOperator{\geqlex}{\geq_{\textsc{Lex}}}
 
 % Style for displaying source code listings
 \lstset{showspaces=false,
@@ -134,6 +136,7 @@
             then $X \leqtail Y$. % TODO strict?
             \label{item:leqtailSuffCondDiscrete}
         \end{enumerate}
+    \label{lem:leqtailSuffCond}
     \end{lemma}
     \begin{proof}
         \newcommand{\mkx}{m_k^X}
@@ -204,12 +207,25 @@
             \mky - \mkx \geq x_m^k * c_{\text{right}} -x_{m-1}^k * c_{\text{left}} > 0 \text{ for $k$ large enough.}
         \end{gather*}        
     \end{proof}
+
+    The discrete part of Lemma \ref{lem:leqtailSuffCond} can also be formulated by the lexicographical ordering:
     
-    
-    
-    
-    
-    
+    \begin{cor}
+        Let both $X$ and $Y$ be tail-orderable and discrete with finite support, with probability mass functions $f, g$. Let $S = \supp(X) \cup \supp(Y) = \set{x_1, \dots, x_n}$ with $x_1 \leq \dots \leq x_n$. Then
+        \begin{gather*}
+            X \leqtail Y ~\Longleftrightarrow~ (f(x_n), \dots, f(x_1)) \;\leqlex\; (g(x_n), \dots, g(x_1))
+        \end{gather*}
+        \label{cor:leqtailDiscreteLex}
+    \end{cor}
+    \begin{proof}
+        Let $v_X = (f(x_n), \dots, f(x_1)), v_Y = (g(x_n), \dots, g(x_1))$ be the probability mass vectors.
+        If $v_X \;\leqlex\; v_Y$, then either $v_X = v_Y$, in which case $X$ and $Y$ have the same distribution, and certainly $X \leqtail Y$; or there is some $x_i$ where $f(x_i) < g(x_i)$, and for all $j > i$, $f(x_j) = g(x_j)$. In this case, the conditions of Lemma \ref{lem:leqtailSuffCond} are satisfied, and $X \leqtail Y$.
+        
+        Now let $X \leqtail Y$. For contradiction, assume $v_X \notleqlex v_Y$.
+        Since the lexicographical ordering is total, this implies $v_X \geqlex v_Y$ and $v_X \neq v_Y$.
+        Therefore $X \geqtail Y$ by the first part.
+        % TODO fix: we want to conclude “but X and Y have different distributions, therefore this implies $X \notleqtail Y$. But we don't have the tools for that.
+    \end{proof}
     
 %    \begin{lemma}
 %        Let $X, Y$ be tail-orderable.
