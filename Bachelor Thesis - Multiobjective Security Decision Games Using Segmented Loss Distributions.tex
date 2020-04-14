@@ -43,6 +43,199 @@
     
     
     \chapter{Non-Cooperative Game Theory}
+    In this chapter, we will have a look at the basic notions of non-cooperative game theory.
+    Game theory is applied in scenarios where multiple agents, called \emph{players}, make decisions independently of another, and each try to achieve the best outcome for themselves.
+    We are explicitly excluding \emph{cooperative game theory} from our discussions, where the players can cooperate and form coalitions to achieve a better overall outcome, and the main issue is how to split up the common payoff between the players.
+    In the \emph{non-cooperative game theory} we are dealing with, on the other hand, players can be thought of as neither being able to communicate, nor to make binding agreements. 
+    The classical example of this is the prisoners dilemma:
+    \begin{ex}[Prisoner's Dilemma]
+        Two criminals have committed a capital crime together. They were caught, and now are being held in different cells, with no way to communicate, and will soon be interrogated.
+        They know, however, that law enforcement only has substantial evidence against them for a small part of the crime; if none of the two confess, both of them will only be sentenced to one year in prison.
+        The dilemma is that both will be offered to confess to the crime, and also snitch on the other criminal. Now if one of them confesses and testifies against the other, he can be placed in a witness protection program and go free, while the other one will go to prison for five years. If both confess, however, they will both be sentenced to four years in prison, with their confession being held for them as mitigating circumstances.
+        
+        The game can be represented by a matrix, where the years in prison for the first and second player, respectively, are given as vectors:
+        The rows are the possible actions of player 1, the columns the actions of player 2 (not confess vs. confess).
+        
+        \begin{table*}[h]
+            \centering
+            $\begin{pmatrix}
+                (1, 1) & (5, 0) \\
+                (0, 5) & (4, 4)
+            \end{pmatrix}$
+        \end{table*}
+    
+        Obviously if the prisoners could make a binding agreement, they would be best of by both not confessing, and both only facing one year in prison.
+        However, if one prisoner does not confess, he risks being ratted out by the other prisoner and face even more time in prison; 
+        Therefore, somewhat counter-intuitively, the non-cooperative game theorist's solution is that both prisoners confess and both face four years in prison instead of just one, only to prevent being betrayed by the other prisoner.
+        \label{ex:prisonersDilemma}
+        \label{ex:gameTheoryIntroductoryExample}
+    \end{ex}
+
+    We will now define such games formally.
+
+    % TODO find a definition properly supported by the literature!
+    % TODO really one-shot? Not better strategic-form? Multi-Stage games can also be encoded like this...
+    % TODO from now on, we call these games
+    \begin{defn}
+        A \emph{real-valued one-shot simultaneous move game} $(n, (S_1, \dots, S_n), (u_1, \dots, u_n))$ consists of 
+        \begin{itemize}
+            \item the number of players $n$,
+            \item for each player $k$, a set $S_k$ of available strategies,
+            \item for each player $k$, a payoff function $u_k: S \to \R$, where $S = \bigtimes\limits_{1\leq i \leq n} S_i$ denotes the set of all possible combinations of the players' strategies (elements of $S$ are also called \emph{strategy profiles}). 
+        \end{itemize}
+        \label{defn:realValuedGames}
+    \end{defn}
+    
+    Instead of specifying payoff functions $u_k$, we could equivalently specify cost functions $c_k$ with the semantics that players want to maximize payoffs, but minimize costs. We can switch between those viewpoints by setting $u_k = - c_k$. For a strategy profile $s = (s_1, \dots, s_n) \in S$ and some player $k$, it is sometimes convenient to use the notation $s_{-k}$ for $s$ with the $k$'th coordinate left out, and write $u_k(s_k, s_{-k})$ instead of $u_k(s)$.
+    % TODO “and we will use what is most convenient; but mean payoffs unless noted otherwise”?
+    
+    A common special case are zero-sum games:
+    
+    \begin{defn}
+        A \emph{two-player zero-sum game} is a game which has two players, and 
+        \[ \forall s \in S: u_1(s) + u_2(s) = 0 \]
+    \end{defn}
+
+    In a zero-sum game, the two players are completely antagonistic: % TODO formally justify this term?
+    one player wins exactly what the other loses, and there would be no reason for the players to cooperate in any way. As \cite{bib:fudenbergGameTheory} notes, the important feature of these games is that the payoffs sum to a constant, while choosing this constant as zero is only for normalization.
+    
+    \section{Solution Concepts}
+    Reasoning about rational strategies, as done in example \ref{ex:gameTheoryIntroductoryExample}, is formalized by \emph{solution concepts}, most prominently the concept of \emph{Nash equilibria}. The first, somewhat simpler concept is that of \emph{dominant strategies}, where the best strategy is optimal regardless of the other players' actions:
+    
+    \begin{defn}[Dominant strategy]
+        A strategy $s_k \in S_k$ for player $k$ is a \emph{dominant strategy} if 
+        \[ \forall \tilde{s} \in S: u_k(s_k, \tilde{s}_{-k}) \geq u_k(\tilde{s}) \]
+    \end{defn}
+    
+    In the prisoners' dilemma \ref{ex:prisonersDilemma}, confessing to the authorities is actually a dominant strategy for both prisoners:
+    For example, if player 2 confesses, then player 1 is better off by also confessing; but if player 2 does not confess, player 1 is \emph{also} best off by confessing, i.e. snitching on player 2 and going into witness protection without a prison sentence.
+    But often there are no dominant strategies, and the answer what a player should do is not so clear.
+    A more sophisticated solution concept are Nash equilibria, encoding that for a given strategy profile, no player has an incentive to deviate on their own. Nash equilibria represent a certain form of stability in a strategy profile.
+    
+    \begin{defn}[Nash equilibrium]
+        A strategy profile $s \in S$ is a \emph{Nash equilibrium} if
+        \[
+            \forall k, \forall \tilde{s_k} \in S_k:~ u_k(s_k, s_{-k}) \geq u_k(\tilde{s_k}, s_{-k})
+        \]
+        \label{def:nashEquilibriumRealValued}
+    \end{defn}
+    
+    \begin{lemma}[Row/Column Criterion] 
+        % TODO call this saddle-point criterion?
+        % TODO similar formulation as minimax?
+        % TODO connection with von-Neumann-theorem?
+        % TODO talk about how matrices specify payoffs earlier
+        In a two-player game with finite strategy sets, where the payoffs are specified by two matrices $A, B$, the Nash equilibria correspond
+        exactly to the set of indices $(i, j)$ where the entry $a_{ij}$ in $A$ is maximal in its column, and the entry $b_{ij}$ in $B$ is maximal in its row.
+        If the game is zero-sum this also corresponds to the indices where $a_{ij}$ is both maximal in its column, and minimal in its row.
+    \end{lemma}
+    \begin{proof}
+        % TODO proof of row/column crit really necessary?
+    \end{proof}
+
+
+    % TODO cite Matsumuto, p. 15/does this hold in the non-finite case? (i.e., mixed strategies)
+    \begin{lemma}
+        In a zero-sum game, all Nash equilibria have the same payoff.
+    \end{lemma}
+    \begin{proof}
+        % TODO really needed?
+    \end{proof}
+    
+    The next example illustrates our solution concepts:
+    
+    \begin{ex}[Dominant Strategy Solutions and Nash Equilibria]
+        In example \ref{ex:prisonersDilemma} we saw a game with a solution strategy profile made up of dominant strategies, which was also the unique Nash equilibrium of the game.
+        The game in 
+        the next figure a) % TODO reference next figure, a)
+        shows that Nash equilibria and dominant strategies are indeed different concepts. No player has a dominant strategy, but yet the game has a Nash equilibrium: if both players play their first strategy, the payoff 1 for player 1 is maximal in its column, and the payoff 1 for player 2 is maximal in its row. Therefore, there is no incentive to deviate from this strategy pair.
+        
+        The game in
+        the next figure b) % TODO reference next figure, a)
+        shows that Nash equilibria need not be unique: Both the upper-left and the lower-right cell correspond to Nash equilibria.
+        
+        % TODO ultimately, multi-figure!
+        \begin{figure}[h]
+            \centering
+            \begin{tabular}{|c|c|}
+                \hline
+                (1, 1) & (0, 0) \\ 
+                \hline
+                (0, 3) & (1, 2) \\
+                \hline
+            \end{tabular}
+            \begin{tabular}{|c|c|}
+                \hline
+                (1, -1) & (0, -2) \\ 
+                \hline
+                (0, -2) & (5, 3) \\
+                \hline
+            \end{tabular}
+        \end{figure}
+    \end{ex}
+    
+    \section{Mixed-Strategy Extensions}
+    
+    \begin{ex}[Rock-Paper-Scissors]
+        We will now consider a game-theoretic version of the well-known game \emph{Rock-Paper-Scissors}.
+        The players have strategy sets $S_1 = S_2 = \set{R, P, S}$, where paper beats rock, rock beats scissors, and scissors beats paper. The game is zero-sum, and can be represented by player 1's payoff matrix:
+        \begin{figure}[h]
+            \centering
+            \begin{tabular}{c|c|c|c|}
+            	         & Rock & Paper & Scissors \\ \hline
+            	  Rock   &  0   &  -1   &    1     \\ \hline
+            	 Paper   &  1   &   0   &    -1    \\ \hline
+            	Scissors &  -1  &   1   &    0     \\ \hline
+            \end{tabular}
+        \end{figure}
+    
+        It is obvious that there is no Nash equilibrium: for example, if player 1 plays rock, player 2 would be able to beat it py playing paper, but in turn player 1 had an incentive to switch to scissors, and so on. Exactly this kind of instability is supposed to be avoided by Nash equilibria, but as this example shows, not all games do have Nash equilibria.
+        
+        But if played in reality, this problem does not occur: instead of picking one single action and playing it, players usually try to randomize their strategies. While a player always playing the same strategy can be easily beaten, this is not the case for a player picking each of the three strategies with equal probability. This idea can also be incorporated in our model, and is formalized by \emph{mixed-strategies}. In this context, the original strategies are called \emph{pure strategies}.
+    \end{ex}
+
+    \begin{defn}
+        Let $G = (n, (S_1,\dots, S_n), (u_1, \dots, u_n))$ be a strategic-form game with a finite strategy space $S$. % TODO strategic form correct now?
+        Its \emph{mixed extension} is defined by $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$
+        where for $k = 1,\dots,n$:
+        \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
+%            \item 
+%            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $(p_1, \dots, p_{\abs{S_k}})$ has the semantics that the $i$'th pure strategy is played with probability $p_i$.
+%            \[
+%            \Delta_k := \bigg\{ (p_1, \dots, p_{\abs{S_k}}) \in \R^{\abs{S_k}} ~ \bigg\vert ~ \sum_{i=1}^{\abs{S_k}} p_i = 1 \bigg\} 
+%            \]
+%            
+%            \item $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles
+%            
+%            \item
+%            The utility function $U_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
+%            \[
+%            U_k: 
+%            %                (\delta_1, \dots, \delta_n) 
+%            ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
+%            \mapsto
+%            \sum_{i_1=1}^{\abs{S_{i_1}}} \dots \sum_{i_n=1}^{\abs{S_{i_n}}} p_{1,i_1} \dots p_{n,i_n} * u_i( ? )
+%            \]
+            
+            \item 
+            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $p : S_k \to \R, p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$:            
+            \[
+                \Delta_k := \bigg\{ p \in \R^{S_k} ~ \bigg\vert ~ \sum_{s_k \in S_k} p(s_k) = 1 \bigg\} 
+            \]
+            
+            \item $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles.
+            
+            \item
+            The utility function $U_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
+            \[
+                U_k: 
+                (p_1, \dots, p_n) 
+%                ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
+                \mapsto
+                \sum_{(s_1, \dots, s_n) \in S} \biggpars{\prod_{i=1}^{n} p(s_i)} * u_k( (s_1, \dots, s_n) )
+            \]
+        \end{itemize}
+    \end{defn}
     
     
     
