@@ -7,6 +7,7 @@
 
 \documentclass[a4paper]{scrreprt}
 
+\input{../todonotes-preamble.tex}
 \input{../preamble-en.tex}
 
 \usepackage[citestyle=alphabetic,bibstyle=alphabetic]{biblatex}
@@ -73,14 +74,15 @@
          one of the following holds:
         \begin{enumerate}
             \item $X$ is discrete with finite support.
-            \item $X$ is absolute continuous, and its density $f$ is zero outside a compact interval $[a_1, b_1]$, as well as continuous von $(a_1, b_1)$.
+            \item $X$ is absolutely continuous, and its density $f$ is zero outside a compact interval $[a_1, b_1]$, as well as continuous von $(a_1, b_1)$.
         \end{enumerate} 
 %    either discrete with finite support, or absolutely continuous with its density $f$ being zero outside a compact interval $[a_1, b_1]$, and continuous on $(a_1, b_1)$. 
         The set of tail-orderable random variables over $(\Omega, \A, P)$ is denoted by $\F$.
     \end{defn}
 
     
-    From now on, we assume that $X, Y$ are real-valued random variables either both discrete or both absolutely continuous, with densities/probability mass functions $f$ and $g$, respectively. % TODO ok if one is discrete, the other AC? relevant to \leqtail being a total ordering on \F...
+    \unsure{Not yet clear what to do with one discrete, one AC -- is this supported? Otherwise, $\leqtail$ is possibly not total on $\F$.}% TODO ok if one is discrete, the other AC? relevant to \leqtail being a total ordering on \F...
+    From now on, we assume that $X, Y$ are real-valued random variables either both discrete or both absolutely continuous, with densities/probability mass functions $f$ and $g$, respectively. 
     
     
     
@@ -152,6 +154,7 @@
             = \lintegral{[a, b]}{t^k(g(t) - f(t))}{\lambda(t)} \\
             = \lintegral{[a, x_0]}{t^k (g(t) - f(t))}{\lambda(t)} + \lintegral{[x_0, b]}{t^k (g(t) - f(t))}{\lambda(t)} 
         \end{multline*}
+        \error{$g-f \geq 1$ is incorrect! These are pdfs, not pmfs. We need both to be bounded!}
         We simplify the left integral: we use that $g - f \geq -1$ since both are densities, and $\forall t \in [a, x_0]: t^k \leq x_0^k$, hence $t^k*(g(t) - f(t)) > -x_0^k$:
         % TODO this whole approximation is STILL a bit fishy.... sure it's right? (but possibly yes)
         \begin{gather*}
@@ -224,6 +227,7 @@
         Now let $X \leqtail Y$. For contradiction, assume $v_X \notleqlex v_Y$.
         Since the lexicographical ordering is total, this implies $v_X \geqlex v_Y$ and $v_X \neq v_Y$.
         Therefore $X \geqtail Y$ by the first part.
+        \improvement{This argument is not finished yet: we are missing a tool to argue that $X \leqtail Y$ and $X \geqtail Y$ imply that $X, Y$ have the same distribution}
         % TODO fix: we want to conclude “but X and Y have different distributions, therefore this implies $X \notleqtail Y$. But we don't have the tools for that.
     \end{proof}
     
