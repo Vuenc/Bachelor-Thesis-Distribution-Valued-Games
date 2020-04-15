@@ -81,6 +81,7 @@
 \newcommand{\dummydot}{\,\cdot\,}
 \DeclareMathOperator{\im}{\text{im}}
 \newcommand{\innerprod}[2]{\left\langle #1, #2 \right\rangle}
+\DeclareMathOperator{\supp}{supp}
 
 % switch-case structure
 \newcommand{\ifequals}[4]{\ifthenelse{\equal{#1}{#2}}{#3}{#4}}
@@ -130,9 +131,13 @@
 
 % shortcut for parentheses and sets
 \newcommand{\pars}[1]{\left(#1\right)}
-\newcommand{\bigpars}[1]{\big(#1\big)}
-\newcommand{\biggpars}[1]{\bigg(#1\bigg)}
+\newcommand{\bigpars}[1]{\bigl(#1\bigr)}
+\newcommand{\biggpars}[1]{\biggl(#1\biggr)}
 \newcommand{\set}[1]{\{#1\}}
+\newcommand{\bigset}[1]{\bigl\{#1\bigr\}}
+\newcommand{\biggset}[1]{\biggl\{#1\biggr\}}
+\newcommand{\bigmid}{\bigm\vert}
+\newcommand{\biggmid}{\biggm\vert}
 
 \newenvironment{correction}[1]{\color{red}\textbf{\underline{#1}}\\}{\ignorespacesafterend}
 
