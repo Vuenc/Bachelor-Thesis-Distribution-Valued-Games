@@ -7,12 +7,14 @@
 
 \documentclass[a4paper]{scrreprt}
 
+\input{todonotes-preamble.tex}
 \input{preamble-en.tex}
 
 \usepackage[citestyle=alphabetic,bibstyle=alphabetic]{biblatex}
 \usepackage{csquotes} % needed for biblatex
 
 \usepackage{setspace}
+\usepackage[headsepline]{scrlayer-scrpage}
 \usepackage{mathtools} % \bigtimes
 
 % no ident, combined with reasonable paragraph spacing
@@ -22,12 +24,13 @@
 
 \addbibresource{Bachelor-Thesis.bib}
 
-
-
-
 \DeclareMathOperator{\A}{\mathcal{A}}
 \DeclareMathOperator{\leqst}{\leq_{\text{st}}}
 \DeclareMathOperator{\F}{\mathcal{F}}
+
+
+\ihead{Vincent Bürgin}
+\ohead{[Work in Progress]}
 
 \begin{document}
     \tableofcontents
@@ -115,7 +118,7 @@
     \begin{defn}[Nash equilibrium]
         A strategy profile $s \in S$ is a \emph{Nash equilibrium} if
         \[
-            \forall k, \forall \tilde{s_k} \in S_k:~ u_k(s_k, s_{-k}) \geq u_k(\tilde{s_k}, s_{-k})
+            \forall k, \forall \tilde{s}_k \in S_k:~ u_k(s_k, s_{-k}) \geq u_k(\tilde{s}_k, s_{-k})
         \]
         \label{def:nashEquilibriumRealValued}
     \end{defn}
@@ -131,6 +134,7 @@
     \end{lemma}
     \begin{proof}
         % TODO proof of row/column crit really necessary?
+        \todo{Prove (if necessary)}
     \end{proof}
 
 
@@ -140,6 +144,7 @@
     \end{lemma}
     \begin{proof}
         % TODO really needed?
+        \todo{Prove (if necessary)}
     \end{proof}
     
     The next example illustrates our solution concepts:
@@ -192,6 +197,7 @@
         It is obvious that there is no Nash equilibrium: for example, if player 1 plays rock, player 2 would be able to beat it py playing paper, but in turn player 1 had an incentive to switch to scissors, and so on. Exactly this kind of instability is supposed to be avoided by Nash equilibria, but as this example shows, not all games do have Nash equilibria.
         
         But if played in reality, this problem does not occur: instead of picking one single action and playing it, players usually try to randomize their strategies. While a player always playing the same strategy can be easily beaten, this is not the case for a player picking each of the three strategies with equal probability. This idea can also be incorporated in our model, and is formalized by \emph{mixed-strategies}. In this context, the original strategies are called \emph{pure strategies}.
+        \label{ex:rockPaperScissors}
     \end{ex}
 
     \begin{defn}
@@ -218,30 +224,126 @@
 %            \]
             
             \item 
-            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $p : S_k \to \R, p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$:            
+            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $p : S_k \to \R, p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$:   
+            % TODO as technicality, it's somewhat problematic to treat mixed strategies as functions as opposed to \R^n tuples when later applying Kakutani's fixed point theorem...
             \[
-                \Delta_k := \bigg\{ p \in \R^{S_k} ~ \bigg\vert ~ \sum_{s_k \in S_k} p(s_k) = 1 \bigg\} 
+                \Delta_k := \biggset{ p \in \R^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } 
             \]
             
             \item $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles.
             
             \item
             The utility function $U_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
-            \[
+            \begin{gather}
                 U_k: 
                 (p_1, \dots, p_n) 
 %                ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
                 \mapsto
                 \sum_{(s_1, \dots, s_n) \in S} \biggpars{\prod_{i=1}^{n} p(s_i)} * u_k( (s_1, \dots, s_n) )
-            \]
+                \label{eq:mixedStrategyUtility}
+            \end{gather}
         \end{itemize}
     \end{defn}
     
+    Note that the resulting mixed extension is still a game that fits definition \ref{defn:realValuedGames}.
+    Since payoffs can be specified by matrices, mixed extensions of two-player finite % TODO define finite
+    games are usually called \emph{bimatrix games}, or just \emph{matrix games} in the zero-sum case.
+    From now on, we will mostly consider mixed extensions of games without explicitly noting it, and, for example, say that a given game has an equilibrium in \emph{mixed strategies} but none in \emph{pure strategies} to distinguish between the cases.
+    
+    Allowing mixed strategies is very important for the existence of equilibria. In a certain sense, “most” games do not have pure equilibria: as noted in \cite{bib:matsumotoGameTheory} % TODO p. 15f
+    the probability that a random matrix game with $n$ and $m$ pure strategies for player 1 and 2, respectively, has a pure equilibrium, is $\frac{m! n!}{(m+n-1)!}$ if all matrix entries are iid. % TODO check if iid was introduced in the prob. theory chapter
+    sampled from some continuous probability distribution. On the other hand, John Nash % TODO cite
+    famously proved that any finite game has a mixed-strategy equilibrium. % TODO really Nash's theorem? check Matsumoto p. 55 / Fudenberg p. 29 for example!
+    
+    
+    % TODO at some point here, we should start thinking of pre-conditions of the following theorems: Maybe define G as a (some sort of) game, or mention in every theorem that it concerns a “Type Bla” game
+    
+    
+    \begin{thm}[Existence of Mixed-Strategy Equilibria]
+        Every finite strategic-form game has a mixed-strategy equilibrium. \cite{bib:fudenbergGameTheory}
+        % TODO Find a more fitting formulation if necessary?
+        \todo{Prove (if necessary), here or later}
+    \end{thm}
+    % TODO either cite proof, or give proof later since at least Katukani's fixed-point theorem and best responses need introduction
+    
+    \begin{ex} % TODO or make this “... continued”
+        The Rock-Paper-Scissors game from example \ref{ex:rockPaperScissors}
+        has the mixed-strategy Nash equilibrium $((\frac{1}{3}, \frac{1}{3}, \frac{1}{3}), (\frac{1}{3}, \frac{1}{3}, \frac{1}{3}))$.
+        This should be intuitively clear to anyone who has played the game in reality, and we will later prove this when looking at methods to compute equilibria.
+    \end{ex}
+    
+    A similar way to think of Nash equilibria, which has interesting consequences for mixed-strategy games, is by \emph{best responses}.
+    
+    \begin{defn}
+        % TODO what are the conditions on the game? Most of all, is it appropriate to use the notation u_k instead of U_k?
+        Let $s \in S$ be a strategy profile. For each player $k$, we define 
+        \[
+            r_k: S \to S_k,~ r_k(s) = \biggset{s_k \in S_k \bigmid u_k(s_k, s_{-k}) = \sup_{\tilde{s}_k \in S_k} u_k(\tilde{s}_k, s_{-k}) }
+        \]
+        We call a strategy $s_k \in r_k(s)$ a \emph{best response} to $s$ (or alternatively to $s_k$).
+        Since $r_k(s)$ does only depend on $s_{-k}$, we can also write $r_k(s_{-k})$ where more convenient. % TODO any reference for this notation? Also, maybe cite Fudenberg p. 29 for the “does not depend” part (even though obvious)
+        \footnote{Nevertheless, $r_k$ is defined to take arguments from $S$ as this will simplify an application of the Kakutani fixed point theorem later. % TODO did we really apply this?
+        }
+    \end{defn}
+    
+    This gives a different characterization of the Nash equilibrium, as a strategy profile which for each player is a best response to itself.
+    
+    \begin{thm}
+        A strategy profile $s \in S$ is a Nash equilibrium iff 
+        \[
+            \forall k = 1, \dots, n: s_k \in r_k(s)
+        \]
+        \label{thm:nashEquilibriumCharacterisationByBestResponses}
+    \end{thm}
+    \begin{proof}
+        \todo{Prove (if necessary)}
+    \end{proof}
+
+    An important fact for best-response mixed strategies is that they are always mixing between best-response pure strategies:
+
+    % TODO cite, e.g, Nisan p.30 (51) or maybe p.55 (76)
+    % TODO maybe introduce the support of a mixed strategy?
+    % TODO as always, preconditions?
+    \begin{thm}
+        Let $s_k$ be a mixed strategy for player $k$, which is mixing between pure strategies $s_{k,1}, \dots, s_{k,m}$.
+        Then for any strategy profile $s \in S$:
+        \[
+            s_k \in r_k(s) \lra \forall j: s_{k, j} \in r_k(s)
+        \]
+        \label{thm:bestResponseMixing}
+    \end{thm}
+    \begin{proof}
+        \todo{Prove}  
+    \end{proof}
+
+    \begin{cor}
+        If $s = (s_1, \dots, s_n) \in S$ is a Nash equilibrium, and the $k$'th player's strategy $s_k$
+        mixes between pure strategies $s_{k,1}, \dots, s_{k,m}$, then the payoff of all the $s_{k,j}$ with respect to $s_{-k}$ is equal;
+        Furthermore, the payoff of any strategy mixing between them is the same as well:
+        \begin{gather}
+            \forall j: u_k(s_{k,j}, s_{-k}) = u_k(s_k, s_{-k}) \\
+            \forall \tilde{s}_k \in \Delta_k: \supp \tilde{s}_k \subseteq \supp s_k \Rightarrow u_k(\tilde{s}_k, s_{-k}) = u_k(s_k, s_{-k})
+        \end{gather}
+        % TODO at the moment, supp is not yet introduced!
+        \label{cor:equilibriumStrategiesSupportHaveEqualPayoffs}
+    \end{cor}
+    \begin{proof}
+        Since $s$ is a Nash equilibrium, the mixed strategy $s_k$ is a best response to $s$ by theorem \ref{thm:nashEquilibriumCharacterisationByBestResponses}.
+        By theorem \ref{thm:bestResponseMixing}, all pure strategies $s_{k, j}$ are best responses as well.
+        By the definition of best responses, they therefore must all have the same payoff.
+        Furthermore, a mixed strategy mixing between pure strategies with equal payoff necessarily also has the same payoff by the linearity of the expected value (cf. equation \eqref{eq:mixedStrategyUtility}).
+    \end{proof}
+    
+    The interpretation of Theorem \ref{thm:bestResponseMixing} and Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs} is that a player, given some strategies by other players, does not mix her own strategies in order to achieve a better payoff; the purpose of mixing strategies is rather to keep up an equilibrium, since only the right mixing leads to a situation where the other players have no incentive to deviate.
+    We will need these results in later chapters when analyzing more general games with lexicographically-ordered outcomes, but most importantly, we will see how they can be applied to compute Nash equilibria in the following section.
+    
+    \section{Computation of Nash Equilibria}
     
     
     
-    % TODO part on Game Theory in Network Security: here as a) chapter, b) section, or c) not here but in the application chapter?
-   
+    
+    
+    % TODO part on Game Theory in Network Security: here as a) chapter, b) section, or c) not here but in the application chapter?  
     \chapter{Games with Distributions as Payoffs}
     
     
