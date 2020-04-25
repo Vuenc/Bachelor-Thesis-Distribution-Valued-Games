@@ -1,0 +1,295 @@
+% !TeX spellcheck = en_US
+% Dirty hack to disable recompiling the bibliography every time, reducing compilation times. Comment out with %% to re-compile bibliography.
+% !TeX TXS-program:recompile-bibliography = donothing
+
+% Use biber as bibliography tool
+% !TeX TXS-program:bibliography = txs:///biber
+
+\documentclass[a4paper]{scrreprt}
+
+\input{../todonotes-preamble.tex}
+\input{../preamble-en.tex}
+
+\usepackage[citestyle=alphabetic,bibstyle=alphabetic]{biblatex}
+\usepackage{csquotes}
+
+\usepackage{setspace}
+\usepackage[headsepline]{scrlayer-scrpage}
+
+\usepackage{mathtools} % \bigtimes
+
+% no ident, combined with reasonable paragraph spacing
+\onehalfspacing
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.7ex}
+
+\addbibresource{../Bachelor-Thesis.bib}
+
+\DeclareMathOperator{\A}{\mathcal{A}}
+\DeclareMathOperator{\leqtail}{\leq_{\text{tail}}}
+\DeclareMathOperator{\geqtail}{\geq_{\text{tail}}}
+\DeclareMathOperator{\F}{\mathcal{F}}
+\DeclareMathOperator{\D}{\mathcal{D}}
+\DeclareMathOperator{\B}{\mathcal{B}}
+\DeclareMathOperator{\releq}{\;=\;}
+\newcommand{\Rp}{\mathbb{R}_+}
+
+% Style for displaying source code listings
+\lstset{showspaces=false,
+    keywordstyle=\ttfamily\bfseries\color{purple},
+    basicstyle=\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    commentstyle=\color{gray},
+    breaklines=true,
+    postbreak=\mbox{\textcolor{lightgray}{$\hookrightarrow$}\space},
+    showstringspaces=false,
+    stringstyle=\color{brickred}
+}
+
+\ihead{Vincent Bürgin}
+\ohead{[Work in Progress]}
+
+\counterwithin{thm}{section}
+
+\begin{document}
+    We explore different possible definitions of games with distribution-valued payoffs.
+    The different definitions all use the assumption of $n$ players and strategy sets $(S_1, \dots, S_n)$, $S := \bigtimes_{k} S_k$, but differ in their payoff models.
+    
+    \setcounter{chapter}{1}
+    \section{The Random-Variable-Valued}
+    Let $(\Omega, \A, P)$ be some probability space, and define 
+    \[\D_X := \set{X: \Omega \to \R \mid X \text{ is a random variable}}\]
+    
+    \begin{defn}
+        A \emph{random-variable-valued game} $G = (n, (S_1, \dots, S_n), (u_1, \dots, u_n))$ has a payoff function $u_k: S \to \D_X$ for each player $k$.
+    \end{defn}
+    
+    \begin{defn}
+        A random-variable-valued game is \emph{zero-sum} if $\forall k: \sum_{k=1}^n u_k = 0$ (i.e. the constant-zero random variable) almost surely.
+    \end{defn}
+
+    \begin{defn}[Mixed extension]
+        We define the \emph{mixed extension} of a finite random-variable-valued game $G$ by $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$. As usual, for $k = 1,\dots,n$, we define $\Delta_k := \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ (mixed strategies), $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ (mixed strategy profiles).
+        
+        In order to specify mixed outcomes, we construct a multi-stage stochastic experiment:
+        In the first stage a (pure) strategy profile $s$ is picked according to the given mixed strategies distributions,
+        and in the second stage the actual payoff is sampled from the random variable $u(s)$.
+        
+        Formally: Assume a strategy profile $\delta = (p_1, \dots, p_n) \in \Delta$ is given.
+        Let $(S, \Pot(S), P_\delta)$ be a probability space modeling the first stage: i.e. for any $(s_1, \dots, s_n) \in S$,
+        \begin{gather}
+            P_\delta(\set{(s_1, \dots, s_n)}) = \prod_{i=1}^n p_i(s_i)
+        \end{gather}
+%        Define a probability kernel $P_2$ % TODO really P_2? Not K_2?
+%        for the second stage as follows:
+%        \begin{gather}
+%            P_2: S \times \A \to [0, 1],~ P_2(s, \dummydot) = P^{u(s)}
+%        \end{gather}
+        % TODO U_k(\delta) is a very confusing notation.
+        Let $(S\times\Omega, \Pot(S)\otimes \A, P_\delta \times P)$ be the corresponding product space, and $U_k$ be a random variable on that space representing the outcome random variable depending on the chosen strategy:
+        \begin{gather}
+            U_k(\delta): S \times \Omega \to \R, (s, \omega) \mapsto u_k(s)(\omega)
+        \end{gather}
+        
+        Importantly, $U_k(\delta)$ does not actually depend on $\delta$; only the corresponding probability measure $P_\delta \times P$ does.
+        
+        We define the outcome distribution $D_k(\delta)$ as the Borel probability measure 
+        \begin{gather*}
+            D_k(\delta) := (P_\delta \times P)^{U_k(\delta)}
+        \end{gather*}
+    \end{defn}
+
+    It's problematic in this definition that the outcome random variables do not share a common probability space.
+    For the 
+
+
+
+    \section{The Marginal-Distribution-Valued}
+    \label{sec:marginalDistributionValued}
+    Let $\D_P$ be the set of Borel probability measures:    
+    \[ \D_P := \set{P: \B \to \R_+ \mid P \text{ is a probability measure on } (\R, \B)} \]
+    
+    \begin{defn}
+        A \emph{marginal-distribution-valued game} $G = (n, (S_1, \dots, S_n), (u_1, \dots, u_n))$ a payoff function $u_k: S \to \D_P$ for each player $k$
+        % TODO possibly, D \subeteq \D_P
+    
+        A marginal-distribution-valued game can be \emph{equipped with stochastic orders} $(\preccurlyeq_1, \dots, \preccurlyeq_n)$, written $G_{(\preccurlyeq_1, \dots, \preccurlyeq_n)}$, where each $\preccurlyeq_i$ is a preorder (transitive, reflexive, symmetric binary relation) on $\D_P$,
+        and has the semantics that the $\preccurlyeq_i$-lesser element is preferred.
+        If $\preccurlyeq_i \releq \preccurlyeq$ for all $i$, we also write $G_\preccurlyeq$.
+    \end{defn}
+    
+    \begin{defn}
+        A \emph{Nash equilibrium} of $G_{(\preccurlyeq_1, \dots, \preccurlyeq_n)}$ (or a \emph{Nash equilibrium of $G$ with respect to $(\preccurlyeq_1, \dots, \preccurlyeq_n)$})
+        is a strategy profile $s = (s_1, \dots, s_n) \in S$ such that for each player $k$:
+        \begin{gather}
+            \forall \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \preccurlyeq_k u_k(\tilde{s}_k, s_{-k})
+        \end{gather}
+        $s$ is a 
+        \todo{This is a really dangerous term, since not really supported by references, and Strong Nash Equilibria are already a different concept with a similar name.}
+        \emph{weak Nash equilibrium} if for each $k$,
+        \begin{gather}
+            \forall \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \nsucc_k u_k(\tilde{s}_k, s_{-k})
+        \end{gather}
+        For $s$ to be a Nash equilibrium, the chosen strategy must be preferable to all alternatives; for the weak Nash equilibrium, it suffices if there if no other alternative is preferable, but there may be strategies to which the chosen strategy cannot be compared due to $\preccurlyeq_k$ not being total. 
+        % TODO did I get indifference right? Is a ~ b <=> \neg(a <= b or a >= b), or rather a ~ b <=> a <= b and a >= b?
+    \end{defn}
+    
+    The implicit underlying assumption of this model is that the game is being played, the selected strategies imply a certain outcome distribution for each player, and then each player gets their actual payoff from this distribution \emph{independently}. The sampling done as last step is necessarily independent, since we only specify marginal distributions and therefore have no notion of the outcomes sampled from different such distributions stochastically depending on each other.
+    But this also means that we cannot define zero-sum games in the natural way: 
+    except for trivial distributions, we cannot hope that in the \emph{distribution of the sum of different player's outcomes}, the value zero is attained almost surely.
+    % TODO explain convolution stuff
+    
+    We define zero-sum games in another way: instead of relying on how the sum of outcomes is distributed, we go back to the intuition of zero-sum games being games that are purely antagonistic, i.e. in a two-player game, what one player gains, the other one loses.
+    % TODO cite something about antagonistic games?
+    
+    \begin{defn}
+        A two-player marginal-distribution-valued game $G$ is \emph{zero-sum with respect to $(\preccurlyeq_1, \preccurlyeq_2)$} (or \emph{$G_{(\preccurlyeq_1, \preccurlyeq_2)}$ is zero-sum}) if
+        \[
+            \forall \tilde{s}, \hat{s} \in S: 
+            u_1(\tilde{s}) \preccurlyeq_1 u_1(\hat{s}) \lra u_2(\tilde{s}) \succcurlyeq_2 u_2(\hat{s})
+        \]
+        \label{defn:marginalDistZeroSum}
+    \end{defn}
+    The most simple kind of zero-sum game then is such that $u_1 = u_2$, and $\preccurlyeq_1 \releq \succcurlyeq_2$: i.e. player 2 has the same payoffs as player 1, but prefers them just the other way around.
+    It must be noted that zero sum games according to \ref{defn:marginalDistZeroSum} in general don't mix well: if we were to define the mixed extension of a finite zero-sum game, the resulting mixed extension wouldn't necessarily be zero-sum as well. Mixing should work however for the simple case where $u_1 = u_2$ and $\preccurlyeq_1 \releq \succcurlyeq_2$.
+    
+    \begin{defn}[Mixed extension]
+        Define the \emph{mixed extension} of a finite marginal-distribution-valued game $G$ by $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$,
+        where for $k = 1,\dots,n$:        
+        \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
+            \item $\Delta_k := \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ are the mixed strategies, $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ the mixed strategy profiles.
+            
+            \item
+            The utility function $U_k: \Delta \to \D_P$ maps to each mixed strategy profile the \emph{mixed distribution} of the $k$'th players payoff distribution under that strategy profile:
+            \begin{gather}
+                U_k: 
+                (p_1, \dots, p_n) 
+                %                ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
+                \mapsto
+                \sum_{(s_1, \dots, s_n) \in S} \biggpars{\prod_{i=1}^{n} p_i(s_i)} * u_k( (s_1, \dots, s_n) )
+                \label{eq:marginalDistMixedStrategyUtility}
+            \end{gather}
+            Note that the values of $u_k$ being summed are Borel probability measures, i.e. the result is again a probability measure on $(\R, \B)$.
+        \end{itemize}
+    \end{defn}
+
+    \begin{ex}
+        While the main interest of this model lies in finite marginal-distribution-valued games and especially their mixed extensions (see later), the model also generalizes the theory of real-valued games. For a given finite real-valued game with payoffs $\tilde{u}_i$, we can simply create distribution-valued payoff functions $u_i$ where $u_i(s)$ is a distribution that attains the value $\tilde{u}_i$ almost surely (i.e., Dirac-mass distributions).
+        In its corresponding mixed extension $\hat{G}$, payoffs behave differently than in the real-valued model: instead of only reflecting the expected value, the payoff of the distribution-valued mixed extension is the whole probability distribution underlying said expected value.
+        
+        % TODO but expected value should exist.
+        In order to get the same behavior for equilibria, we can choose the stochastic order accordingly: If $\leq_E$ represents the order comparing by expected value, i.e. $d_1 \leq_E d_2 \lra E(d_1) \leq E(d_2)$ for $d_1, d_2$ that are $L_1$,
+        then $\hat{G}$ will have the same distributional-Nash equilibrium as the original game's mixed extension.
+        
+        Additionally, note that the mixed extension of a “Dirac distribution” game might also be interesting with respect to other stochastic orders: Even though the original payoffs in the finite game were not probabilistic, the payoff distribution now is and therefore can be compared by stochastic orders, allowing different risk behaviors than the risk-neutral expected value does.
+    \end{ex}
+
+    
+    \section{The Joint-Distribution-Valued}
+    Let $\D_P^n$ be the set of $k$-dimensional Borel probability measures:    
+    \[ \D_P^n := \set{P: \B_n \to \R_+ \mid P \text{ is a probability measure on } (\R^n, \B_n)} \]
+    
+    \begin{defn}
+        A \emph{joint-distribution-valued game} $G = (n, (S_1, \dots, S_n), u)$
+        has one \emph{joint payoff function} $u: S \to \D_P^n$.
+        For a strategy profile $s$, $u(s)$ is a probability distribution of how the \emph{vector of payoffs of the single players} is distributed.
+
+        The game can again be \emph{equipped with stochastic orders} $(\preccurlyeq_1, \dots, \preccurlyeq_n)$, where the $\preccurlyeq_i$ are preorders on $\D_P^n$.
+        Here we write $G_\preccurlyeq$ if for all $k$, $d_1 \preccurlyeq_k d_2 \lra d_1^{(k)} \preccurlyeq d_2^{(k)}$, where $d_1^{(k)}, d_2^{(k)}$ denote the $k$'th marginal distributions and $\preccurlyeq$ is a preorder on $\D_P$.
+        % TODO really preorders?
+        
+        % TODO possibly, D \subeteq \D_P^n
+        
+%        A distribution-valued game can be \emph{equipped with stochastic orders} $(\preccurlyeq_1, \dots, \preccurlyeq_n)$, written $G_{(\preccurlyeq_1, \dots, \preccurlyeq_n)}$, where each $\preccurlyeq_i$ is a preorder (transitive, reflexive, symmetric binary relation) on $\D_P$,
+%        and has the semantics that the $\preccurlyeq_i$-lesser element is preferred.
+%        If $\preccurlyeq_i \releq \preccurlyeq$ for all $i$, we also write $G_\preccurlyeq$.
+    \end{defn}
+    The underlying assumption is that depending on the chosen strategy profile $s$, a vector $(x_1, \dots, x_n)$ is sampled from $u(s)$, and each player $k$ gets payoff $x_k$, respectively.
+    Contrast this with the independent sampling from section \ref{sec:marginalDistributionValued}:
+    Joint-distribution-valued games allow outcomes for different players to depend on each other;
+    Marginal-distribution-valued games correspond to the special case of joint-distribution-valued games where all payoff distributions are independent.
+    
+    
+    
+    \begin{defn}
+        A \emph{Nash equilibrium} of $G_{(\preccurlyeq_1, \dots, \preccurlyeq_n)}$ is defined analogously to the marginal distribution case:
+        A strategy profile $s = (s_1, \dots, s_n) \in S$ is a Nash equilibrium if for each player $k$:
+        \begin{gather*}
+            \forall \tilde{s}_k \in S_k: u(s_k, s_{-k}) \preccurlyeq_k u(\tilde{s}_k, s_{-k})
+        \end{gather*}
+        Instead $s$ is a \emph{weak Nash equilibrium} if for each $k$,
+        \begin{gather*}
+            \forall \tilde{s}_k \in S_k: u(s_k, s_{-k}) \nsucc_k u(\tilde{s}_k, s_{-k})
+        \end{gather*}
+    \end{defn}
+    We also define \emph{mixed extensions} analogously to the marginal-distribution case.
+    But for the definition of zero-sum games, having payoffs possibly depending on each other again allows us a definition closer to the usual notion of zero-sum:
+    \begin{defn}
+        A joint-distribution-valued game $G$ is \emph{zero-sum} if the sums payoffs of all players sum to zero almost surely, i.e.
+        \[
+            \forall s \in S: u(s)(K) = 1, \quad \text{ where } K := \bigset{(x_1,\dots,x_n)\in \R^n: x_1 + \dots + x_n = 0}
+        \]
+    \end{defn}
+
+    \section{Discussion of the Different Definitions}
+    What do these different definitions represent, and how are they related?
+    The motivation for having these different definitions is that they seem to encode different amounts of information.
+    The random-variable-valued version encodes the most information: Every random variable has just one distribution, but for each distribution there can be many different random variables having the same distribution. Most importantly, in a game with random variables, outcomes may depend on each other. As an example, consider the following game:
+    
+    \begin{ex}
+        Let $X, Y \sim U([-1, 1]) \text{iid.}$ be random variables on some probability space $(\Omega, P)$.
+        Consider the following random-variable game, and its corresponding marginal-distribution counterpart:
+        % TODO ultimately, multi-figure!
+        \begin{figure}[h]
+            \centering
+            \begin{tabular}{c|c|c|}
+            	      & $b_1$ & $b_2$ \\ \hline
+            	$a_1$ &  $X$  &  $Y$  \\ \hline
+            	$a_2$ &  $X$  &  $X$  \\ \hline
+            	$a_3$ &  $X$  & $-X$  \\ \hline
+            \end{tabular}
+            \quad
+            \begin{tabular}{c|c|c|}
+            	      &    $b_1$     &    $b_2$     \\ \hline
+            	$a_1$ & $U([-1, 1])$ & $U([-1, 1])$ \\ \hline
+            	$a_2$ & $U([-1, 1])$ & $U([-1, 1])$ \\ \hline
+            	$a_3$ & $U([-1, 1])$ & $U([-1, 1])$ \\ \hline
+            \end{tabular}
+        \end{figure}
+    
+        Assume player 2 plays the mixed strategy $(\frac{1}{2}, \frac{1}{2})$. Which row should player 1 select?
+        In the distribution-valued game, obviously, all rows are the same, but in the random-variable-valued game there are differences:
+        In row 1, $X$ and $Y$ are independent, and their average is Irwin-Hall distributed (with values around 0 more likely than those closer to 1 or -1).
+        In row 2, both outcomes are the same random variable, and their average again uniformly distributed within $[-1, 1]$.
+        In row 3, the average is always zero. So which row should player 1 choose? For example, should she prefer row 1 or row 3 over row 2, in some sense diversifying the risk? 
+        
+        The next lemma shows that as far as the outcome distribution is concerned, the two games are actually equivalent.
+    \end{ex}
+
+    \begin{lemma}
+        Let $\hat{G}$ be a finite random-variable-valued game, with payoff functions $\hat{u}_k$. 
+        Define the corresponding marginal-distribution-valued game $\check{G}$ with payoff functions $\check{u}_k: S \to \D_P,
+        %TODO \D_P is a confusing notation
+        \check{u}_k(s) = P^{\hat{u}_k(s)}$. Then for all mixed-strategy profiles $\delta = (p_1, \dots, p_n) \in \Delta$, the payoff distributions given $\delta$ are the same for both games:
+        \[
+            D_k(\delta) := (P_\delta \times P)^{\hat{U}_k} = \check{U}_k(\delta)
+        \]
+    \end{lemma}
+    \begin{proof}
+        Let $A \in \B$. Then
+        \begin{multline*}
+            D_k(\delta)(A)
+            = (P_\delta \times P)(\set{\hat{U}_k \in A})
+            = (P_\delta \times P)\biggpars{\bigcup_{s \in S}\set{s} \times \set{\hat{u}_k(s) \in A}} \\
+            = \sum_{s \in S} P_\delta(\set{s}) P(\set{\hat{u}_k(s) \in A})
+            = \sum_{\scriptscriptstyle(s_1, \dots, s_n)\in S} \biggpars{\prod_{i = 1}^n p_i(s_i)} P^{\hat{u}_k(s)}(A) \\
+            = \sum_{\scriptscriptstyle(s_1, \dots, s_n)\in S} \biggpars{\prod_{i = 1}^n p_i(s_i)} \check{u}_k((s_1, \dots, s_n))
+            = \check{U}_k(\delta)(A)
+        \end{multline*}
+    \end{proof}
+    
+    
+    
+    \printbibliography
+\end{document}
