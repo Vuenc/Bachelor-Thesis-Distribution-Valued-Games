@@ -29,6 +29,7 @@
 \DeclareMathOperator{\F}{\mathcal{F}}
 \newcommand{\Rp}{\mathbb{R}_+}
 \let\epsilon\varepsilon
+\let\phi\varphi
 
 \ihead{Vincent Bürgin}
 \ohead{[Work in Progress]}
@@ -267,8 +268,10 @@
         Every finite strategic-form game has a mixed-strategy equilibrium. \cite{bib:fudenbergGameTheory}
         % TODO Find a more fitting formulation of Existence of Mixed-Strategy Equilibria if necessary?
         \todo{Prove Existence of Mixed-Strategy Equilibria (if necessary), here or later}
+        \label{thm:existenceOfMixedStrategyEquilibria}
     \end{thm}
     % TODO either only cite proof of the Existence of Mixed-Strategy Equilibria, or give proof later since at least Katukani's fixed-point theorem and best responses need introduction
+    We will introduce some more concepts and see a proof of this theorem in section \ref{sec:existenceOfMixedStrategyEquilibria}.
     
     \begin{ex} % TODO or make this RockPaperScissors example “... continued”
         The Rock-Paper-Scissors game from example \ref{ex:rockPaperScissors}
@@ -297,7 +300,7 @@
         \[
             \forall k = 1, \dots, n: s_k \in r_k(s)
         \]
-        \label{thm:nashEquilibriumCharacterisationByBestResponses}
+        \label{thm:nashEquilibriumCharacterizationByBestResponses}
     \end{thm}
     \begin{proof}
         \todo{Prove (if necessary) the best-response characterization of equilibria}
@@ -305,7 +308,7 @@
 
     An important fact for best-response mixed strategies is that they are always mixing between best-response pure strategies:
 
-    % TODO cite, e.g, Nisan p.30 (51) or maybe p.55 (76)
+    % TODO cite best-response mixing, e.g, Nisan p.30 (51) or maybe p.55 (76)
     % TODO maybe introduce the support of a mixed strategy?
     % TODO as always, preconditions?
     \begin{thm}
@@ -332,7 +335,7 @@
         \label{cor:equilibriumStrategiesSupportHaveEqualPayoffs}
     \end{cor}
     \begin{proof}
-        Since $s$ is a Nash equilibrium, the mixed strategy $s_k$ is a best response to $s$ by theorem \ref{thm:nashEquilibriumCharacterisationByBestResponses}.
+        Since $s$ is a Nash equilibrium, the mixed strategy $s_k$ is a best response to $s$ by theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}.
         By theorem \ref{thm:bestResponseMixing}, all pure strategies $s_{k, j}$ are best responses as well.
         By the definition of best responses, they therefore must all have the same payoff.
         Furthermore, a mixed strategy mixing between pure strategies with equal payoff necessarily also has the same payoff by the linearity of the expected value (cf. equation \eqref{eq:mixedStrategyUtility}).
@@ -458,8 +461,86 @@
     \end{defn}
 
     \begin{cor}
-        For any $\epsilon > 0$, there is some $K \in \N$ such that $(x_k, y_k)$ is an $\epsilon$-Nash equilibrium $\forall k \geq K$.
+        % TODO Epsilon-Equilibrit this is completely without solid proof whatsoever. 
+        For any $\epsilon > 0$, there is some $K \in \N$ such that $\forall k \geq K$ the result after $k$ rounds of fictitious play $(x_k, y_k)$ is an $\epsilon$-Nash equilibrium .
     \end{cor}
+
+    
+    \section{Proof that Mixed-Strategy Equilibria Exist}
+    % TODO move mixed-strategy-proof section before the computation section
+    The existence of mixed-strategy equilibria (Theorem \ref{thm:existenceOfMixedStrategyEquilibria}) was first proven by John Nash in a one-page article. %TODO cite Nash's article
+    His proof is based on the characterization of Nash equilibria by best responses (Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}) and non-constructively finds an equilibrium point by Kakutani's Fixed Point Theorem, a generalization of Brouwer's Fixed Point Theorem to set-valued functions.
+    % TODO non-constructiveness: possibly already discussed in computation section
+    
+    \begin{defn}
+        % TODO find a good reference for the closed-graph-formulation of Kak'sFP
+        Let $S \subseteq \R^n$. A set-valued function $\phi: S \to \Pot(S)$ \emph{has a closed graph} if for all convergent sequences $(x_n)_{n \in \N}$, $(y_n)_{n \in \N}$ in $S$,
+        \[
+            (\forall n: y_n \in \phi(x_n)) \implies \liminfty{n} y_n \in \phi\bigpars{\liminfty{n} x_n}
+        \]
+    \end{defn}
+
+    Having a closed graph clearly is a kind of continuity property for set-valued functions.
+    Kakutani's original paper instead uses the concept of \emph{upper semi-continuity}, which is equivalent in the case we are looking at.
+    % TODO cite closed graph = upper semi-cont. ? At least, Kakutani defines upper-semi-continuity just as we define closed graph
+
+    \begin{thm}[Kakutani's Fixed Point Theorem]
+        % TODO find a good reference for the formulation of Kak'sFP
+        Let $S \subseteq \R^n$. Let $\phi: S \to \Pot(S)$ be a function with the following properties:
+        \begin{enumerate}
+            \item $S$ is non-empty, compact and convex. \label{item:KakFP-nonEmptyCompactConvexDomain}
+            \item $\forall s \in S: \phi(s)$ is  non-empty, convex and closed. \label{item:KakFP-nonEmptyConvexClosedOutputs}
+            \item $\phi$ has a closed graph. \label{item:KakFP-closedGraph}
+        \end{enumerate}
+        Then $\phi$ has a fixed point $x$: $x \in \phi(x)$.
+    \end{thm}
+
+    We're now ready to proof Theorem \ref{thm:existenceOfMixedStrategyEquilibria}.
+    
+    \begin{proof}[Proof of \ref{thm:existenceOfMixedStrategyEquilibria}]
+        % TODO note that for the equilibrium existence proof it's necessary to talk about real vectors, while otherwise our usual notations are more convenient
+        In the context of this proof, let each player $k$ have $m_k$ different pure strategies and set $m := m_1 + \dots + m_n$.
+        We represent mixed strategy profiles as points in $\R^m$: Let $\Delta_k := \set{(p_1, \dots, p_{m_k}) \in \R^{m_k} \mid \sum_{i=1}^{m_k} p_i = 1}$ (the standard $(m_k - 1)$-simplex) and let $\Delta := \bigtimes_{k=1}^n \Delta_k \subseteq \R^m$.
+        
+        We next define $r: \Delta \to \Pot(\Delta)$ as the \emph{best-response correspondence}. Recall that $r_k: \Delta \to \Delta_k$ maps mixed-strategy profiles to the set of \emph{best-response mixed strategies} for the $k$'th player: Now $r$ incorporates this information for all players at once, mapping mixed-strategy profiles to the set of \emph{best-response mixed-strategy profiles}.
+        \begin{gather}
+            r: \Delta \to \Pot(\Delta), (\delta_1, \dots, \delta_n) \mapsto r_1(\delta_1, \dots, \delta_n) \times \dots \times r_n(\delta_1, \dots, \delta_n)
+            \label{eq:bestResponseCorresponenceDefinition}
+        \end{gather}
+        By Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}, Nash equilibria are exactly the fixed points of $r$, i.e. strategy profiles that are best responses to themselves: So if we can show that the conditions of Kakutani's Fixed Point Theorem are satisfied, we have proven that Nash equilibria exist.
+        
+        \ref{item:KakFP-nonEmptyCompactConvexDomain}, conditions on $\Delta$: The $\Delta_k$ are clearly non-empty, compact and convex as simplices. Therefore $\Delta$ also is non-empty,
+        compact as the Cartesian product of compact sets, and convex as the Cartesian product of convex sets. % TODO cite source that products of compact/convex sets are compact/convex.
+        
+        \ref{item:KakFP-nonEmptyConvexClosedOutputs}, for all $s \in \Delta$, the set $r(s)$ of best-response profiles is non-empty, convex and closed: It suffices to show that these conditions hold for each $r_k(s)$, since $r(s)$ is the product of those. By Theorem \ref{thm:bestResponseMixing}, best-response mixed strategies are always convex combinations of best-response pure strategies, so the $r_k(s)$ are simplices as well, i.e. compact and convex. The $r_k(s)$ are non-empty because at least one of the finitely many pure strategies must have a maximal payoff value: mixed strategies cannot have larger payoffs than the best of their support's pure strategies.
+        
+        \ref{item:KakFP-closedGraph}, $r$ has a closed graph: we need to show that if a sequence of mixed-strategy profiles converges to some limit, and has a sequence of best-response profiles also converging, then the limit of the latter sequence is a best response to the limit of the former. Let $(\delta^{(i)})_{i \in \N}$ be a sequence of profiles, and $(a^{(i)})_{i \in \N}$ a sequence of best responses to it:
+        \begin{align*}
+            &\delta^{(i)} = (\delta_1^{(i)}, \dots, \delta_n^{(i)}) \toinfty{i} (\delta_1, \dots, \delta_n) =: \delta, \\
+            &a^{(i)} = (a^{(i)}, \dots, a^{(i)}) \toinfty{i} (a_1, \dots, a_n) =: a, \quad
+            \forall i: a_i \in r(\delta_i)
+        \end{align*}
+        If we show that $a_k \in r_k(\delta)$ for all player $k$, we directly get $a \in r(\delta)$ by \eqref{eq:bestResponseCorresponenceDefinition}.
+        Let $k \in \set{1, \dots, n}$, and let $b_k \in \Delta_k$ some arbitrary response. We show that $b_k$ is not a better response than $a_k$:
+        First, for any $i \in \N$, $a^{(i)}_k$ is a best response to $\delta^{(i)}_k$, so
+        \begin{gather*}
+            u_k(a^{(i)}_k, \delta^{(i)}_{-k}) \geq u_k(b_k, \delta^{(i)}_{-k})
+        \end{gather*}
+        In the limit as $i \to \infty$, by continuity of the payoff function $u_k$, 
+        % TODO technically, we did not prove the continuity of the u_k anywhere
+        the left side goes to $u_k(a_k, \delta_{-k})$ while the right side goes to $u_k(b_k, \delta_{-k})$.
+        Recall that the ordering $\leq$ on the reals has the property of being closed under limits (in other words, its closed as a subset of $\R \times \R$).
+        \footnote{By the “sandwich theorem”. While this may seem obvious, we emphasize it here since this continuity property does not hold for general orderings on topological spaces:
+        in particular, it will be important later that it does \emph{not hold} for the lexicographical ordering on $\R^n$.}
+        % TODO find a reference for “closed as subset of \R^2”
+        Therefore,
+        \begin{gather*}
+            u_k(a_k, \delta_{-k}) \geq u_k(b_k, \delta_{-k})
+        \end{gather*}
+        Therefore $a_k$ maximizes the payoff over all responses to $\delta_{-k}$, and $a_k \in r(\delta_{-k})$. This shows that $r$ has a closed graph.
+        So $r$ satisfies the conditions of Kakutani's theorem and therefore has a fixed point, which is a Nash equilibrium for the game.
+    \end{proof}
+    
     
     
     
