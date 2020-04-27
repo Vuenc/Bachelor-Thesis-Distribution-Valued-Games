@@ -25,11 +25,12 @@
 \addbibresource{Bachelor-Thesis.bib}
 
 \DeclareMathOperator{\A}{\mathcal{A}}
-\DeclareMathOperator{\leqst}{\leq_{\text{st}}}
 \DeclareMathOperator{\F}{\mathcal{F}}
 \newcommand{\Rp}{\mathbb{R}_+}
 \let\epsilon\varepsilon
 \let\phi\varphi
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
 
 \ihead{Vincent Bürgin}
 \ohead{[Work in Progress]}
@@ -271,7 +272,7 @@
         \label{thm:existenceOfMixedStrategyEquilibria}
     \end{thm}
     % TODO either only cite proof of the Existence of Mixed-Strategy Equilibria, or give proof later since at least Katukani's fixed-point theorem and best responses need introduction
-    We will introduce some more concepts and see a proof of this theorem in section \ref{sec:existenceOfMixedStrategyEquilibria}.
+    We will give a a proof of this theorem in section \ref{sec:existenceOfMixedStrategyEquilibria}, but first introduce some more concepts relevant for the proof.
     
     \begin{ex} % TODO or make this RockPaperScissors example “... continued”
         The Rock-Paper-Scissors game from example \ref{ex:rockPaperScissors}
@@ -467,6 +468,7 @@
 
     
     \section{Proof that Mixed-Strategy Equilibria Exist}
+    \label{sec:existenceOfMixedStrategyEquilibria}
     % TODO move mixed-strategy-proof section before the computation section
     The existence of mixed-strategy equilibria (Theorem \ref{thm:existenceOfMixedStrategyEquilibria}) was first proven by John Nash in a one-page article. %TODO cite Nash's article
     His proof is based on the characterization of Nash equilibria by best responses (Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}) and non-constructively finds an equilibrium point by Kakutani's Fixed Point Theorem, a generalization of Brouwer's Fixed Point Theorem to set-valued functions.
@@ -546,7 +548,155 @@
     
     % TODO part on Game Theory in Network Security: here as a) chapter, b) section, or c) not here but in the application chapter?  
     \chapter{Games with Distributions as Payoffs}
+    Now that we covered the basic concepts of standard game theory, we are ready to introduce the new theory of games that have probability distributions as payoffs.
+    The model was first introduced by Stefan Rass % TODO cite
+    in the context of IT security, and in this model probabilistic outcomes are rated based on a stochastic order called the \emph{tail order} which we will introduce later.
+    In our discussion, we will first introduce and formalize the model of distribution-valued games in a slightly more general way by leaving the stochastic order open to be specified, before we focus on the special case of the stochastic tail order.
     
+    \section{Distribution-Valued Normal-Form Games}
+    \label{sec:distributionValuedNormalFormGames}
+    \newcommand{\DP}{\D_P} % Shortcut for the set of distributions on the reals
+    
+    Let $\DP$ denote the set of Borel probability measures:
+    \[ \DP \coloneqq \set{P: \B \to \Rp \mid P \text{ is a probability measure on } (\R, \B)} \]
+    Each element of $\DP$ represents a probability distribution on the real numbers.
+    
+    % Defining shortcuts for the symbols used for generic stochastic orders. Can be changed easily here. “dleq” = “distributionally less-or-equal”
+    \let\dleq\preccurlyeq
+    \let\dgeq\succcurlyeq
+    \let\dless\prec
+    \let\dgreater\succ
+    
+    % Defining symbols for some particular stochastic orders
+    \newcommand{\leqE}{\dleq_E}
+    \newcommand{\leqst}{\dleq_{\text{st}}}
+    \newcommand{\leqtail}{\dleq_{\text{tail}}}
+    
+    \begin{defn}[Stochastic Order]
+        % TODO think about if the name “stochastic preorder” would be more appropriate
+        A \emph{stochastic order} $\dleq$ is a preorder on $\DP$, i.e. a reflexive and transitive binary relation on $\DP$:
+        \footnote{\cite{bib:shakedStochasticOrders} defines stochastic orders between random variables, but for our purposes it's more convenient to define them between distributions instead.}
+        \begin{align*}
+            &\forall P_1 \in \DP: P_1 \dleq P_1 \tag{Reflexivity} \\
+            &\forall P_1, P_2, P_3 \in \DP: P_1 \dleq P_2, P_2 \dleq P_3 \implies P_1 \dleq P_3 \tag{Transitivity}
+        \end{align*}
+        Stochastic orders may have additional properties:
+        \begin{align*}
+            &\forall P_1, P_2 \in \DP: P_1 \dleq P_2 \wedge P_1 \dgeq P_2 \implies P_1 = P_2 \tag{Antisymmetry} \\
+            &\forall P_1, P_2 \in \DP: P_1 \dleq P_2 \vee P_1 \dgeq P_2 \tag{Totality}
+        \end{align*}
+        In this case, we call them \emph{antisymmetric stochastic ordering} or \emph{total stochastic ordering}.
+        We may also restrict the ordering to some subset $D \subseteq \DP$ and say that it's a \emph{stochastic ordering on $D$}.
+    \end{defn}
+    Antisymmetric stochastic orderings are never indifferent between different elements. Total stochastic orderings make a decision between any pair of distributions, so there are no incomparable elements. Since neither property is required, general stochastic orders may exhibit indifference as well as incomparability.
+    
+    \begin{ex}~
+        % TODO make sure that the Expected Value is defined for distributions, and that L1 is defined for distributions
+        % TODO think about making \leqEdefined for non-L1 variables (but what about oo-oo?)
+        \begin{enumerate}
+            \item 
+            Let $\leqE$ be the ordering that compares distributions by expected value:
+            \begin{gather*}
+                P_1 \leqE P_2 \colonlra \text{ $P_1, P_2$ are $L_1$ and $E(P_1) \leq E(P_2)$} 
+            \end{gather*}
+            Then $\leqE$ is a stochastic ordering, but neither antisymmetric nor total. Antisymmetry fails since many distributions can have the same expected value, in which case $\leqE$ is indifferent between them. Totality fails because not all distributions have a well-defined expected value. However $\leqE$ is a total stochastic order on $L_1 \subseteq \DP$, which includes all distributions with bounded support.
+            
+            \item Let the \emph{usual stochastic order} \cite{bib:shakedStochasticOrders} $\leqst$ be defined by
+            \begin{gather*}
+                P_1 \leqst P_2 \colonlra \forall x \in \R: P_1((x, \infty)) \leq P_2((x, \infty))
+            \end{gather*}
+            Phrased in terms of distribution functions, this holds iff $F_1 \geq F_2$ point-wise. It's a quite strong notion of one distribution tending to take smaller values than the other. Because of this strong requirement, it's not surprising that $\leqst$ is not total and there are many pairs of incomparable distributions. However it is antisymmetric, because $\leqst$ is indifferent only between distributions with equal distribution functions, and a distribution function uniquely determines the distribution.
+        \end{enumerate}
+    \end{ex}
+
+    % How we define preference at the moment...
+    \let\dpref\dgeq
+    \let\dnonpref\dleq
+    \let\dstrpref\dgreater
+    \let\dstrnonpref\dless
+    
+    % ...vs. how it should be defined if utility was switched to cost
+    %    \let\dpref\dleq
+    %    \let\dnonpref\dgeq
+    %    \let\dstrpref\dless
+    %    \let\dstrnonpref\dgreater
+
+    \begin{defn}[Distribution-Valued Game]
+        A \emph{distribution-valued game} $G = (n, (S_1, \dots, S_n), (u_1, \dots, u_n))$ with $n$ players consists of strategy sets $S_k$ and a payoff function $u_k: S \to \D_P$ for each player $k$.
+        
+        A distribution-valued game can be \emph{equipped with stochastic orders} $(\dleq_1, \dots, \dleq_n)$, written $G_{(\dleq_1, \dots, \dleq_n)}$, where each $\dleq_i$ is a stochastic order.
+        If $\dleq_i \mathbin{=} \dleq$ for all $i$, we also write $G_\dleq$.
+        % TODO overthink G_{\dleq} notation; the notation could also be convenient for the zero sum game
+    \end{defn}
+    The implicit underlying assumption of this model is that when the game is being played, an outcome distribution for each player is determined by the selected strategies, and then each player gets their actual payoff drawn from this distribution independently.
+%    The sampling done as last step is necessarily independent, since we only specify marginal distributions and therefore have no notion of the outcomes sampled from different such distributions stochastically depending on each other.
+
+    We adopt the convention that the greater utility w.r.t. a stochastic ordering is preferred, e.g. if $x \dleq y$, then $y$ is preferred. However as in real-valued games, it will sometimes be more convenient to talk about costs instead of utility (cf. Definition \ref{defn:realValuedGames}). Since we can \emph{not} simply define $c_k = -u_k$ in the distributional-valued setting, we will resort to a slight abuse of notation and define $c_k(s) \dpref c_l(\tilde{s}) \colonlra u_k(s) \dnonpref u_l(\tilde{s})$ whenever using cost instead of utility functions is more appropriate.
+
+    \begin{defn}[Nash Equilibrium of Distribution-Valued Game]
+        A \emph{Nash equilibrium} of $G_{(\dleq_1, \dots, \dleq_n)}$ (or a \emph{Nash equilibrium of $G$ with respect to $(\dleq_1, \dots, \dleq_n)$})
+        is a strategy profile $s = (s_1, \dots, s_n) \in S$ such that for each player $k$:
+        % TODO IMPORTANT check again in which direction preference is being defined!
+        % TODO IMPORTANT possibly swap u_k for c_k since we are using loss distributions?
+        \begin{gather}
+            \forall \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \dpref_k u_k(\tilde{s}_k, s_{-k})
+        \end{gather}
+    \end{defn}
+
+    Because stochastic orders are not total in general, this definition may be overly restrictive in some cases: there might be equilibrium-like situations where the current payoff may not preferable to all alternatives, but yet no alternative is preferable either due to incomparability. We define a weaker equilibrium concept for this case, where the current situation needs not dominate all alternatives to be an equilibrium, but just must not be dominated:
+    \todo{I think this weaker equilibrium concept is interesting  and might be useful, but we have no direct use for it at the moment. Possibly remove if not needed. Also, find a better name.}
+    \begin{defn}
+        % TODO find a better term. Non-connex? Non-dominant?
+        A \emph{Nash equilibrium up to comparability} of $G_{(\dleq_1, \dots, \dleq_n)}$
+        is a strategy profile $s = (s_1, \dots, s_n) \in S$ such that for each player $k$:
+        % TODO IMPORTANT check again in which direction preference is being defined!
+        % TODO IMPORTANT possibly swap u_k for c_k since we are using loss distributions?
+        \begin{gather}
+            \nexists \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \dstrnonpref u_k(\tilde{s}_k, s_{-k})
+        \end{gather}
+    \end{defn}
+
+    Similar to the real-valued scenario, a subset of games we are especially interested in are the two-player zero-sum games.
+    But we are in some trouble defining what zero-sum is supposed to mean: If $s$ is some strategy profile and $X_1 \sim u_1(s), X_2 \sim u_2(s)$ are independent random variables modeling the drawing of random payoffs for the players, we cannot require that $X_1 + X_2 = 0$ almost surely since this will never happen except for trivial distributions, because the sum of independent random variables is distributed as the convolution of their distributions.
+    % TODO reference convolution theorem/distribution of sum of independent RVs
+    Alternatively, we could require that the distributions $u_1(s), u_2(s)$ are symmetrically mirrored inverses around the origin, e.g. for all Borel sets $B$, $u_1(s)(B) = u_2(s)(-B)$ (e.g. 
+    if the distributions have densities $f_1, f_2$, this would mean $\forall x: f_1(x) = f_2(-x)$).
+    While this requirement seems to make sense, this symmetry is not necessarily reflected by the stochastic orders: There is no requirement for stochastic orders to satisfy $P_1(\dummydot) \dleq P_2(\dummydot) \lra P_1(-\dummydot) \dgeq P_2(\dummydot)$, and indeed the stochastic tail order we will introduce later does not have this property.
+    However a crucial property of zero-sum games is that they are \emph{antagonistic}: 
+    % TODO cite “antagonistic games” paper
+    when one player gains, the other loses. We therefore make a definition focusing on this property.
+    \begin{defn}[Antagonistic and Zero-Sum Games]
+        A two-player distribution-valued game $G_{(\dleq_1, \dleq_2)}$ is \emph{antagonistic} if
+        \begin{gather*}
+            \forall s, t \in S:~ u_1(s) \dpref_1 u_1(t) ~\lra~ u_2(s) \dnonpref_2 u_2(t)
+        \end{gather*}
+        $G_{(\dleq_1, \dleq_2)}$ is \emph{zero-sum} if $u_1 = u_2$, and $\dleq_2 {=} \dgeq_1$: i.e. their payoff distributions are equal, but preferred just in reverse order.
+    \end{defn}
+
+    % TODO either introduce antagonistic games here, or in the standard game theory section
+    For the sake of equilibria, it does not matter if a game is zero-sum or only antagonistic, since the only thing that matters for equilibria is how the values that actually occur as payoffs are ordered. But once we define mixed extensions, our zero-sum property will ensure that the mixed extension of a finite zero-sum game will also be zero sum, but mixed extensions of antagonistic games needn't be antagonistic. This is analogous to real-valued games, where mixed extensions preserve the zero-sum property, but not the antagonism property.
+    % TODO reference standard game theory section about antagonistic games for the antagonistic mixing; Cite antagonistic games paper
+    
+    Next we define what we mean by mixed extensions of distribution-valued games.
+    \begin{defn}[Mixed extension]
+        The \emph{mixed extension} of a finite distribution-valued game $G$ is the distribution-valued game $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$,
+        where for $k \in \set{1, \dots, n}$:        
+        \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
+            \item $\Delta_k := \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ are the mixed strategies, $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ the mixed strategy profiles.
+            
+            \item
+            The utility function $U_k: \Delta \to \D_P$ maps to each mixed strategy profile the \emph{mixed distribution} of the $k$'th players payoff distribution under that strategy profile:
+            \begin{gather}
+                U_k: 
+                (p_1, \dots, p_n) 
+                %                ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
+                \mapsto
+                \sum_{(s_1, \dots, s_n) \in S} \biggpars{\prod_{i=1}^{n} p_i(s_i)} * u_k( (s_1, \dots, s_n) )
+                \label{eq:marginalDistMixedStrategyUtility}
+            \end{gather}
+            Note that this is a weighted sum of Borel probability measures, and the result is again a probability measure on $(\R, \B)$.
+        \end{itemize}
+    \end{defn}
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
     
