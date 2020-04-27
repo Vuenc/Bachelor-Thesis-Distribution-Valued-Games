@@ -210,10 +210,10 @@
 %            \item 
 %            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $(p_1, \dots, p_{\abs{S_k}})$ has the semantics that the $i$'th pure strategy is played with probability $p_i$.
 %            \[
-%            \Delta_k := \bigg\{ (p_1, \dots, p_{\abs{S_k}}) \in \R^{\abs{S_k}} ~ \bigg\vert ~ \sum_{i=1}^{\abs{S_k}} p_i = 1 \bigg\} 
+%            \Delta_k \coloneqq \bigg\{ (p_1, \dots, p_{\abs{S_k}}) \in \R^{\abs{S_k}} ~ \bigg\vert ~ \sum_{i=1}^{\abs{S_k}} p_i = 1 \bigg\} 
 %            \]
 %            
-%            \item $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles
+%            \item $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles
 %            
 %            \item
 %            The utility function $U_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
@@ -229,10 +229,10 @@
             The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $p : S_k \to \Rp, p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$:   
             % TODO as technicality, it's somewhat problematic to treat mixed strategies as functions as opposed to \R^n tuples when later applying Kakutani's fixed point theorem...
             \[
-                \Delta_k := \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } 
+                \Delta_k \coloneqq \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } 
             \]
             
-            \item $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles.
+            \item $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles.
             
             \item
             The utility function $U_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
@@ -499,8 +499,8 @@
     
     \begin{proof}[Proof of \ref{thm:existenceOfMixedStrategyEquilibria}]
         % TODO note that for the equilibrium existence proof it's necessary to talk about real vectors, while otherwise our usual notations are more convenient
-        In the context of this proof, let each player $k$ have $m_k$ different pure strategies and set $m := m_1 + \dots + m_n$.
-        We represent mixed strategy profiles as points in $\R^m$: Let $\Delta_k := \set{(p_1, \dots, p_{m_k}) \in \R^{m_k} \mid \sum_{i=1}^{m_k} p_i = 1}$ (the standard $(m_k - 1)$-simplex) and let $\Delta := \bigtimes_{k=1}^n \Delta_k \subseteq \R^m$.
+        In the context of this proof, let each player $k$ have $m_k$ different pure strategies and set $m \coloneqq m_1 + \dots + m_n$.
+        We represent mixed strategy profiles as points in $\R^m$: Let $\Delta_k \coloneqq \set{(p_1, \dots, p_{m_k}) \in \R^{m_k} \mid \sum_{i=1}^{m_k} p_i = 1}$ (the standard $(m_k - 1)$-simplex) and let $\Delta \coloneqq \bigtimes_{k=1}^n \Delta_k \subseteq \R^m$.
         
         We next define $r: \Delta \to \Pot(\Delta)$ as the \emph{best-response correspondence}. Recall that $r_k: \Delta \to \Delta_k$ maps mixed-strategy profiles to the set of \emph{best-response mixed strategies} for the $k$'th player: Now $r$ incorporates this information for all players at once, mapping mixed-strategy profiles to the set of \emph{best-response mixed-strategy profiles}.
         \begin{gather}
