@@ -572,6 +572,7 @@
     \newcommand{\leqE}{\dleq_E}
     \newcommand{\leqst}{\dleq_{\text{st}}}
     \newcommand{\leqtail}{\dleq_{\text{tail}}}
+    \newcommand{\lesstail}{\dless_{\text{tail}}}
     
     \begin{defn}[Stochastic Order]
         % TODO think about if the name “stochastic preorder” would be more appropriate
@@ -711,10 +712,138 @@
         \end{gather*}
         Then the real-valued mixed extension $\hat{G}^{(\R)}$ is equivalent to the distribution-valued mixed extension $\hat{G}^{(\DP)}$ wrt. $\leqE$, i.e. 
         $\hat{G}^{(\R)}$ has the same equilibria as $\hat{G}^{(\DP)}_{\leqE}$.
-        
-        It's worth mentioning that games constructed like $\hat{G}^{(\DP)}$ might be interesting in their own right, with respect to other stochastic orders than $\leqE$.
-        The model allows to talk about the “payoff distribution” of the real-valued game $G$, and rate outcomes by other orders than the expected value. In decision-theoretic terms, this allows us to model risk-averse and risk-seeking attitudes, as opposed to the risk-neutral attitude of expected value.
     \end{ex}
+
+    It's worth mentioning that games constructed like $\hat{G}^{(\DP)}$ might be interesting in their own right, with respect to other stochastic orders than $\leqE$:
+    The model allows to talk about the “payoff distribution” of the real-valued game $G$, and rate outcomes by other orders than the expected value. In decision-theoretic terms, this allows us to model risk-averse and risk-seeking attitudes, as opposed to the risk-neutral attitude of expected value. Our main interest however will lie in mixed extensions of games where the pure-strategy payoffs already are (non point-mass) distributions.
+
+    
+    \section{The Stochastic Tail Order}
+    We have laid out the foundations of distribution-valued games in the last section, but the usefulness of the model heavily depends on choosing the right stochastic orders.
+    The stochastic orders we've seen so far are not extremely satisfying: $\leqE$ basically leads us back to the theory of real-valued games by taking expected values; $\leqst$ takes more information from the distributions into account, but fails to compare many distributions since a decision is only made for distributions where one distribution function dominates the other in a strong way.
+    In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers defined the stochastic tail order, which we will denote by $\leqtail$ \cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}.
+    It was introduced in the context of risk assessment for critical infrastructure, where risks with higher impact are to  be avoided at all costs, even if very unlikely.
+    Therefore it's usually not applied on \emph{payoff distributions}, but rather on \emph{loss} (or \emph{cost}) \emph{distributions}.
+    The ordering is defined based on moment sequences, but we will later show that in many cases, it can essentially be understood as a kind of lexicographic ordering.
+
+    \subsection{Definition and Basic Properties}    
+    \newcommand{\Lallmoms}{L}
+    \begin{defn}[Moments]
+        Let $P \in \DP$, $k \in \N_0$. If $\lintegral{R}{\abs{x}^k}{P} < \infty$, we say that \emph{$P$ has a moment of order $k$} and define it by
+        \begin{gather*}
+            m_k(P) \coloneqq \lintegral{\R}{x^k}{P}
+        \end{gather*}
+        Define the set of distributions which have moments of arbitrary order as
+        \todo{The suggestive letter $L$ as in $L_p$ is a bit dubious, since we are talking about measures, not functions.}
+        \begin{gather*}
+            \Lallmoms \coloneqq \bigset{P \in \DP \bigmid \lintegral{R}{\abs{x}^k}{P} < \infty}
+        \end{gather*}
+    \end{defn}
+
+    \begin{defn}[Stochastic Tail Order]
+        % TODO does the tail order definition make sense for distributions taking values < 1, or < 0?
+        The \emph{stochastic tail order} $\leqtail$ is defined by
+        \begin{gather*}
+            P_1 \leqtail P_2 \colonlra \bigpars{P1, P2 \in \Lallmoms} \wedge \bigpars{m_k(P_1) \leq m_k(P_2) \text{ for all but finitely many $k \in \N_0$}}
+        \end{gather*}
+    \end{defn}
+
+    \begin{lemma}
+        The tail order $\leqtail$ is a stochastic order, i.e. a preorder on $\DP$.
+    \end{lemma}
+    \begin{proof}
+        $\leqtail$ is clearly reflexive since for any $P_1 \in \DP$, $m_k(P_1) \leq m_k(P_1)$ for all $k$.
+        It is also transitive: if $P_1, P_2, P_3 \in \DP$, $m_k(P_1) \leq m_k(P_2)$ for all $k \geq K_1$ and $m_k(P_2) \leq m_k(P_3)$ for all $k \geq K_2$, then $m_k(P_1) \leq m_k(P_3)$ for all $k \geq \max(K_1, K_2)$.
+    \end{proof}
+    
+    Now that we know that $\leqtail$ is a stochastic order, we can ask if it is anti-symmetric and/or total.
+    In the general context, it has neither of the properties: $\leqtail$ can not compare distributions which don't have moments of all orders, therefore it is not total on $\DP$.
+    Also there exist examples of different distributions in $\Lallmoms$ which have equal moment sequences, violating anti-symmetry. However as \cite{bib:rassGameRiskManagI} notes that for any pair of distributions which both have their moment generating functions existing in a neighborhood around 0, equal moment sequences imply equal distributions.
+    Therefore $\leqtail$ is anti-symmetric on any subset $D \subseteq \DP$ of distributions having moment generating functions.
+    % TODO Introduce moment generating functions somewhere earlier
+    % TODO Formalize Rass' (?) result about moment generating functions, at least in a lemma without proof
+    % TODO give examples about for how a wide range of distributions the generating functions result implies anti-symmetry
+    A more interesting question is if we can identify a sufficiently large class of distributions on which $\leqtail$ is total. We will discuss this question in more detail later.
+    
+    % TODO is Characterization a valid term?
+    \subsection{Characterization of Tail Order Preference}
+    \newcommand{\Fgeq}{\mathfrak{F}_{\geq 1}} % The set of distributions \geq 1
+    Before we do so, let's first get a better understanding of what the tail order means apart from moment sequences.
+    In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values $\geq 1$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Also the discussion focuses on distributions which have finite support, or are absolutely continuous with additional requirements on the densities. We will generally adopt the former assumption for our further discussion, and write $\Fgeq := \set{P \in \DP \mid P([1, \infty)) = 1}$.
+    % TODO reformulate “will at time use slightly relaxed assumptions on AC” bit
+    However we will at times slightly relax their assumptions on absolutely continuous distributions.
+    
+    An important insight is that the tail order behaves essentially like a lexicographical ordering in many cases.
+    \begin{thm}
+        Let $P_1, P_2 \in \Fgeq \cap L$ be absolutely continuous distributions that have density functions $f, g$ which are bounded in value.
+        \begin{enumerate}
+            \item 
+            % TODO natural formulation: if from some point on, f <= g almost everywhere and f < g on some non-null set, then P1 \leqtail P2
+            If there is some $x_0 > 1$ such that 
+            \begin{gather*}
+                \lambda(\set{f > g} \cap [x_0, \infty)) = 0 ~\wedge~ \lambda(\set{f < g} \cap [x_0, \infty)) > 0,
+            \end{gather*}
+            then $P_1 \lesstail P_2$.
+            \label{item:acTailOrder-NonNullDominatingSetCondition}
+            
+            \item 
+            If there are $x_0 > 1, \delta > 0$ such that $f < g$ on $[x_0, x_0 + \delta]$ and $f \leq g$ on $[x_0, \infty)$, then $P_1 \lesstail P_2$.
+            \label{item:acTailOrder-DominatingIntervalCondition}
+        \end{enumerate}
+    \end{thm}
+    \begin{proof}
+        \ref{item:acTailOrder-NonNullDominatingSetCondition}:
+        We need to show that $m_k(P_1) \leq m_K(P_2)$ for $k$ large enough. We have:
+        \begin{multline*}
+            m_k(P_2) - m_k(P_1)
+            = \lintegral{\R}{t^k g(t)}{\lambda(t)} - \lintegral{\R}{t^k f(t)}{\lambda(t)} \\
+            = \lintegral{[1, x_0)}{t^k(g(t) - f(t))}{\lambda(t)} 
+              - \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
+%              + \lintegral{[1, x_0)\cap \set{f = g}}{t^k(g(t) - f(t))}{\lambda(t)}
+        \end{multline*}
+        We lower-bound the left integral:
+        Since $f, g$ are bounded, we get the lower-bound $g-f \geq - c_l$ for some $c_l > 0$.
+        \todo{Check this estimate!}
+        Further $0 \leq t^k \leq x^k$ for $t \in [1, x_0)$. So $t^k*(g(t) - f(t)) \geq -c_l*x_0^k$.
+        We get:
+        \begin{multline*}
+            \lintegral{[1, x_0)}{t^k(g(t) - f(t))}{\lambda(t)}
+            \geq \lintegral{[1, x_0)}{-c_l*x_0^k}{\lambda(t)}
+            = -c_l (x_0 - 1)*x_0^k 
+            \eqqcolon -c_{\text{left}} * x_0^k
+        \end{multline*}
+        
+        For the right-hand integral, observe that the integrand becomes zero on $\set{f = g}$, so we can focus on $[x_0, \infty) \cap \set{f < g}$ which we required to have positive measure.
+        Pick some $x_1 > x_0$ such that $I \coloneqq ([x_1, \infty) \cap \set{f < g})$ still has positive measure (for example, $x_1 := x_0 + \frac{1}{2} \lambda([x_0, \infty) \cap \set{f < g})$ will do).
+        Next we identify a positive-measure subset of $I$ where $(g-f)$ is bounded away from zero:
+        Define $A_n := \set{x \in I \mid g(x) - f(x) > \frac{1}{n}}$.
+        % TODO and these sets are Borel
+        Then $I = \bigcup_n A_n$ and by continuity of measures, $\lambda(A_n) \toinfty{n} \lambda(I) > 0$. So some set in the sequence has positive measure, which we'll call $A$, and on $A$, $g-f \geq \epsilon$ holds for some $\epsilon > 0$. From this we get:
+        \begin{multline*}
+            \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
+            = \lintegral{[x_0, \infty)\cap \set{f < g}}{t^k(g(t) - f(t))}{\lambda(t)} \\
+            \geq \lintegral{A}{t^k(g(t) - f(t))}{\lambda(t)}
+            \geq \lintegral{A}{t^k*\epsilon}{\lambda(t)}
+            \geq \epsilon*\lambda(A)*x_1^k
+            \eqqcolon c_{\text{right}}*x_1^k
+        \end{multline*}
+        
+        Putting in our estimates into the original equation, we get
+        \begin{gather*}
+            m_k(P_2) - m_k(P_1)
+            \geq c_{\text{right}}*x_1^k - c_{\text{left}} * x_0^k
+        \end{gather*}
+        Since $x_1 > x_0 > 1$, this shows that for some $K \in \N$ and all $k \geq K$, $m_k(P_2) - m_k(P_1) > 0 \lra m_k(P_1) < m_k(P_2)$, so $P_1 \lesstail P_2$.
+        
+        \ref{item:acTailOrder-DominatingIntervalCondition}:
+        This is as a special case of the previous condition.
+        We have that $\lambda(\set{f > g} \cap [x_0, \infty)) = \lambda(\emptyset) = 0$, and $\lambda(\set{f < g} \cap [x_0, \infty)) > \lambda([x_0, x_0 + \delta)) > 0$, so the conditions of $\ref{item:acTailOrder-NonNullDominatingSetCondition}$ are satisfied and $P_1 \lesstail P_2$.
+        
+%        We can upper-bound the
+        
+        
+    \end{proof}
+    
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
     
