@@ -573,6 +573,11 @@
     \newcommand{\leqst}{\dleq_{\text{st}}}
     \newcommand{\leqtail}{\dleq_{\text{tail}}}
     \newcommand{\lesstail}{\dless_{\text{tail}}}
+    \newcommand{\greatertail}{\dgreater_{\text{tail}}}
+    \newcommand{\leqRlex}{\leq_{\textsc{Rlex}}}
+    \newcommand{\lessRlex}{<_{\textsc{Rlex}}}
+    \newcommand{\geqRlex}{\geq_{\textsc{Rlex}}}
+    \newcommand{\greaterRlex}{>_{\textsc{Rlex}}}
     
     \begin{defn}[Stochastic Order]
         % TODO think about if the name “stochastic preorder” would be more appropriate
@@ -687,7 +692,7 @@
         The \emph{mixed extension} of a finite distribution-valued game $G$ is the distribution-valued game $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$,
         where for $k \in \set{1, \dots, n}$:        
         \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
-            \item $\Delta_k := \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ are the mixed strategies, $\Delta := \bigtimes\limits_{1\leq i \leq n} \Delta_i$ the mixed strategy profiles.
+            \item $\Delta_k \coloneqq \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ are the mixed strategies, $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ the mixed strategy profiles.
             
             \item
             The utility function $U_k: \Delta \to \D_P$ maps to each mixed strategy profile the \emph{mixed distribution} of the $k$'th players payoff distribution under that strategy profile:
@@ -769,7 +774,7 @@
     \subsection{Characterization of Tail Order Preference}
     \newcommand{\Fgeq}{\mathfrak{F}_{\geq 1}} % The set of distributions \geq 1
     Before we do so, let's first get a better understanding of what the tail order means apart from moment sequences.
-    In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values $\geq 1$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Also the discussion focuses on distributions which have finite support, or are absolutely continuous with additional requirements on the densities. We will generally adopt the former assumption for our further discussion, and write $\Fgeq := \set{P \in \DP \mid P([1, \infty)) = 1}$.
+    In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values $\geq 1$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Also the discussion focuses on distributions which have finite support, or are absolutely continuous with additional requirements on the densities. We will generally adopt the former assumption for our further discussion, and write $\Fgeq \coloneqq \set{P \in \DP \mid P([1, \infty)) = 1}$.
     % TODO reformulate “will at time use slightly relaxed assumptions on AC” bit
     However we will at times slightly relax their assumptions on absolutely continuous distributions.
     
@@ -779,31 +784,31 @@
         \begin{enumerate}
             \item 
             % TODO natural formulation: if from some point on, f <= g almost everywhere and f < g on some non-null set, then P1 \leqtail P2
-            If there is some $x_0 > 1$ such that 
+            If there is some $x_0 \geq 1$ such that 
             \begin{gather*}
                 \lambda(\set{f > g} \cap [x_0, \infty)) = 0 ~\wedge~ \lambda(\set{f < g} \cap [x_0, \infty)) > 0,
             \end{gather*}
             then $P_1 \lesstail P_2$.
-            \label{item:acTailOrder-NonNullDominatingSetCondition}
+            \label{item:acTailOrder-NonNullDominatingSetSuffCondition}
             
             \item 
-            If there are $x_0 > 1, \delta > 0$ such that $f < g$ on $[x_0, x_0 + \delta]$ and $f \leq g$ on $[x_0, \infty)$, then $P_1 \lesstail P_2$.
-            \label{item:acTailOrder-DominatingIntervalCondition}
+            If there are $x_0 \geq 1, \delta > 0$ such that $f < g$ on $[x_0, x_0 + \delta]$ and $f \leq g$ on $[x_0, \infty)$, then $P_1 \lesstail P_2$.
+            \label{item:acTailOrder-DominatingIntervalSuffCondition}
         \end{enumerate}
+        \label{thm:acTailOrderSuffConditions}
     \end{thm}
     \begin{proof}
-        \ref{item:acTailOrder-NonNullDominatingSetCondition}:
-        We need to show that $m_k(P_1) \leq m_K(P_2)$ for $k$ large enough. We have:
+        \ref{item:acTailOrder-NonNullDominatingSetSuffCondition}:
+        We need to show that $m_k(P_1) < m_K(P_2)$ for $k$ large enough. We have:
         \begin{multline*}
             m_k(P_2) - m_k(P_1)
             = \lintegral{\R}{t^k g(t)}{\lambda(t)} - \lintegral{\R}{t^k f(t)}{\lambda(t)} \\
             = \lintegral{[1, x_0)}{t^k(g(t) - f(t))}{\lambda(t)} 
-              - \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
+              + \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
 %              + \lintegral{[1, x_0)\cap \set{f = g}}{t^k(g(t) - f(t))}{\lambda(t)}
         \end{multline*}
         We lower-bound the left integral:
         Since $f, g$ are bounded, we get the lower-bound $g-f \geq - c_l$ for some $c_l > 0$.
-        \todo{Check this estimate!}
         Further $0 \leq t^k \leq x^k$ for $t \in [1, x_0)$. So $t^k*(g(t) - f(t)) \geq -c_l*x_0^k$.
         We get:
         \begin{multline*}
@@ -814,11 +819,11 @@
         \end{multline*}
         
         For the right-hand integral, observe that the integrand becomes zero on $\set{f = g}$, so we can focus on $[x_0, \infty) \cap \set{f < g}$ which we required to have positive measure.
-        Pick some $x_1 > x_0$ such that $I \coloneqq ([x_1, \infty) \cap \set{f < g})$ still has positive measure (for example, $x_1 := x_0 + \frac{1}{2} \lambda([x_0, \infty) \cap \set{f < g})$ will do).
+        Pick some $x_1 > x_0$ such that $I \coloneqq ([x_1, \infty) \cap \set{f < g})$ still has positive measure (for example, $x_1 \coloneqq x_0 + \frac{1}{2} \lambda([x_0, \infty) \cap \set{f < g})$ will do).
         Next we identify a positive-measure subset of $I$ where $(g-f)$ is bounded away from zero:
-        Define $A_n := \set{x \in I \mid g(x) - f(x) > \frac{1}{n}}$.
+        Define $A_n \coloneqq \set{x \in I \mid g(x) - f(x) > \frac{1}{n}}$.
         % TODO and these sets are Borel
-        Then $I = \bigcup_n A_n$ and by continuity of measures, $\lambda(A_n) \toinfty{n} \lambda(I) > 0$. So some set in the sequence has positive measure, which we'll call $A$, and on $A$, $g-f \geq \epsilon$ holds for some $\epsilon > 0$. From this we get:
+        Then $I = \bigcup_n A_n$ and by continuity of measures, $\lambda(A_n) \toinfty{n} \lambda(I) > 0$. So some set in the sequence has positive measure, which we'll call $A$, and on $A$, $g-f \geq \epsilon$ holds for some $\epsilon > 0$. From this we get 
         \begin{multline*}
             \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
             = \lintegral{[x_0, \infty)\cap \set{f < g}}{t^k(g(t) - f(t))}{\lambda(t)} \\
@@ -833,17 +838,83 @@
             m_k(P_2) - m_k(P_1)
             \geq c_{\text{right}}*x_1^k - c_{\text{left}} * x_0^k
         \end{gather*}
-        Since $x_1 > x_0 > 1$, this shows that for some $K \in \N$ and all $k \geq K$, $m_k(P_2) - m_k(P_1) > 0 \lra m_k(P_1) < m_k(P_2)$, so $P_1 \lesstail P_2$.
+        Since $x_1 > x_0 \geq 1$, this shows that for some $K \in \N$ and all $k \geq K$, $m_k(P_2) - m_k(P_1) > 0 \lra m_k(P_1) < m_k(P_2)$, so $P_1 \lesstail P_2$.
         
-        \ref{item:acTailOrder-DominatingIntervalCondition}:
+        \ref{item:acTailOrder-DominatingIntervalSuffCondition}:
         This is as a special case of the previous condition.
-        We have that $\lambda(\set{f > g} \cap [x_0, \infty)) = \lambda(\emptyset) = 0$, and $\lambda(\set{f < g} \cap [x_0, \infty)) > \lambda([x_0, x_0 + \delta)) > 0$, so the conditions of $\ref{item:acTailOrder-NonNullDominatingSetCondition}$ are satisfied and $P_1 \lesstail P_2$.
+        We have that $\lambda(\set{f > g} \cap [x_0, \infty)) = \lambda(\emptyset) = 0$, and $\lambda(\set{f < g} \cap [x_0, \infty)) > \lambda([x_0, x_0 + \delta)) > 0$, so the conditions of $\ref{item:acTailOrder-NonNullDominatingSetSuffCondition}$ are satisfied and $P_1 \lesstail P_2$.
+    \end{proof}
+
+    \begin{thm}
+        Let $P_1, P_2 \in \Fgeq \cap L$ be discrete distributions with probability mass functions $f, g$.
+        \begin{enumerate}
+            \item 
+            If there is some $x_0 \geq 1$ such that $f(x_0) < g(x_0)$, and $\forall x > x_0: f(x) \leq g(x)$, this is sufficient for $P_1 \lesstail P_2$.
+            \label{item:discreteTailOrder-DominatingPointSuffCondition}
+            
+            \item 
+            If $P_1, P_2$ both have finite support, then
+            \begin{gather}
+                P_1 \lesstail P_2 \lra \exists x_0 \geq 1: f(x_0) < g(x_0) \wedge \forall x > x_0: f(x_0) \leq g(x_0)
+                \label{eq:discreteFiniteTailOrder-DominatingPointEquivalence}
+            \end{gather}
+            \label{item:discreteFiniteTailOrder-DominatingPointEquivalence}
+        \end{enumerate}
+        \label{thm:DiscreteTailOrderSuffConditions}
+    \end{thm}
+    \begin{proof}
+        \ref{item:discreteTailOrder-DominatingPointSuffCondition}:
+        Similar to the proof of Theorem \ref{thm:acTailOrderSuffConditions}, we want to show that $m_k(P_2) - m_k(P_1) > 0$ for all large enough $k$.
+        Let $v_1 < v_2 < \dots$ denote the values that get assigned positive probability mass by either $f$ or $g$, in ascending order.
+        Let $n$ be such that $x_0 = v_n$. Then we get
+        \begin{multline*}
+            m_k(P_2) - m_k(P_1)
+            = \sum_{i \geq 1} g(v_i)*v_i^k - \sum_{i \geq 1} f(v_i)*v_i^k \\
+            = \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + \sum_{i = n}^{\infty} (g(v_i) - f(v_i))*v_i^k
+            \geq \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + (g(v_n) - f(v_n)) * v_n^k
+        \end{multline*}
+        Similar to before, we find $c_{l} > 0$ such that $\forall i < n: g(v_i) - f(v_i) \geq - c_{l}$, and let $- n c_l \eqqcolon c_{\text{left}}$. Also, let $c_{\text{right}} \coloneqq g(v_n) - f(v_n)$. We get
+        \begin{multline*}
+            \biggpars{ \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k} + (g(v_n) - f(v_n)) * v_n^k
+            % TODO problematic if n = 1, so v_0 does not exist?
+            \geq -n c_l v_{n-1}^k + c_{\text{right}}*v_n^k = c_{\text{right}}*v_n^k  - c_{\text{left}}*v_{n-1}^k
+        \end{multline*}
+        Since $v_{n-1} < v_n$, this difference is positive for all $k$ large enough, and $P_1 \lesstail P_2$.
         
-%        We can upper-bound the
-        
-        
+        \ref{item:discreteFiniteTailOrder-DominatingPointEquivalence}:
+        By \ref{item:discreteTailOrder-DominatingPointSuffCondition}, the condition in \eqref{eq:discreteFiniteTailOrder-DominatingPointEquivalence} is sufficient; We need to show that in the finite case, it is also necessary.
+        Suppose $P_1 \lesstail P_2$, let $v_1 < \dots < v_m$ denote the values in the common support.
+        Let $n$ be the maximal index such that $f(v_n) \neq g(v_n)$: Such an $n$ must exist; else, $f(v_i) = g(v_i)$ for all $i$ would imply $P_1 = P_2$ in contradiction to our assumption.
+        Since by the above sufficient condition, $f(v_n) > g(v_n)$ would imply $P_1 \greatertail P_2$, we must have $f(v_n) < g(v_n)$. So $x_0 \coloneqq v_n$ fulfills the desired property.
+    \end{proof}
+
+    \begin{defn}
+        % TODO cite from somewhere, and discuss the term
+        Let $\leqRlex$ denote the \emph{reflected lexicographical order} on $\R^n$:
+        \begin{gather*}
+            (x_1, \dots, x_n) \leqRlex (y_1, \dots, y_n) \colonlra x = y \vee (\exists k: x_k < y_k \wedge x_i = y_i ~\forall i > k)
+        \end{gather*}
+    \end{defn}
+    $\leqRlex$ of course is essentially the usual lexicographic order, but starting comparisons from the right instead of from the left.
+    
+    \begin{cor}
+        Let $P_1, P_2 \in \Fgeq \cap L$ be discrete distributions with probability mass functions $f, g$ and finite common support $(\supp P_1 \cup \supp P_2) = \set{v_1, \dots, v_m}$ with the support elements $v_i$ in increasing order. Then
+        \begin{gather}            
+            P_1 \leqtail P_2 \lra (f(v_1), \dots, f(v_m)) \leqRlex (g(v_1), \dots, g(v_m))
+            \label{eq:discreteFiniteTailOrder-RLexEqivalence}
+        \end{gather}
+    \end{cor}
+    \begin{proof}
+        This follows directly from Theorem \ref{thm:DiscreteTailOrderSuffConditions} and its proof via the definition of $\leqRlex$.
     \end{proof}
     
+%    \begin{cor}
+%        Let both $X$ and $Y$ be tail-orderable and discrete with finite support, with probability mass functions $f, g$. Let $S = \supp(X) \cup \supp(Y) = \set{x_1, \dots, x_n}$ with $x_1 \leq \dots \leq x_n$. Then
+%        \begin{gather*}
+%        X \leqtail Y ~\Longleftrightarrow~ (f(x_n), \dots, f(x_1)) \;\leqlex\; (g(x_n), \dots, g(x_1))
+%        \end{gather*}
+%        \label{cor:leqtailDiscreteLex}
+%    \end{cor}
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
     
