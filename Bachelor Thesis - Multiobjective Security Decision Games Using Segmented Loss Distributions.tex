@@ -860,10 +860,11 @@
             \end{gather}
             \label{item:discreteFiniteTailOrder-DominatingPointEquivalence}
         \end{enumerate}
-        \label{thm:DiscreteTailOrderSuffConditions}
+        \label{thm:discreteTailOrderSuffConditions}
     \end{thm}
     \begin{proof}
         \ref{item:discreteTailOrder-DominatingPointSuffCondition}:
+        \todo{The assumption that the support can be ordered like that is invalid. The whole proof needs to be fixed.}
         Similar to the proof of Theorem \ref{thm:acTailOrderSuffConditions}, we want to show that $m_k(P_2) - m_k(P_1) > 0$ for all large enough $k$.
         Let $v_1 < v_2 < \dots$ denote the values that get assigned positive probability mass by either $f$ or $g$, in ascending order.
         Let $n$ be such that $x_0 = v_n$. Then we get
@@ -905,16 +906,107 @@
         \end{gather}
     \end{cor}
     \begin{proof}
-        This follows directly from Theorem \ref{thm:DiscreteTailOrderSuffConditions} and its proof via the definition of $\leqRlex$.
+        This follows directly from Theorem \ref{thm:discreteTailOrderSuffConditions} and its proof via the definition of $\leqRlex$.
     \end{proof}
+
+    In the more general case of distributions in $\Fgeq \cap L$ which are either absolutely continuous discrete, but supported on a countably infinite set, Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} only give sufficient conditions. Both can not be made into equivalences, as the following counter-examples show.
+    \begin{ex}~
+        \begin{enumerate}
+            \item
+%            \paragraph{Discrete Counterexample} 
+            We construct two discrete distributions $P_1, P_2$ both supported on a subset of the bounded interval $[1, 2]$, such that their probability mass functions $f, g$, as well as their distribution functions $F_1, F_2$, are infinitely alternating.
+            
+%%            For $k \in \N$, let $\tilde{p}_k \coloneqq 1-\frac{1}{2^k}$, $\tilde{q}_k \coloneqq \frac{1}{2}(\tilde{p}_k + \tilde{p}_{k+1})$. Next let $p_{2k-1} = p_{2k} \coloneqq \tilde{p}_k$, $q_1 = 0$, $q_{2k} = q_{2k+1} \coloneqq \tilde{q}_k$ for all $k$.
+%            For $k \in \N$, let 
+%%            $p_{2k} = p_{2k+1} \coloneqq 1 - \frac{1}{2^{2k-1}}$, $p_1 = 0$, $q_{2k-1} = q_{2k} \coloneqq 1 - \frac{1}{2^{2k-2}}$.
+%            $p_{2k-1} = p_{2k} \coloneqq 1 - \frac{1}{2^{2k-1}}$, $q_{2k} = q_{2k+1} =  \frac{1}{2^{2k}}$, $q_1 = 1$.
+%            Then the sequences $(p_k)_k, (q_k)_k$ are alternating:
+%            For example, the first entries in $(p_k, q_k)_k$ are $(\frac{1}{2}, 0), (\frac{1}{2}, \frac{3}{4}), (\frac{7}{8}, \frac{3}{4}), (\frac{7}{8}, \frac{15}{16})$, etc.
+%            % TODO change p, q to something simpler
+%            They are going to represent plateau values the distribution functions $F_1$ and $F_2$ will take on sub-intervals of $[1, 2]$.
+%            We achieve this by letting $f(2-\frac{1}{2^{k}}) = p_{k} - p_{k-1}$ for odd $k$ (where $p_0 \coloneqq 0$), $g(2-\frac{1}{2^k}) = q_{k} - q_{k-1}$ for even $k$, and let $f, g$ be zero for all other values. By construction, these actually are probability mass functions.
+%            
+%            Since $f, g$ are alternating, i.e. there is no $x_0$ such that one mass function dominates the other from $x_0$ on, the sufficient condition from \ref{thm:discreteTailOrderSuffConditions} is not fulfilled in either direction.
+%            However, we will show that $P_1 \leqtail P_2$, so \ref{thm:discreteTailOrderSuffConditions} is not an equivalence; since the distribution functions are alternating as well, this also shows there also can not be a sufficient dominance condition for distribution functions.
+
+            For $c > 1$, let $P_c$ be defined by $P(\set{2-\bigpars{\frac{1}{c}}^k}) = (c-1)\bigpars{\frac{1}{c}}^k$ for all $k \in \N$, and zero everywhere else.
+            These are constructed to sum to $1$ by the geometric series.
+            Letting $a_k \coloneqq \bigpars{\frac{1}{c}}^k$, we will use that $\sum_{j = 1}^k  a_k = \frac{1 - \pars{\frac{1}{c}}^k}{c - 1} = \frac{1 - a_k}{c - 1}$,
+            the corresponding distribution function $F_c$ comes out to be 
+            \begin{multline*}
+                F_c 
+                = \sum_{k \geq 1} (c-1) a_k * \1_{[2-a_k, \infty)}
+                = \biggpars{\sum_{k \geq 1} (c-1) \biggpars{\sum_{j = 1}^k  a_j} * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)} \\
+%                = \biggpars{\sum_{k \geq 1} (c-1) \frac{1-a_k}{c-1} * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}
+                = \biggpars{\sum_{k \geq 1} (1-a_k) * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}
+            \end{multline*}
+            In particular, $F_c$ has the property to be upper-bounded by the line $x \mapsto x-1$ on [1, 2], touching it exactly at its discontinuity points, i.e. $F_c(2-a_k) = 1-a_k$.
+            We can use this to construct two distributions with infinitely alternating distribution functions, as shown by a graphical proof, see Figure \ref{fig:distributionsGeometricSeriesCounterexample-2-3}:
+%            $F_c$ “jumps” to the diagonal at every point $2-\frac{1}{c^k}$, but stays below it everywhere else.
+            If we choose $c, d$ such that the sets $\set{2 - \frac{1}{c^k} \mid k \in \N}, \set{2 - \frac{1}{d^k} \mid k \in \N}$ are disjoint,
+            then $F_c, F_d$ infinitely alternate, since at every jump, one distribution function overtakes the other.
+            In particular, $\set{P_p \mid p \text{ prime}}$ is an infinite family of distributions with infinitely alternating distribution functions.
+            
+            We can express the $n$'th moment of $P_c$ as
+            \begin{multline*}
+                m_n(P_c) 
+                = \sum_{k \geq 1} (c-1) \frac{1}{c^k} (2-\frac{1}{c^k})^n
+                = \sum_{k \geq 1} (c-1) \frac{(2c^k-1)^n}{c^{kn+k}} \\
+                = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j (c-1)\biggpars{\sum_{k \geq 1}\frac{c^{-jk}}{c^k}}
+                = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \frac{1}{c^{1+j}-1}
+            \end{multline*}
+            We would like to prove $P_c \lesstail P_d \forall 1 < c < d$, but it's hard to show that above formula is increasing with $c$.
+            Computer calculations suggest that the moment sequence of $P_c$ increases pointwise as $c$ increases, however we have no rigorous argument yet.
+            
+            \begin{figure}
+                \centering
+                \includegraphics[width=0.5\linewidth]{Pictures/geometric-series-distribution-2-3-half.png}
+                \caption{Distribution functions $F_2, F_3$ of geometric series construction}
+                \label{fig:distributionsGeometricSeriesCounterexample-2-3}
+            \end{figure}
+        
+            \item 
+            In another, more general approach, we start with some discrete distribution $P$ with $\supp P = \set{s_1, s_2, \dots} \subseteq [a, b)$, $1 < a < b$, the $s_i$ in increasing order, and probability mass function $f$ which is monotonic on the support, i.e. $\forall i < j: f(s_i) > f(s_j)$. We construct $\tilde{P}$ with mass function $g$, where each support point is shifted a bit to the right, with its probability adjusted to be only a little smaller, giving the remaining probability mass to the point $\tilde{a} \coloneqq \frac{1+a}{2}$.
+            First, set $\tilde{s}_i \coloneqq \frac{s_i+ s_{i+1}}{2}$.
+            We adjust the probability of $\tilde{s}_i$ by a factor $c_i < 1$, i.e. $g(\tilde{s}_i) = c_i f(s_i)$, chosen such that $c_i \geq \frac{s_i}{\tilde{s_i}}$ (ensuring $\tilde{P}$ has greater moments than $P$), $c_i \geq 1-\frac{1}{2^i}$ (ensuring the distribution functions alternate), and $c_i \geq \frac{f(s_{i+1})}{f(s_i)}$ (ensuring $g$ 
+            also is monotonic on its support). In summary, we have:            
+            \begin{gather*}
+                g(\tilde{s}_i) = c_i f(s_i), \quad
+                c_i \coloneqq \max\biggset{\frac{s_i}{\tilde{s_i}}, 1-\frac{1}{2^i}, \frac{f(s_{i+1})}{f(s_i)}} < 1, \quad
+                g(\tilde{a}) = \sum_{i \geq 1} (1-c_i) f(s_i)
+            \end{gather*}
+            By the first property of $c_i$, $g(\tilde{s}_i)\tilde{s}_i \geq f(s_i)s_i ~\forall i$, so for the moments we have:
+            \begin{multline*}
+                m_n(\tilde{P}) - m_n(P)
+                = g(\tilde{a})*\tilde{a}^n + \sum_{k \geq 1} g(\tilde{s}_i) \tilde{s}_i^n - f(s_i) s_i^n \\
+                \geq g(\tilde{a}) + \sum_{k \geq 1} f(s_i) s_i^n * (\tilde{s}_i^{(n-1)} - 1)
+                \geq g(\tilde{a}) > 0
+%                \label{eq:momentPushingExample}
+            \end{multline*}
+            Secondly, the distribution functions alternate: on the one hand, 
+            \begin{multline*}
+                G(\tilde{s_k}) 
+                = g(\tilde{a}) + \sum_{i=1}^k f(s_i)c_i 
+                = g(\tilde{a}) - \bigpars{\sum_{i=1}^k (1-c_i) f(s_i)} + F(s_k) \\
+                = \bigpars{\sum_{i \geq k+1} (1-c) f(s_i)} + F(s_k) > F(s_k) = F(\tilde{s_k})
+            \end{multline*}
+            On the other hand, 
+            \begin{multline*}
+                G(s_k)
+                = g(\tilde{a}) + \sum_{i=1}^{k-1} f(s_i)c_i 
+                = g(\tilde{a}) + \sum_{i=1}^{k-1} f(s_i) - \sum_{i=1}^{k-1} f(s_i) (1-c_i) \\
+                = F(s_k) - f(s_k) + g(\tilde{a}) - \sum_{i=1}^{k-1} f(s_i) (1-c_i) 
+                = F(s_k) - f(s_k) + \sum_{i \geq k} f(s_i) (1-c_i)
+            \end{multline*}
+            Using the second property of $c_i$ and monotonicity of $f$, we get
+            $\sum_{i \geq k} f(s_i) (1-c_i) \leq \sum_{i \geq k} f(s_i) \frac{1}{2^i} < \frac{1}{2^{k-1}} f(s_k) \leq f(s_k)$,
+            therefore $G(s_k) < F(s_k)$.
+            So $P \lesstail \tilde{P}$, and their probability mass, as well as distribution functions are infinitely alternating, such that the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} is not satisfied for any $x_0$.
+            Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending wrt. $\lesstail$, and no two consecutive distribution in it satisfy the sufficient condition of \ref{thm:acTailOrderSuffConditions}.
+            
+        \end{enumerate}
+    \end{ex}
     
-%    \begin{cor}
-%        Let both $X$ and $Y$ be tail-orderable and discrete with finite support, with probability mass functions $f, g$. Let $S = \supp(X) \cup \supp(Y) = \set{x_1, \dots, x_n}$ with $x_1 \leq \dots \leq x_n$. Then
-%        \begin{gather*}
-%        X \leqtail Y ~\Longleftrightarrow~ (f(x_n), \dots, f(x_1)) \;\leqlex\; (g(x_n), \dots, g(x_1))
-%        \end{gather*}
-%        \label{cor:leqtailDiscreteLex}
-%    \end{cor}
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
     
