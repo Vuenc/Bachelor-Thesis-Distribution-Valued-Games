@@ -896,7 +896,7 @@
             (x_1, \dots, x_n) \leqRlex (y_1, \dots, y_n) \colonlra x = y \vee (\exists k: x_k < y_k \wedge x_i = y_i ~\forall i > k)
         \end{gather*}
     \end{defn}
-    $\leqRlex$ of course is essentially the usual lexicographic order, but starting comparisons from the right instead of from the left.
+    $\leqRlex$ is very similar to the usual lexicographic order, but starts comparing from the right instead of from the left.
     
     \begin{cor}
         Let $P_1, P_2 \in \Fgeq \cap L$ be discrete distributions with probability mass functions $f, g$ and finite common support $(\supp P_1 \cup \supp P_2) = \set{v_1, \dots, v_m}$ with the support elements $v_i$ in increasing order. Then
@@ -909,12 +909,19 @@
         This follows directly from Theorem \ref{thm:discreteTailOrderSuffConditions} and its proof via the definition of $\leqRlex$.
     \end{proof}
 
-    In the more general case of distributions in $\Fgeq \cap L$ which are either absolutely continuous discrete, but supported on a countably infinite set, Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} only give sufficient conditions. Both can not be made into equivalences, as the following counter-examples show.
+    In the more general case of distributions in $\Fgeq \cap L$ which are either absolutely continuous or discrete, but supported on a countably infinite set, Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} only give sufficient conditions. Both can not be made into equivalences, as the following counter-examples show.
     \begin{ex}~
+        We want to construct pairs of distributions which do not satisfy the sufficient conditions from above theorems:
+        Their probability mass/density functions should \emph{not} be such that one dominates the other from one point on, and instead switch infinitely often.
+        Furthermore, we want our counterexamples to satisfy additional properties: 
+        First, they should have bounded support. 
+        Second, not only the mass/density functions should alternate, but also the distribution functions, showing that no alternative criterion for $\lesstail$ requiring eventual distribution function dominance can be made into an equivalence.
+        Third, in the absolutely continuous case, the densities should be continuous.        
+        
         \begin{enumerate}
             \item
 %            \paragraph{Discrete Counterexample} 
-            We construct two discrete distributions $P_1, P_2$ both supported on a subset of the bounded interval $[1, 2]$, such that their probability mass functions $f, g$, as well as their distribution functions $F_1, F_2$, are infinitely alternating.
+%            We construct two discrete distributions $P_1, P_2$ both supported on a subset of the bounded interval $[1, 2]$, such that their probability mass functions $f, g$, as well as their distribution functions $F_1, F_2$, are infinitely alternating.
             
 %%            For $k \in \N$, let $\tilde{p}_k \coloneqq 1-\frac{1}{2^k}$, $\tilde{q}_k \coloneqq \frac{1}{2}(\tilde{p}_k + \tilde{p}_{k+1})$. Next let $p_{2k-1} = p_{2k} \coloneqq \tilde{p}_k$, $q_1 = 0$, $q_{2k} = q_{2k+1} \coloneqq \tilde{q}_k$ for all $k$.
 %            For $k \in \N$, let 
@@ -929,10 +936,11 @@
 %            Since $f, g$ are alternating, i.e. there is no $x_0$ such that one mass function dominates the other from $x_0$ on, the sufficient condition from \ref{thm:discreteTailOrderSuffConditions} is not fulfilled in either direction.
 %            However, we will show that $P_1 \leqtail P_2$, so \ref{thm:discreteTailOrderSuffConditions} is not an equivalence; since the distribution functions are alternating as well, this also shows there also can not be a sufficient dominance condition for distribution functions.
 
+            Our first discrete example is based on the geometric series and has a nice visual proof of alternating distribution functions, but we have no complete proof of moment-sequence dominance.
             For $c > 1$, let $P_c$ be defined by $P(\set{2-\bigpars{\frac{1}{c}}^k}) = (c-1)\bigpars{\frac{1}{c}}^k$ for all $k \in \N$, and zero everywhere else.
             These are constructed to sum to $1$ by the geometric series.
-            Letting $a_k \coloneqq \bigpars{\frac{1}{c}}^k$, we will use that $\sum_{j = 1}^k  a_k = \frac{1 - \pars{\frac{1}{c}}^k}{c - 1} = \frac{1 - a_k}{c - 1}$,
-            the corresponding distribution function $F_c$ comes out to be 
+            Letting $a_k \coloneqq \bigpars{\frac{1}{c}}^k$, we will use that $\sum_{j = 1}^k  a_k = \frac{1 - \pars{\frac{1}{c}}^k}{c - 1} = \frac{1 - a_k}{c - 1}$.
+            The corresponding distribution function $F_c$ comes out to be 
             \begin{multline*}
                 F_c 
                 = \sum_{k \geq 1} (c-1) a_k * \1_{[2-a_k, \infty)}
@@ -940,11 +948,10 @@
 %                = \biggpars{\sum_{k \geq 1} (c-1) \frac{1-a_k}{c-1} * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}
                 = \biggpars{\sum_{k \geq 1} (1-a_k) * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}
             \end{multline*}
-            In particular, $F_c$ has the property to be upper-bounded by the line $x \mapsto x-1$ on [1, 2], touching it exactly at its discontinuity points, i.e. $F_c(2-a_k) = 1-a_k$.
-            We can use this to construct two distributions with infinitely alternating distribution functions, as shown by a graphical proof, see Figure \ref{fig:distributionsGeometricSeriesCounterexample-2-3}:
-%            $F_c$ “jumps” to the diagonal at every point $2-\frac{1}{c^k}$, but stays below it everywhere else.
+            In particular, on the interval [1, 2], $F_c$ is bounded from above by the line $x \mapsto x-1$, touching it exactly at its discontinuity points, i.e. $F_c(2-a_k) = 1-a_k$. This gives rise to a graphical proof.
             If we choose $c, d$ such that the sets $\set{2 - \frac{1}{c^k} \mid k \in \N}, \set{2 - \frac{1}{d^k} \mid k \in \N}$ are disjoint,
-            then $F_c, F_d$ infinitely alternate, since at every jump, one distribution function overtakes the other.
+            then $F_c, F_d$ infinitely alternate as seen in Figure \ref{fig:distributionsGeometricSeriesCounterexample-2-3}:
+            At every jump, one distribution function overtakes the other since it jumps to the diagonal while the other function is strictly smaller.
             In particular, $\set{P_p \mid p \text{ prime}}$ is an infinite family of distributions with infinitely alternating distribution functions.
             
             We can express the $n$'th moment of $P_c$ as
@@ -955,7 +962,7 @@
                 = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j (c-1)\biggpars{\sum_{k \geq 1}\frac{c^{-jk}}{c^k}}
                 = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \frac{1}{c^{1+j}-1}
             \end{multline*}
-            We would like to prove $P_c \lesstail P_d \forall 1 < c < d$, but it's hard to show that above formula is increasing with $c$.
+            We would like to prove $P_c \lesstail P_d ~ \forall 1 < c < d$, but it's hard to show that above formula is increasing with $c$.
             Computer calculations suggest that the moment sequence of $P_c$ increases pointwise as $c$ increases, however we have no rigorous argument yet.
             
             \begin{figure}
@@ -968,7 +975,7 @@
             \item 
             In another, more general approach, we start with some discrete distribution $P$ with $\supp P = \set{s_1, s_2, \dots} \subseteq [a, b)$, $1 < a < b$, the $s_i$ in increasing order, and probability mass function $f$ which is monotonic on the support, i.e. $\forall i < j: f(s_i) > f(s_j)$. We construct $\tilde{P}$ with mass function $g$, where each support point is shifted a bit to the right, with its probability adjusted to be only a little smaller, giving the remaining probability mass to the point $\tilde{a} \coloneqq \frac{1+a}{2}$.
             First, set $\tilde{s}_i \coloneqq \frac{s_i+ s_{i+1}}{2}$.
-            We adjust the probability of $\tilde{s}_i$ by a factor $c_i < 1$, i.e. $g(\tilde{s}_i) = c_i f(s_i)$, chosen such that $c_i \geq \frac{s_i}{\tilde{s_i}}$ (ensuring $\tilde{P}$ has greater moments than $P$), $c_i \geq 1-\frac{1}{2^i}$ (ensuring the distribution functions alternate), and $c_i \geq \frac{f(s_{i+1})}{f(s_i)}$ (ensuring $g$ 
+            We adjust the probability of $\tilde{s}_i$ by a factor $c_i < 1$, i.e. $g(\tilde{s}_i) = c_i f(s_i)$, chosen such that $c_i \geq \frac{s_i}{\tilde{s_i}}$ (ensuring $\tilde{P}$ has greater moments than $P$), $c_i \geq 1-\frac{1}{2^i}$ (ensuring the distribution functions alternate), and $c_i \geq \frac{f(s_{i+1})}{f(s_i)}$ (ensuring that $g$ 
             also is monotonic on its support). In summary, we have:            
             \begin{gather*}
                 g(\tilde{s}_i) = c_i f(s_i), \quad
@@ -1003,7 +1010,58 @@
             therefore $G(s_k) < F(s_k)$.
             So $P \lesstail \tilde{P}$, and their probability mass, as well as distribution functions are infinitely alternating, such that the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} is not satisfied for any $x_0$.
             Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending wrt. $\lesstail$, and no two consecutive distribution in it satisfy the sufficient condition of \ref{thm:acTailOrderSuffConditions}.
+            \label{item:discreteSufficientTailOrderConditionCounterexample}
             
+            \item 
+            For the absolutely continuous counterexample, we start with two discrete distributions $P_1, P_2$ where $P_2$ is obtained from $P_1$ by the process from \ref{item:discreteSufficientTailOrderConditionCounterexample}: In particular, we require $P_1 \lesstail P_2$, $\supp(P_1) = \set{s_1, s_2, \dots}$, $\supp(P_2) = \set{t_0, t_1, t_2, \dots}$ with $1 < t_0 < s_1 < t_1 < s_2 < t_2 < \dots$ ($t_0$ represents $\tilde{a}$ from above), and their distribution functions $F, G$ should alternate with $F(s_k) > G(s_k), F(t_k) < G(t_k) ~\forall k\geq 1$.
+%            their mass functions $f, g$ should satisfy $f(s_i)s_i < g(t_i)t_i ~ \forall i$ (and therefore 
+            
+            We then shift the probability mass $P_1$ gives to each point $s_k$ to an interval to the left of $s_k$, and the probability mass $P_2$ gives to each point $t_k$ to an interval to the right of $t_k$, which preserves the order of the moments. We do it in such a way that the distribution functions are again alternating, and the new density functions are continuous. We will call the new absolutely continuous distributions $\tilde{P}_1, \tilde{P}_2$, their new density functions $\tilde{f}, \tilde{g}$, and their distribution functions $\tilde{F}, \tilde{G}$.
+            
+            To formalize this, let $h: \R \to \R, x \mapsto (6x - 6x^2)\1_{[0, 1]}(x)$. $h$ is a simple probability density function ($\lintegral{\R}{h}{\lambda} = 1$), which is continuous since $h(0) = h(1) = 0$.
+            Denote by $h_{[a, b]}: x \mapsto \frac{1}{b-a}h\bigpars{\frac{x-a}{b-a}}$ the version of $h$ scaled to the interval $[a, b]$, still integrating to 1.
+%            Define $h_{a, b, s}: x \mapsto s*h(\frac{x-b}{b-a})*s$.
+%            Another way to view it is that the integral of $h$ continuously interpolates between the values 0 and 1 on the interval $[0, 1]$.
+            Also, let $m_{k} = \frac{t_{k-1} + s_k}{2}$.
+            Using this notation, we define $\tilde{f}, \tilde{g}$ by:
+            \begin{gather}
+                \tilde{f} = \sum_{k \geq 1}  f(s_k) h_{[m_k, s_k]}, \quad
+                \tilde{g} = \sum_{k \geq 0}  g(t_k) h_{[t_k, m_{k+1}]}
+                \label{eq:acSufficientTailOrderConditionCounterexample-densitiesDefinition}
+            \end{gather}
+            By construction, it's clear that $\lintegral{\R}{\tilde{f}}{\lambda} = \lintegral{\R}{\tilde{g}}{\lambda} = 1$, since $(f(s_k))_{k \geq 1}, g(t_k))_{k \geq 0}$ sum to $1$. The distribution functions are alternating:
+            For $k \geq 1$,
+            \begin{gather*}
+                \tilde{F}(s_k) 
+                = \lintegral{[1, s_k]}{\tilde{f}}{\lambda} 
+                = \sum_{i=1}^{k} f(s_k) 
+                = F(s_k)
+                > G(s_k)
+                = \sum_{i=1}^{k-1} g(t_k) 
+                = \tilde{G}(s_k)
+                ,\\                
+                \tilde{G}(m_{k+1})                
+                = \lintegral{[1, m_{k+1}]}{\tilde{g}}{\lambda} 
+                = \sum_{i=1}^{k} g(t_k)
+                = G(t_k)
+                > F(t_k)
+                = \sum_{i=1}^{k} f(s_k) 
+                = \tilde{F}(m_{k+1})
+            \end{gather*}
+            The ordering of the moments is preserved:
+            \begin{multline*}
+                m_n(\tilde{P_1})
+                = \sum_{k \geq 1} \lintegral{[m_k, s_k]}{x^n h_{[m_k, s_k]}(x)}{\lambda(x)}
+                < \sum_{k \geq 1} f(s_k)*s_k^n \\
+                = m_n(P_1)
+                < m_n(P_2) \\
+                = \sum_{k \geq 0} g(t_k)*t_k^n
+                < \sum_{k \geq 0} \lintegral{[t_k, m_{k+1}]}{x^n h_{[t_k, m_{k+1}]}(x)}{\lambda(x)}
+                = m_n(\tilde{P_2})
+            \end{multline*}
+            If the series in \eqref{eq:acSufficientTailOrderConditionCounterexample-densitiesDefinition} converges uniformly, continuity is preserved.
+            For this we need to have $\norm{f(s_k) h_{[m_k, s_k]}}_\infty = \frac{f(s_k)}{s_k - m_k} \toinfty{k} 0$, and similarly for $g$, which is the case if the probability masses $f(s_k)$ approach zero asymptotically faster than the consecutive differences of the $s_k$. For example, we can set $s_k = 2-\frac{1}{k+1}, f(s_k) = \frac{1}{2^k}$, and use $g, (t_k)_k$ constructed from it as in \ref{item:discreteSufficientTailOrderConditionCounterexample}.
+            % TODO properly reference “uniform convergence preserves continuity”
         \end{enumerate}
     \end{ex}
     
