@@ -1080,6 +1080,207 @@
         \end{enumerate}
     \end{ex}
     
+    \subsection{Totality of Restricted Versions of the Tail Order}
+    When we introduced the tail order, we already discussed its anti-symmetry and totality properties: In short, $\leqtail$ in general is neither total nor anti-symmetric; For anti-symmetry, good counterexamples of distributions with equal moment sequences exist, however anti-symmetry \emph{does} hold on the reasonably large subset of distributions with bounded support.
+    For totality, the situation is less clear: the only counterexamples we saw so far were trivially not $\leqtail$-comparable because they did not even have moments of all orders.
+    A natural question thus is if there is some useful subset of $\DP$ where $\leqtail$ is total. Most generally, is $\leqtail$ total on $L$, i.e. are distributions comparable as soon as  they have moments of all orders? This first question is easy to answer: $\leqtail$ is not total on the whole of $L$, because distributions can take negative values that can make the moment sequences alternating. 
+    % TODO make this “alternating moment sequences” example even shorter [using Dirac measure notations]. Maybe  even move it further up, to the definition of tail order, discussing that \leqtail is not useful on negative values in the support
+    As the simplest example, consider the point-mass distributions on $-1$ and $0$: The moment sequence of the former is given by $(-1)^n$, alternating around the sequence of the latter which is constantly $0$, making the distributions not $\leqtail$-comparable.
+    However, a more realistic question is: is there a smaller subset of $\DP$ where $\leqtail$ is total, which is easy to characterize and big enough to contain many useful distributions?
+    
+    In \cite{bib:rassGameRiskManagI,bib:rassTotalOrderingOnLossDistributions}, the discussion focuses on the particular subset of distributions that have \emph{bounded support which is a subset of $[1, \infty)$} and are either \emph{discrete with finite support}, or \emph{absolutely continuous with a continuous density function}.
+    In \cite[Lemma 2]{bib:rassTotalOrderingOnLossDistributions} and \cite[Lemma 2.4]{bib:rassGameRiskManagI}, the claim is that such distributions are always $\leqtail$-comparable.
+    A proof is given for the absolutely continuous case; however, it contains an error, as it more-or-less applies the argumentation of Theorem \ref{thm:acTailOrderSuffConditions} and implicitly assumes that of two density functions, one dominates the other from some point on. As shown in Example \ref{ex:tailOrderSufficientConditionsCounterexamples}, pairs of distributions exist where this is not the case, and which also are in $\Fgeq$, bounded, and have continuous density functions.
+    
+    \subsubsection{The Moment Problem and its Variants}
+    Since our question crucially depends on properties of moment sequences, it will be helpful to know about the properties of moment sequences.
+    The question to find out whether a given sequence $(m_n)_n$ is a moment sequence for some measure $\mu$ on $\R$ is known as the \emph{moment problem}, and there are several variants studied in the literature:
+%    to characterize moment sequences is known as the \emph{moment problem}, and there are several variants:
+    The \emph{Hamburger moment problem} concerns measures supported on a subset of $\R$, the \emph{Stieltjes moment problem} is about measures supported on a subset of $[0, \infty)$,
+    and the \emph{Hausdorff moment problem} deals with measures supported on a subset of $[0, 1]$. For all three versions, conditions are known that are both sufficient and necessary for $(m_n)_n$ to be a moment sequence of the respective kind.
+    The Hamburger moment problem is too general for our case, since negative values in the support can lead to alternating moment sequences, making the tail order non-total.
+    % TODO and negative values in the support make it useless, too.
+%    We will introduce the characterizations by Stieltjes and Hausdorff, which are more interesting for us.
+%    
+%    \begin{defn}
+%        % TODO check if the term “Hankel matrix” is appropriate. Isn't that an infinite matrix?
+%        Let $n \geq 1$, $a_0, a_1, \dots, a_{2n} \in \R$. Define the \emph{Hankel matrix} $H(a_0,\dots,a_{2n})$ as
+%        \begin{gather*}
+%            H(a_0,\dots,a_{2n}) \coloneqq
+%            \begin{pmatrix}
+%            	a_0    & a_1     & a_2    & \dots    & a_n      \\
+%            	a_1    & a_2     & \ddots &          & a_{n+1}  \\
+%            	a_2    & \ddots  & \ddots & \ddots   & \vdots   \\
+%            	\vdots &         & \ddots & \ddots   & a_{2n-1} \\
+%            	a_n    & a_{n+1} & \dots  & a_{2n-1} & a_{2n}
+%            \end{pmatrix}
+%            \in \R^{(n+1)\times(n+1)}
+%        \end{gather*}
+%    \end{defn}
+%    
+%    \begin{thm}[Stieltjes Moment Characterization]
+%        A sequence $(m_n)_{n \geq 0}$ of real numbers is the moment sequence of some measure $\mu$ on $[0, \infty)$ if and only if one of the following conditions hold:
+%%        \begin{enumerate}
+%%            \item
+%%            \begin{gather*}
+%%                
+%%            \end{gather*}
+%%        \end{enumerate}
+%        \begin{gather}
+%            \forall n: \det(H(m_0, \dots, m_{2n})) > 0,~ \det(H(m_1, \dots, m_{2n+1})) > 0 \\
+%            \begin{split}
+%                \forall n \geq m: \det(H(m_0, \dots, m_{2n})) > 0,~ \det(H(m_1, \dots, m_{2n+1})) > 0 \\
+%                \text{ and } \forall n > m: \det(H(m_0, \dots, m_{2n})) = \det(H(m_1, \dots, m_{2n+1})) = 0
+%            \end{split}
+%        \end{gather}
+%        In the first case, the measure $\mu$ has infinite support, in the second case, it has finite support of size $m$.
+%    \end{thm}  
+
+    \subsubsection{Non-Totality in the Stieltjes Case}
+    However, we can make use of a result relating Stieltjes and Hamburger moment sequences:
+    A moment sequence is called \emph{Hamburger-}/\emph{Stieltjes-}/\emph{Hausdorff-determinate} if there is a \emph{unique} measure of the respective type generating the sequence. The result we'll use is that Stieltjes-determinateness in general does not imply Hamburger-determinateness:
+    
+    \begin{thm}
+        % TODO cite Akhiezer/Dong Lin/Chihara
+        There exists a moment sequence $(m_n)_{n \geq 0}$ that is Stieltjes-determinate, but not Hamburger-determinate.
+    \end{thm}
+
+    \begin{cor}
+        There exist probability measures $P_1, P_2$ with equal moment sequences, where $\supp (P_1) \subseteq [0, \infty)$ and $\supp (P_2) \subsetneq [0, \infty)$.
+        \label{cor:equalMomentSequencesStieltjesHamburger}
+    \end{cor}
+    \begin{proof}
+        Let $(m_n)_{n \geq 0}$ be a moment sequence which is Stieltjes-determinate, but not Hamburger-determinate.
+        Let $\mu_1$ be the unique measure with that moment sequence and support in $[0, \infty)$.
+        Let $\mu_2 \neq \mu_1$ be a different measure with that moment sequence, which exists since the sequence is not Hamburger-determinate. 
+        Since $\mu_1$ is unique in the Stieltjes sense, the support of $\mu_2$ must overlap with $(-\infty, 0)$.
+        If $m_0 \neq 1$, the measures constructed are not probability measures: 
+        We set $P_1 = \frac{1}{m_0}\mu_1, P_2 = \frac{1}{m_0}\mu_2$, which are probability measures which both have the moment sequence $(\frac{m_n}{m_0})_{n \geq 0}$.
+    \end{proof}
+    
+    This result allows us to show that two Stieltjes moment sequences can infinitely alternate: 
+    \begin{ex}
+%        We construct a pair of probability measures supported on a subset of $[0, \infty)$, which have infinitely alternating moment sequences:
+        Let $P_1, P_2$ be the measures from Corollary \ref{cor:equalMomentSequencesStieltjesHamburger}, with moment sequence $(m_n)_{n \geq 0}$.
+        Define a measure $\tilde{P}_2: A \mapsto P_2(A \cap [0, \infty)) + \1_A(0) P_2((\infty, 0))$, which shifts the whole probability mass $P_2$ puts on the negative half-axis to the point $0$, and has support in $[0, \infty)$.
+        Then its moment sequence $(\tilde{m}_n)_{n \geq 0}$ is given by $\tilde{m}_0 = 1$, and for $n > 0$:
+        \begin{gather*}
+            \tilde{m}_n 
+            = \lintegral{[0, \infty)}{x^n}{\tilde{P}_2}
+            = \lintegral{[0, \infty)}{x^n}{P_2}
+            = \lintegral{\R}{x^n}{P_2} - \lintegral{(-\infty, 0)}{x^n}{P_2}
+            = m_n - \undersetbrace{\lintegral{(-\infty, 0)}{x^n}{P_2}}{\text{alternating}}
+        \end{gather*}
+        By construction of $P_2$, the term $\lintegral{(-\infty, 0)}{x^n}{P_2}$ is strictly positive for $n$ even, and strictly negative for $n$ odd.
+        Therefore $(\tilde{m}_n)_{n \geq 0}$ alternates infinitely around $(m_n)_{n \geq 0}$,
+        and both sequences are moment sequences of probability measures supported on a subset of $[0, \infty)$.
+    \end{ex}
+
+    This shows that the space of probability measures supported on a subset of $[0, \infty)$ that have moments of all orders is still too large for $\leqtail$ to be total.
+    \todo{Give a counterexample explicitly.}
+    
+    \subsubsection{Distributions with Non-Negative Bounded Support}
+    Next we look into distributions with support in a bounded interval $[a, b]$, $0 \leq a < b$.
+    This is related to the Hausdorff moment problem where the bounded interval is $[0, 1]$.
+    A sufficient and necessary condition for a sequence to be a Hausdorff moment sequence is based on repeatedly taking differences of successive terms.
+    \begin{defn}
+        The \emph{difference operator} $\Delta: \R^{\N_0} \to \R^{\N_0}$ maps a sequence of real numbers to the sequence of its successive differences:
+        \[
+            \Delta((s_n)_{n \in \N_0}) \coloneqq (s_{n+1} - s_n)_{n \in \N_0}, ~ \text{ also written as }\,
+            (\Delta s)_n \coloneqq s_{n+1} - s_n
+        \]
+    \end{defn}
+
+    \begin{thm}
+        A sequence $m = (m_n)_{n \in \N_0}$ is a Hausdorff moment sequence, i.e. is the moment sequence of a measure $\mu$ on with support in $[0, 1]$,
+        if and only if
+        \begin{gather}
+            \forall n, k \in \N: (-1)^k (\Delta^k m)_n \geq 0
+            \label{eq:completelyMonotonicSequence}
+        \end{gather}
+        A sequence satisfying \eqref{eq:completelyMonotonicSequence} is also called \emph{completely monotonic}.
+        \label{thm:hausdorffMomentSequenceCharacterization}
+    \end{thm}
+    \begin{proof}[Proof (necessity)]
+        We only show here that condition \eqref{eq:completelyMonotonicSequence} is necessary, which is the easier part of the proof.
+        Let $\mu$ be the measure with support in $[0, 1]$ which has $m$ as its moment sequence.
+        We first proof by induction over $k$ that $(\Delta^k m)_n = \lintegral{[0, 1]}{x^n (x-1)^k}{\mu(x)}$:
+        \begin{gather*}
+            (\Delta m)_n 
+            = m_{n+1} - m_{n} 
+            = \lintegral{[0, 1]}{x^{n+1}}{\mu(x)} - \lintegral{[0, 1]}{x^n}{\mu(x)} 
+            = \lintegral{[0, 1]}{x^n(x-1)}{\mu(x)}, \\
+            (\Delta^{k+1} m)_n
+%            = (\Delta^k m)_{n+1} - (\Delta^k m)_n \\
+            = \lintegral{[0, 1]}{x^{n+1} (x-1)^k}{\mu(x)} - \lintegral{[0, 1]}{x^n (x-1)^k}{\mu(x)}
+            = \lintegral{[0, 1]}{x^{n}(x-1)^{k+1}}{\mu(x)}
+        \end{gather*}
+        From this we directly get that $(-1)^k (\Delta^k m)_n = \lintegral{[0, 1]}{x^n (1-x)^k}{\mu(x)}$.
+        Since we integrate over $[0, 1]$, the integrand is non-negative on the domain of integration.
+        Therefore, $(-1)^k (\Delta^k m)_n \geq 0$.
+    \end{proof}
+
+    However, our focus is not so much on distributions with support in $[0, 1]$, but rather with support in $[1, b]$ for some $b > 1$.
+    Moment sequences behave somewhat differently in that case: While they are monotonically decreasing in the former case, they are monotonically increasing in the latter, even growing without bound if there is some mass to the right of $1$.
+    Yet we can easily obtain a necessary criterion similar to \eqref{eq:completelyMonotonicSequence} for a sequence to be the moment sequence of such a distribution:
+    \begin{cor}
+        For any moment sequence $m$ of a measure $\mu$ supported on a subset of $[1, b]$, all successive differences are non-negative:
+        \begin{gather}
+            \forall n, k \in \N: (\Delta^k m)_n \geq 0
+        \end{gather}
+        \label{cor:hausdorff-1-b-necessaryCondition}
+    \end{cor}
+    \begin{proof}
+        Just as in the last proof, we have that $(\Delta^k m)_n = \lintegral{[1, b]}{x^n (x-1)^k}{\mu(x)}$.
+        Since in this case, $x-1 > 0 \,\forall x \in [1, b]$, the integrand is non-negative, and $(\Delta^k m)_n \geq 0$.
+    \end{proof}
+
+    Another similar necessary condition can be stated for moment sequences of distributions on $[0, b]$, using a somewhat modified difference operator:
+    \newcommand{\DeltaB}[1]{\Delta\hspace{-.225cm}{\mathrel{\raisebox{0.045cm}{\scalebox{.9}{$\scriptscriptstyle#1$}}}\hspace{.22cm}}}
+    \begin{lemma}
+        Let $\DeltaB{b}: \R^{\N_0} \to \R^{\N_0}$, $(\DeltaB{b} m)_n \coloneqq m_{n+1} - b * m_n$.
+        Then for any moment sequence $m$ of a measure $\mu$ supported on a subset of $[0, b]$:
+        \begin{gather}            
+            \forall n, k \in \N: (-1)^k (\DeltaB{b}^k m)_n \geq 0
+        \end{gather}
+        \label{lemma:hausdorff-0-b-necessaryCondition}
+    \end{lemma}
+    \begin{proof}
+        Analogously to the proof of \ref{thm:hausdorffMomentSequenceCharacterization},
+        we can prove by induction that $(\DeltaB{b}^k m)_n = \lintegral{[0, b]}{x^n (x-b)^k}{\mu(x)}$.
+        Since again, in $(-1)^k (\DeltaB{b}^k m)_n = \lintegral{[0, b]}{x^n (b - x)^k}{\mu(x)}$, the integrand is non-negative, we can conclude $(-1)^k (\DeltaB{b}^k m)_n \geq 0$.
+    \end{proof}
+
+    % TODO basically, we woould need a sufficient condition to construct a counterexample; if we can proof that no alternating counterexample exists, a necessary condition will be enough.
+    While \ref{cor:hausdorff-1-b-necessaryCondition} and \ref{lemma:hausdorff-0-b-necessaryCondition} give necessary conditions, it would be very useful to have a condition that is also sufficient. However, using \ref{lemma:hausdorff-0-b-necessaryCondition} we can show that \ref{cor:hausdorff-1-b-necessaryCondition} can not be a sufficient condition.
+    
+    \begin{ex}
+        We construct a sequence that satisfies the condition of \ref{cor:hausdorff-1-b-necessaryCondition} and is infinitely alternating around a moment sequence:
+        Let sequences $s, q$ be given by $s_n = 4^n$, $q_n = (-1)^n\frac{1}{2^n}$, $n \in \N_0$. $s$ is clearly a moment sequence; we show that $(s_n + q_n)_{n \in \N_0}$ satisfies the conditions of \ref{cor:hausdorff-1-b-necessaryCondition}:
+        By induction, one can show that $(\Delta^k s)_n = 3^k 2^n$ and $(\Delta^k q)_n = 3^k\frac{(-1)^{n+k}}{2^{n+k}}$.
+        Since the $\Delta$-operator is linear, we have $(\Delta^k (s+q))_n = 3^k\bigpars{2^n + \frac{(-1)^{n+k}}{2^{n+k}}} \geq 0$ for all $n, k$.
+        So $s+q$ is infinitely alternating around the moment sequence $s$ and satisfies \ref{cor:hausdorff-1-b-necessaryCondition}, which would make it a candidate for a counterexample.
+        
+        However, $s+q$ does not satisfy \ref{lemma:hausdorff-0-b-necessaryCondition} for any reasonable choice of $b$:
+        If $s+q$ was the moment sequence of some measure $\mu$ with support in $[0, b]$, then certainly $\forall n \geq 0: s_n + q_n < b^n$.
+        We can take the generous bound $s_n + q_n \leq 5^n$ which is satisfied, since $s_n \leq 4^n, q_n < 1$ - so the support of $\mu$ would definitely be a subset of $[0, 5]$.
+        However, calculations show that $(\DeltaB{5}^2 (s+q))_1 = -\frac{89}{8} < 0$, so by \ref{lemma:hausdorff-0-b-necessaryCondition}, $(s+q)$ is not a moment sequence of such a measure.
+    \end{ex}
+
+    \subsubsection{Possible Further Progress}
+
+    As far as this thesis is concerned, the question whether two moment sequences of distributions on either an interval $[0, b]$ or an interval $[1, b]$ can be infinitely alternating could not be solved yet. It therefore remains open for the moment if $\leqtail$ is a total order on such distributions.
+    However, the condition of complete monotonicity \eqref{eq:completelyMonotonicSequence} seems quite strict, and during experimentation I could not even find a pair of completely monotonic sequences alternating more than twice; some possible further progress could be to prove that two Hausdorff moment sequences (i.e. for the $[0, 1]$-case) can not infinitely alternate. Possibly, such a result could be easily generalized to the $[0, b]$-case using the condition of \ref{lemma:hausdorff-0-b-necessaryCondition}; however another issue is how to generalize it to the $[1, b]$-case.
+    % TODO find references that seem to suggest that Hausdorff works for [a, b] (e.g. the one book review, but more?)
+    
+    While the necessary condition of \ref{lemma:hausdorff-0-b-necessaryCondition} might be enough to transfer a positive result from $[0, 1]$ to $[0, b]$, it does not suffice if a counterexample is found: Even if we found two alternating sequences satisfying the conditions of \ref{lemma:hausdorff-0-b-necessaryCondition}, this would still not ensure that corresponding Borel measures exist, since the only proved the condition to be necessary, not sufficient.
+    Yet another issue is that we are especially interested in distributions that 
+%    either have finite support, or 
+    are absolutely continuous (or with finite support, but there no counterexamples exist by \ref{thm:discreteTailOrderSuffConditions}); so even if we found a counter-example and proved that the two sequences belonged to measures on $[0, b]$, this would still not ensure the measures are absolutely continuous.
+    
+    An interesting note is that in some references it is suggested that Hausdorff's characterization can easily be generalized to any interval $[a, b]$.
+    However, I could not yet find a formalization of this as a necessary and sufficient criterion. If something in this direction could be found, this would definitely be a helpful step, either for transferring a proof from $[0, 1]$ to $[1, b]$, or for proving counterexample sequences to have corresponding measures.
+    
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
     
