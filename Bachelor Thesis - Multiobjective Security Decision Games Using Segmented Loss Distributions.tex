@@ -452,7 +452,8 @@
     \begin{proof}
         \todo{Probably leave out this proof of Fictitious Play convergence.}
     \end{proof}
-    
+
+    % TODO rewrite occurences of it's, didn't, don't etc. (However, consider: “If you are making an off-the-cuff or informal remark within an otherwise formal paper, it is okay to use a contraction as part of your writing voice”)
     Note that it's quite possible that for no value of $k$, $(x_k, y_k)$ actually forms a Nash equilibrium.
     To deal with situations like this, there is the notion of $\epsilon$-Nash equilibria, where deviation from the equilibrium at most gains players $\epsilon$ additional payoff. % TODO Cite definition of epsilon-equilibria!
     By continuity of the payoff functions, we see that for any $\epsilon$, for $k$ large enough, $(x_k, y_k)$ is an $\epsilon$-Nash equilibrium.
@@ -767,6 +768,7 @@
     Now that we know that $\leqtail$ is a stochastic order, we can ask if it is anti-symmetric and/or total.
     In the general context, it has neither of the properties: $\leqtail$ can not compare distributions which don't have moments of all orders, therefore it is not total on $\DP$.
     Also there exist examples of different distributions in $\Lallmoms$ which have equal moment sequences, violating anti-symmetry. However as \cite{bib:rassGameRiskManagI} notes that for any pair of distributions which both have their moment generating functions existing in a neighborhood around 0, equal moment sequences imply equal distributions.
+    % TODO wait, but moment sequences only need to be eventually equal for violated anti-symmetry?
     Therefore $\leqtail$ is anti-symmetric on any subset $D \subseteq \DP$ of distributions having moment generating functions.
     % TODO Introduce moment generating functions somewhere earlier
     % TODO Formalize Rass' (?) result about moment generating functions, at least in a lemma without proof
@@ -1022,7 +1024,7 @@
             $\sum_{i \geq k} f(s_i) (1-c_i) \leq \sum_{i \geq k} f(s_i) \frac{1}{2^i} < \frac{1}{2^{k-1}} f(s_k) \leq f(s_k)$,
             therefore $G(s_k) < F(s_k)$.
             So $P \lesstail \tilde{P}$, and their probability mass, as well as distribution functions are infinitely alternating, such that the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} is not satisfied for any $x_0$.
-            Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending wrt. $\lesstail$, and no two consecutive distribution in it satisfy the sufficient condition of \ref{thm:acTailOrderSuffConditions}.
+            Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending wrt. $\lesstail$, and no two distribution in it satisfy the sufficient condition of \ref{thm:acTailOrderSuffConditions} (and for any two \emph{consecutive} elements, the distribution functions are infinitely alternating as well).
             
             \item 
             \label{item:acSufficientTailOrderConditionCounterexample}
