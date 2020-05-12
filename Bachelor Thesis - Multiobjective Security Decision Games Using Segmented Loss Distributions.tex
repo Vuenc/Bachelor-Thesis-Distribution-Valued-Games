@@ -558,6 +558,136 @@
     in the context of IT security, and in this model probabilistic outcomes are rated based on a stochastic order called the \emph{tail order} which we will introduce later.
     In our discussion, we will first introduce and formalize the model of distribution-valued games in a slightly more general way by leaving the stochastic order open to be specified, before we focus on the special case of the stochastic tail order.
     
+    \section{Normal-Form Games with Preordered Payoff Spaces}
+    As a general framework, let us define games where the payoffs lie in a preordered set.
+    \begin{defn}[Preorder]
+        % TODO think about if the name “stochastic preorder” would be more appropriate
+        A \emph{preorder} $\leq$ on some set $A$ is a reflexive and transitive binary relation on $A$:
+        \begin{align*}
+            &\forall a \in A: a \leq a \tag{Reflexivity} \\
+            &\forall a, b, c \in A: a \leq b, b \leq c \implies a \leq c \tag{Transitivity}
+        \end{align*}
+        Additional properties that a preorder does \emph{not need} to satisfy are:
+        \begin{align*}
+            &\forall a, b \in A: a \leq b, a \geq b \implies a = b \tag{Antisymmetry} \\
+            &\forall a, b \in A: a \leq b \vee a \geq b \tag{Totality}
+        \end{align*}
+%        If these are satisfied, we call them \emph{antisymmetric stochastic ordering} or \emph{total stochastic ordering}.
+%        We may also restrict the ordering to some subset $\tilde{A} \subseteq A$ and say that it's a \emph{stochastic ordering on $B$}.
+    \end{defn}
+    Antisymmetric preorders are never indifferent between different elements. Total preorders make a decision between any pair of elements, so no two elements are incomparable. Since neither property is required, general preorders may exhibit indifference as well as incomparability.
+    
+    % How we define preference at the moment...
+    \let\popref\geq
+    \let\pononpref\leq
+    \let\postrpref>
+    \let\postrnonpref<    
+
+    \begin{defn}[Game with Preordered Payoff Space]
+        A \emph{game with preordered payoff space $A$}, $G = (n, A, (S_1, \dots, S_n), (u_1, \dots, u_n))$ with $n$ players consists of strategy sets $S_k$ and a payoff function $u_k: S \to A$ for each player $k$.
+        
+        Such a game can be \emph{equipped with preorders} $(\leq_1, \dots, \leq_n)$, written $G_{(\leq_1, \dots, \leq_n)}$, where each $\leq_i$ is a preorder on $A$.
+        If $\leq_i \mathbin{=} \leq$ for all $i$, we also write $G_\leq$.
+        % TODO overthink G_{\dleq} notation; the notation could also be convenient for the zero sum game
+    \end{defn}
+    We adopt the convention that the greater distribution w.r.t. a preorder is preferred, e.g. if $x \leq y$, then $y$ is preferred. However as in real-valued games, it will sometimes be more convenient to talk about costs instead of utility (cf. Definition \ref{defn:realValuedGames}). Since we can not simply define $c_k = -u_k$ in the general setting of a preordered set $A$, we will resort to a slight abuse of notation and define $c_k(s) \popref c_k(\tilde{s}) \colonlra u_k(s) \pononpref u_k(\tilde{s})$ whenever using cost instead of utility functions is more appropriate.
+    
+    \begin{defn}[Nash Equilibrium of Game with Preordered Payoffs]
+        A \emph{Nash equilibrium} of $G_{(\leq_1, \dots, \leq_n)}$ (or a \emph{Nash equilibrium of $G$ with respect to $(\leq_1, \dots, \leq_n)$})
+        is a strategy profile $s = (s_1, \dots, s_n) \in S$ such that for each player $k$:
+        \begin{gather}
+            \forall \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \popref_k u_k(\tilde{s}_k, s_{-k})
+            \label{eq:nashEquilibriumPreorderedPayoffs}
+        \end{gather}
+    \end{defn}
+    
+    Because preorders are not total in general, this definition may be overly restrictive in some cases: there might be equilibrium-like situations where the current payoff may not be preferable to all alternatives, but yet no alternative is preferable either due to incomparability. We define a weaker equilibrium concept for this case, where the current situation needs not \emph{dominate} all alternatives to be an equilibrium, but just must not be dominated itself:
+    \todo{I think this weaker equilibrium concept is interesting  and might be useful, but we have no direct use for it at the moment. Possibly remove if not needed. Also, find a better name?}
+    \begin{defn}
+        % TODO find a better term. Non-connex? Non-dominant?
+        A \emph{Nash equilibrium up to non-comparability} of $G_{(\leq_1, \dots, \leq_n)}$
+        is a strategy profile $s = (s_1, \dots, s_n) \in S$ such that for each player $k$:
+        % TODO IMPORTANT check again in which direction preference is being defined!
+        % TODO IMPORTANT possibly swap u_k for c_k since we are using loss distributions?
+        \begin{gather}
+            \nexists \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \postrnonpref u_k(\tilde{s}_k, s_{-k})
+        \end{gather}
+    \end{defn}
+    
+    Similar to the real-valued scenario, a subset of games we are especially interested in are the two-player zero-sum games.
+    But we are in some trouble defining what zero-sum is supposed to mean: Obviously, in our general setting we have no notion of two payoffs $a_1, a_2 \in A$ summing to zero.
+    We can base our definition on another crucial property of zero-sum games: Zero-sum games are \emph{antagonistic} -- when one player wins, the other loses.
+    % TODO cite “antagonistic games” paper
+    
+    \begin{defn}[Antagonistic and Zero-Sum Games]
+        A two-player game with preordered payoffs $G_{(\leq_1, \leq_2)}$ is \emph{antagonistic} if
+        \begin{gather*}
+            \forall s, t \in S:~ u_1(s) \popref_1 u_1(t) ~\lra~ u_2(s) \pononpref_2 u_2(t)
+        \end{gather*}
+        $G_{(\leq_1, \leq_2)}$ is \emph{zero-sum} if $u_1 = u_2$, and $\leq_2 {=} \geq_1$: i.e. the player always get equal payoff distributions, but prefer them just in reverse order.
+    \end{defn}
+    
+    % TODO either introduce antagonistic games here, or in the standard game theory section
+    For the sake of equilibria, it does not matter if a game is zero-sum or only antagonistic, since the only thing that matters for equilibria is how the values that actually occur as payoffs are ordered.
+    But if we want to define mixed extensions for subclasses of preordered-payoff-games (which of course requires more structure on $A$ than in the general case), our zero-sum property will ensure that the mixed extension of a finite zero-sum game will also be zero sum, while mixed extensions of antagonistic games need not be antagonistic. This is analogous to real-valued games, where mixed extensions preserve the zero-sum property, but not necessarily the antagonism property.
+    \footnote{Note that not only zero-sum satisfy this property, but constant-sum games as well, so our naming convention seems a bit arbitrary.
+        Yet “zero-sum” appears like the most recognizable and easily-understood term for this concept, so we'll stick to this name even though nothing actually sums to zero.}
+    % TODO reference standard game theory section about antagonistic games for the antagonistic mixing; Cite antagonistic games paper
+    
+    In order to define mixed extensions, the payoff set $A$ must have additional vector-space structure. Since mixed strategies correspond to convex combinations of pure strategies, we require $A$ be a convex subset of a vector space over the reals.
+    \begin{defn}[Mixed extension]
+        Let $G = (n, A, (S_1, \dots, S_n), (u_1, \dots, u_n))$ be a finite game with preordered payoff space,
+        where $A$ is a subset of a real vector space with operations $(+, *)$.
+        Its \emph{mixed extension} $\hat{G} = (n, A, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$ consists of the following (where $k \in \set{1, \dots, n}$):        
+        \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
+            \item $\Delta_k \coloneqq \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ are the mixed strategies, $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ the mixed strategy profiles.
+            
+            \item
+            The utility function $U_k: \Delta \to A$ maps each mixed strategy profile to
+            its payoff:
+%            the \emph{mixed distribution} of the $k$'th players payoff distribution under that strategy profile:
+            \begin{gather}
+            U_k: 
+            (p_1, \dots, p_n) 
+            %                ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
+            \mapsto
+            \sum_{(s_1, \dots, s_n) \in S} \biggpars{\prod_{i=1}^{n} p_i(s_i)} * u_k( (s_1, \dots, s_n) )
+            \label{eq:preorderedPayoffSpaceMixedStrategyUtility}
+            \end{gather}
+%            Note that this is a weighted sum of Borel probability measures, and the result is again a probability measure on $(\R, \B)$.
+        \end{itemize}
+    \end{defn}
+    
+    As a last concept, we define the notion of \emph{isomorphic} games, which lets us switch between different payoff spaces that behave the same with respect to the right orderings.
+    \begin{defn}
+        Let $G$, $H$ be two $n$-player games with preordered payoff spaces sharing the same strategy sets $S_i$, where $G$ has payoffs in $A$ and utility functions $u_i$,
+        and $H$ has payoffs in $B$ and utility functions $v_i$.
+        Let $G$ be equipped with $(\leq_1^G, \dots, \leq_n^G)$, and $H$ is equipped with $(\leq_1^H, \dots, \leq_n^H)$.
+        Furthermore let $\bar{A} \coloneqq \bigcup_k u_k(S)$, $\bar{B} \coloneqq \bigcup_k v_k(S)$ be the sets of payoff values actually taken for some strategy profiles.
+        Then $G_{(\leq_1^G, \dots, \leq_n^G)}$, $H_(\leq_1^H, \dots, \leq_n^H)$
+        are \emph{isomorphic} if there is a bijection $\phi: \bar{A} \to \bar{B}$ such that
+        \begin{gather}
+            \forall k \in \set{1, \dots, n}, \forall s \in S: \phi(u_k(s)) = v_k(s) \\
+            \forall k \in \set{1, \dots, n}, \forall a_1, a_2 \in \bar{A}: a_1 \leq_k^G a_2 \lra \phi(a_1) \leq_k^H \phi(a_2)
+        \end{gather}
+    \end{defn}
+    
+    \begin{lemma}
+        If two games with preordered payoff space $G_{(\leq_1^G, \dots, \leq_n^G)}$, $H_{(\leq_1^H, \dots, \leq_n^H)}$ are isomorphic,
+        they have the same Nash equilibria (and the same Nash equilibria up to incomparability).
+    \end{lemma}
+    \begin{proof}
+        Let $s = (s_1, \dots, s_n) \in S$ be a Nash equilibrium of $G$.
+%        such that for each player $k$:
+%        \begin{gather}
+%        \forall \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \popref_k u_k(\tilde{s}_k, s_{-k})
+%        \end{gather}
+        Then $s$ is a Nash equilibrium of $H$: Let $k \in \set{1, \dots, n}$, $\tilde{s}_k \in S_k$.
+        By \eqref{eq:nashEquilibriumPreorderedPayoffs}, $u_k(s_k, s_{-k}) \popref_k^G u_k(\tilde{s}_k, s_{-k}$.
+        Then $v_k(s_k, s_{-k}) = \phi(u_k(s_k, s_{-k})) \popref_k^H \phi(u_k(\tilde{s}_k, s_{-k})) = v_k(\tilde{s}_k, s_{-k})$.
+        The case of Nash equilibria up to incomparability works analogously.
+    \end{proof}
+    
     \section{Distribution-Valued Normal-Form Games}
     \label{sec:distributionValuedNormalFormGames}
     \newcommand{\DP}{\D_P} % Shortcut for the set of distributions on the reals
@@ -1280,6 +1410,9 @@
     
     An interesting note is that in some references it is suggested that Hausdorff's characterization can easily be generalized to any interval $[a, b]$.
     However, I could not yet find a formalization of this as a necessary and sufficient criterion. If something in this direction could be found, this would definitely be a helpful step, either for transferring a proof from $[0, 1]$ to $[1, b]$, or for proving counterexample sequences to have corresponding measures.
+    
+    
+    \section{Equilibria in Tail-Ordered Games}
     
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
