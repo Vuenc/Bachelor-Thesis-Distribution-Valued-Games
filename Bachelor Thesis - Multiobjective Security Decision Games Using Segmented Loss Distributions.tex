@@ -520,6 +520,7 @@
         compact as the Cartesian product of compact sets, and convex as the Cartesian product of convex sets. % TODO cite source that products of compact/convex sets are compact/convex.
         
         \ref{item:KakFP-nonEmptyConvexClosedOutputs}, for all $s \in \Delta$, the set $r(s)$ of best-response profiles is non-empty, convex and closed: It suffices to show that these conditions hold for each $r_k(s)$, since $r(s)$ is the product of those. By Theorem \ref{thm:bestResponseMixing}, best-response mixed strategies are always convex combinations of best-response pure strategies, so the $r_k(s)$ are simplices as well, i.e. compact and convex. The $r_k(s)$ are non-empty because at least one of the finitely many pure strategies must have a maximal payoff value: mixed strategies cannot have larger payoffs than the best of their support's pure strategies.
+        % TODO think about this argument; we are talking about strategy profiles, not strategies
         
         \ref{item:KakFP-closedGraph}, $r$ has a closed graph: we need to show that if a sequence of mixed-strategy profiles converges to some limit, and has a sequence of best-response profiles also converging, then the limit of the latter sequence is a best response to the limit of the former. Let $(\delta^{(i)})_{i \in \N}$ be a sequence of profiles, and $(a^{(i)})_{i \in \N}$ a sequence of best responses to it:
         \begin{align*}
@@ -660,7 +661,12 @@
 %            Note that this is a weighted sum of Borel probability measures, and the result is again a probability measure on $(\R, \B)$.
         \end{itemize}
     \end{defn}
+    As for real-valued games, we will sometimes specify payoffs by one or more matrices.
+    When talking about the \emph{bimatrix game} specified by two matrices, we mean the mixed extension of the finite game corresponding to the matrices.
+    In the zero-sum case, where only one matrix is specified, we will talk about \emph{matrix games}.
     
+    % TODO really isomorphic? Or rather equilibrium-equivalent?
+    % TODO isn't this definition too complicated? Why not just say that u_k(s1) \leq u_k(s2) \lra v_k(s1) \leq v_k(s2)?
     As a last concept, we define the notion of \emph{isomorphic} games, which lets us switch between different payoff spaces that behave the same with respect to the right orderings.
     \begin{defn}
         Let $G$, $H$ be two $n$-player games with preordered payoff spaces sharing the same strategy sets $S_i$, where $G$ has payoffs in $A$ and utility functions $u_i$,
@@ -967,8 +973,9 @@
         Let $P_1, P_2 \in \Fgeq \cap L$ be discrete distributions with probability mass functions $f, g$ and finite common support $(\supp P_1 \cup \supp P_2) = \set{v_1, \dots, v_m}$ with the support elements $v_i$ in increasing order. Then
         \begin{gather}            
             P_1 \leqtail P_2 \lra (f(v_1), \dots, f(v_m)) \leqRlex (g(v_1), \dots, g(v_m))
-            \label{eq:discreteFiniteTailOrder-RLexEqivalence}
+            \label{eq:discreteFiniteTailOrder-RLexEquivalence}
         \end{gather}
+        \label{cor:discreteFiniteTailOrder-RLexEquivalence}
     \end{cor}
     \begin{proof}
         This follows directly from Theorem \ref{thm:discreteTailOrderSuffConditions} and its proof via the definition of $\leqRlex$.
@@ -1343,7 +1350,279 @@
     
     
     \section{Equilibria in Tail-Ordered Games}
+    We will now look into equilibria of distribution-valued games with respect to the stochastic tail order.
+    Importantly, unlike their real-valued counterparts, these games fail to have mixed-strategy equilibria in general.
+    % TODO do we only look at two-player, zero-sum?
     
+    We first
+    % TODO do we really *first* restrict ourselves to LEX-Games, or permanently?
+    restrict our attention to games with finitely supported distributions as payoffs.
+    As shown in Corollary \ref{cor:discreteFiniteTailOrder-RLexEquivalence}, for such distributions the tail order can be reduced to lexicographical comparison.
+    To make our discussion notationally easier, we will games with finite common support of the payoff distributions as real-valued vectors of probabilities, ordered by the reflect lexicographical order.
+    \begin{defn}
+        A \emph{vector-valued game} of dimension $m \in \N$ is a game $G_{\leqRlex}$ with preordered payoff space $\R^m$.
+        If it it equipped with the preorder $\leqRlex$, we call it a \emph{reflected-lexicographically ordered} (also \emph{ref-lex-ordered}) game.
+    \end{defn}
+
+    \begin{lemma}
+        Let $G$ be a distribution valued game where $\supp(G) \coloneqq \bigcup\limits_{s \in S, 1 \leq k \leq n} \supp(u_k(s))$ is finite, 
+        in particular $\supp(G) = \set{x_1, \dots, x_m}$, $x_1 < \dots < x_n$. Let $u_k(s)$ have probability mass function $f_{k, s}$.
+        Define the ref-lex-ordered game $H$ with payoffs
+        $v_k(s) \coloneqq (f_{k, s}(x_1), \dots, f_{k, s}(x_m))$.
+        Then $G_{\leqtail}$ and $H_{\leqRlex}$ are isomorphic.
+    \end{lemma}
+    \begin{proof}
+        The bijective function $\phi: \DP \to \R^m$ is already clear by definition of $v_k$.
+        By Corollary \ref{cor:discreteFiniteTailOrder-RLexEquivalence}, mapping distributions ordered by $\leqtail$ to real-valued vectors ordered by $\leqRlex$ preserves the ordering.
+    \end{proof}
+
+    \subsection{Existence Conditions for Mixed-Strategy Equilibria in Lexicographically-Ordered Games}
+    % TODO better game table design
+    \begin{ex}
+        \label{ex:reflectedLexicographicallyOrderedGame}
+%        Consider the vector-valued two-player zero-sum game $G$ represented by
+        An example of a ref-lex game could look like:
+        \begin{gather}
+            \centering
+            \begin{tabular}{c|c|c|}
+            	      &        $b_1$        &        $b_2$        \\ \hline
+            	$a_1$ & (0.1,\; 0.8,\; 0.1) & (0.1,\; 0.7,\; 0.2) \\ \hline
+            	$a_2$ & (0.6,\; 0.1,\; 0.3) & (0.8,\; 0.1,\; 0.1) \\ \hline
+            \end{tabular}
+        \end{gather}
+        The game is a two-player matrix game (i.e. zero-sum), so we only specify payoffs for the first player.
+        An equivalent tail-ordered distribution-valued game can be constructed from it for a specified support set of size 3;
+        Which specific support is chosen however does not matter for the tail order.
+%        $G$ has no mixed-strategy equilibrium with respect to $\leqtail$.
+    \end{ex}
+
+    \newcommand{\Gproj}[1]{G_{#1}}
+    \newcommand{\Gprojsub}[1]{\bar{G}_{#1}}
+    
+    The game given in the last example has no Nash equilibria with respect to $\leqRlex$.
+    To see this we will first take a closer look at the highest coordinate, projecting the game to it: i.e. consider the projected game
+    $\Gproj{3}$ represented by $\smallmat{0.1 & 0.2 \\ 0.3 & 0.1}$, which is a real-valued zero-sum game that we can solve with standard techniques.
+    
+    % TODO we have a problem since we should interpret these as losses. Or change the example. Maybe give (u_1(pure strategy one) < u_1(mixed_strategy) < u_1(pure strategy two))
+    Computations done with the game-theoretic library included in the mathematical software \texttt{SageMath} % TODO properly reference this
+    show that $\Gproj{3}$ has exactly one equilibrium, with mixed strategies $s_1 = (\frac{2}{3}, \frac{1}{3})$ for player 1 and $s_2 = (\frac{1}{3}, \frac{2}{3})$ for player 2, yielding a payoff of $\frac{1}{6}$ to player 1.
+    Applying this strategy to our original game $G$ yields the payoff distribution $u = (\frac{28}{90}, \frac{47}{90}, \frac{1}{6})$.
+    From Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs} we know that if any player unilaterally deviates from this strategy profile, the payoff stays the same: 
+%    For example, if player 1 plays the pure strategy $(0, 1)$ and player 2 continues to play $s_2$, the payoff for player 1 will still be $\frac{1}{6}$.
+    For example, if player 1 plays the pure strategy $(1, 0)$ and player 2 continues to play $s_2$, the payoff for player 1 will still be $\frac{1}{6}$.
+    However while this works for $\Gproj{3}$, the payoff does not stay the same if we look at the original game $G$:
+    With new strategy of player 1, the payoff is $(\frac{9}{90}, \frac{66}{90}, \frac{1}{6}) \greaterRlex u$, making her payoff more preferable w.r.t. $\leqRlex$.
+    If instead player 1 keeps her strategy $s_1$ and player 2 plays the pure strategy $(0, 1)$, the payoff for player 1 becomes $(\frac{30}{45}, \frac{45}{90}, \frac{1}{6}) \lessRlex u$, which is more preferable for player 2.
+    Therefore, $(s_1, s_2)$ is not a Nash equilibrium for $G$.
+        
+    Also, there can be no other equilibria: recall that $(s_1, s_2)$ was the only equilibrium for the projected game $\Gproj{3}$. Now assume there was another set of strategies $(t_1, t_2) \neq (s_1, s_2)$ which \emph{is} an equilibrium for $G$. But since $(t_1, t_2)$ is not an equilibrium for $\Gproj{3}$, there is an incentive for some player to deviate from $(t_1, t_2)$ which improves their outcome for $G$ in the highest coordinate, thus also improving it with respect to $\leqRlex$, which is a contradiction.
+    
+    At the core of this problem is that the projected games in the different coordinates have different mixed-strategy equilibria.
+    Specifically, while $\Gproj{3}$ has the equilibrium $((\frac{2}{3}, \frac{1}{3}), (\frac{1}{3}, \frac{2}{3}))$,
+    $\Gproj{2}$ instead has the equilibrium $((1, 0), (0, 1))$, and $\Gproj{1}$ has the equilibrium $((0, 1), (1, 0))$.
+    
+    \begin{lemma}
+        Let $G$ be a vector-valued bimatrix game with values in $\R^m$.
+        \todo{Make clear if/how this generalizes to $G_{(\leqRlex,\geqRlex)}$, $G_{(\geqRlex,\leqRlex)}$, $G_{(\geqRlex,\geqRlex)}$}
+        Then the set of equilibria of $G_{(\leqRlex,\leqRlex)}$ is a subset of the set of equilibria of the projected game $\Gproj{m}$:
+        Any equilibrium $(s_1, s_2)$ of $G_{(\leqRlex,\leqRlex)}$ is also an equilibrium of $\Gproj{m}$.
+    \end{lemma}
+    \begin{proof}
+        Suppose $\Gproj{m}$ does not have $(s_1, s_2)$ as an equilibrium.
+        Then one of the players, say w.l.o.g. player 1, has an incentive to deviate in $\Gproj{m}$: If $u_1^{m}$ denotes her payoff function in $\Gproj{m}$,
+        this means for some strategy $\tilde{s}_1 \in S_1$, $u_1^{m}(\tilde{s}_1, s_2) > u_1^{m}(s_1, s_2)$.
+        But then for the payoffs in $G$, 
+        \begin{gather*}
+            u_1(\tilde{s}_1, s_2) = \bigpars{u_1^{1}(\tilde{s}_1, s_2), \dots, u_1^{m}(\tilde{s}_1, s_2)}
+            \greaterRlex \bigpars{u_1^{1}(s_1, s_2), \dots, u_1^{m}(s_1, s_2)} = u_1(s_1, s_2)
+        \end{gather*}
+    \end{proof}
+
+    \begin{cor}
+        Let $G$ be a vector-valued bimatrix game with values in $\R^m$, and suppose that  $\Gproj{m}$ has exactly one equilibrium $(s_1, s_2)$.
+        Then
+        \begin{gather*}
+            G_{(\leqRlex,\leqRlex)} \text{ has a Nash equilibrium } 
+            \lra\quad G_{(\leqRlex,\leqRlex)} \text{ has the equilibrium } (s_1, s_2)     
+        \end{gather*}
+    \end{cor}
+
+    \begin{thm}
+        % TODO there seems no reason for non-pure to be needed here or elsewhere. Check!
+        Let $G$ be a vector-valued bimatrix game with values in $\R^m$, and define the projected games $\Gproj{1}, \dots, \Gproj{m}$ as above.
+        Suppose that $\Gproj{m}$ has the non-pure\footnote{With \emph{non-pure}, we mean “properly mixed”, whereas \emph{mixed equilibria} include pure and properly mixed equilibria (i.e. $(s_1, s_2)$ is non-pure if at least one of $s_1, s_2$ is not a pure strategy)}
+        Nash equilibrium $(s_1, s_2)$.    
+        Then
+        \begin{align}
+            \label{eq:allProjectedGamesHaveTheNashEquilibrium}
+                            &\forall i = 1, \dots, m-1: \Gproj{i} \text{ has the Nash equilibrium } (s_1, s_2) \\
+            \Rightarrow\quad &G_{(\leqRlex,\leqRlex)} \text{ has the equilibrium } (s_1, s_2)
+        \end{align}
+        \label{thm:rlexGameProjectedGameSufficientCondition}
+    \end{thm}
+    \begin{proof}
+%        The first equivalence follows from the fact that any Nash equilibrium of $G$ must also be a Nash equilibrium of $\Gproj{m}$ by the previous lemma.
+        Assume that \eqref{eq:allProjectedGamesHaveTheNashEquilibrium} holds.
+%        Suppose for some player $k$ there is an incentive to deviate from $(s_1, s_2)$ in $G$, i.e. there is an $\tilde{s}_k \in S_k$ such that
+%        $u_k(\tilde{s}_k) \greaterRlex u_
+        Let $k$ be one of the players, and $\tilde{s}_k \in S_k$ an alternative strategy.
+        Then for each projected game $i$ we have $u_k^{i}(\tilde{s}_k, s_{-k}) \leqRlex u_k^{i}(s_k, s_{-k})$, since $(s_1, s_2)$ is a Nash equilibrium.
+        Therefore in $G$,
+        \begin{multline*}
+            u_k(\tilde{s}_k, s_{-k}) 
+            = \bigpars{u_k^{1}(\tilde{s}_k, s_{-k}), \dots, u_k^{m}(\tilde{s}_k, s_{-k})} \\
+            \leqRlex \bigpars{u_k^{1}(s_k, s_{-k}), \dots, u_k^{m}(s_k, s_{-k})}
+            = u_k(s_k, s_{-k}) 
+        \end{multline*}
+%        Now assume that \eqref{eq:allProjectedGamesHaveTheNashEquilibrium} does not hold.
+%%        Let $l$ be the maximal index such that $\Gproj{l}$ does not have the equilibrium $(s_1, s_2)$.
+%%        W.l.o.g. assume that $s_1$ is not a pure strategy, and instead mixes between pure strategies $\set{p_1, \dots, p_j}$.
+        % Idea how to proceed: by mixing theorem, there is a pure strategy in the support of s_1 or s_2 improving the payoff on G_l
+    \end{proof}
+    From our first example above, it seems that \eqref{eq:allProjectedGamesHaveTheNashEquilibrium} may not only be a sufficient, but also a necessary condition. This is not the case, however, as the next example shows:
+    \begin{ex}
+        \label{ex:allProjectedEquilibriaAreEqualIsNotNecessary}
+        Consider the ref-lex-ordered bimatrix game $G$ with payoffs for player 1/player 2, respectively:
+        \begin{gather*}
+            \centering
+            \begin{tabular}{c|c|c|c|}
+            	      & $b_1$  & $b_2$  & $b_3$  \\ \hline
+            	$a_1$ & (1, 1) & (2, 2) & (3, 3) \\ \hline
+            	$a_2$ & (2, 2) & (1, 1) & (3, 3) \\ \hline
+            	$a_3$ & (3, 0) & (3, 0) & (3, 3) \\ \hline
+            \end{tabular}\qquad
+            \begin{tabular}{c|c|c|c|}
+            	      &  $b_1$  &  $b_2$  &  $b_3$  \\ \hline
+            	$a_1$ & (1, -1) & (2, -2) & (3, -3) \\ \hline
+            	$a_2$ & (2, -2) & (1, -1) & (3, -3) \\ \hline
+            	$a_3$ & (3, 0)  & (3, 0)  & (3, -3) \\ \hline
+            \end{tabular}
+        \end{gather*}
+        The projected game $\Gproj{2}$ is a zero-sum game with payoffs $\pm\smallmat{1 & 2 & 3 \\ 2 & 1 & 3 \\ 0 & 0 & 3}$, and in the projected game $\Gproj{1}$ both players have the same payoff matrix, namely $\smallmat{1 & 2 & 3 \\ 2 & 1 & 3 \\ 3 & 3 & 3}$.
+        It can be computed that the only Nash equilibrium for $\Gproj{2}$ is $(s_1, s_2) \coloneqq \pars{(\frac{1}{2}, \frac{1}{2}, 0), (\frac{1}{2}, \frac{1}{2}, 0)}$.
+        This is not a Nash equilibrium for $\Gproj{1}$, since for any player, deviating to $(0, 0, 1)$ is advantageous (the last row/column have strictly higher payoffs for both).
+        However $(s_1, s_2)$ indeed \emph{is} an equilibrium for $G$:
+        Any deviation that does not mix in the last row or column (for example, if player 1 deviates to $(0.3, 0.7, 0)$) will keep the payoffs the same for both players in both coordinates; any deviation that does mix in the last row or column will make the payoff for the respective player worse in the highest coordinate, and therefore also with respect to $\leqRlex$.
+    \end{ex}
+
+    This example shows the obstacle when trying to make \eqref{eq:allProjectedGamesHaveTheNashEquilibrium} into an equivalence.
+    More or less, the idea applied in the first Example \ref{ex:reflectedLexicographicallyOrderedGame} was that player 1 deviated from the highest-coordinate Nash equilibrium $(s_1, s_2)$, but the new strategy still mixed between the pure strategies in $\supp(s_1)$. That way, the payoff in the highest coordinate stayed the same, but the second-coordinate payoff improved.
+    In the new example \ref{ex:allProjectedEquilibriaAreEqualIsNotNecessary}, only deviating within the support of $s_1$ (or $s_2$ for player 2) of course keeps the high-coordinate payoff the same, but the low-coordinate payoff can only be improved by playing a strategy outside of the support.
+%    The reason why $(s_1, s_2)$ is not a Nash equilibrium for $\Gproj{1}$
+%    %TODO Using G1, while calling it second-coordinate payoff, is confusing!
+%    is that switching to the third row/column improves payoffs, but in $G$ that would mean decreasing highest-coordinate payoffs, which are prioritized by $\leqRlex$. 
+    So except for the low-game $G_1$ not having $(s_1, s_2)$ as equilibrium, the equilibrium still holds for $G$, as there's no incentive to deviate in $G_1$ within the bounds of the mixed-strategies' supports.
+    A natural next step is to restrict the lower-coordinate projected games to subgames: we take out the rows/columns not in the support of the highest-coordinate equilibrium.
+    
+    % TODO we did use the letter S instead of Delta. Problematic!
+    % TODO do we really need uniqueness of the mixed strategy?
+    % TODO fix all occurences of \in T_1 where it refers to mixed strategies!
+    \begin{thm}
+        Let $G$ be a vector-valued bimatrix game with values in $\R^m$, where $\Gproj{m}$ has the non-pure equilibrium $(s_1, s_2)$.
+        Let $T_1 \coloneqq \supp(s_1) \subseteq S_1, T_2 \coloneqq \supp(s_2) \subseteq S_2$.
+        Define projected subgames $\Gprojsub{i}$ with pure-strategy spaces $T_1, T_2$, and payoff functions $\bar{u}_k^i \coloneqq \restr{u_k^i}{T_1 \times T_2}$.
+        Also, denote by $t_1, t_2$ the equilibrium strategies $s_1, s_2$ restricted to their support.
+        Then
+        \begin{align}
+                             &G_{(\leqRlex,\leqRlex)} \text{ has the Nash equilibrium } (s_1, s_2) \nonumber \\
+            \Rightarrow\quad &\forall i = 1, \dots, m-1: \Gprojsub{i} \text{ has the Nash equilibrium } (t_1, t_2) 
+            \label{eq:allProjectedSubgamesHaveTheNashEquilibrium}
+        \end{align}   
+        \label{thm:rlexGameProjectedSubgameCharacterization}
+        
+        If additionally in $\Gproj{m}$,
+        all pure-strategy best responses to $s_1$ are in $T_2$, and all pure-strategy best responses to $s_2$ are in $T_1$,
+        the implication becomes an equivalence.
+    \end{thm}
+    \begin{proof}
+        We use the contrapositive to show “$\Rightarrow$”. Assume \eqref{eq:allProjectedSubgamesHaveTheNashEquilibrium} does not hold, and let $l$ be the maximal index such that $G_l$ does not have the equilibrium $(t_1, t_2)$.
+        Then one player $k$ has an improving strategy $\tilde{t}_k \in T_k$, i.e.
+        $\bar{u}_k^l(\tilde{t}_k, t_{-k}) > \bar{u}_k^l(t_k, t_{-k})$.
+        Furthermore since $l$ is maximal, for all $i \in \set{l+1, \dots, m}$, $\Gprojsub{i}$ has $(t_1, t_2)$ as equilibrium.
+        So by Theorem \ref{thm:bestResponseMixing}, $\bar{u}_k^i(\tilde{t}_k, t_{-k}) = \bar{u}_k^i(t_k, t_{-k})$.
+        
+        Denote by $\tilde{s}_k \in S_k$ the strategy for $G$ corresponding to the restricted strategy $\tilde{t}_k$.
+        Obviously for all $i$, $\bar{u}_k^i(\tilde{t}_k, t_{-k}) = u_k^i(\tilde{s}_k, s_{-k})$.
+        Since all projected-game payoffs for $i > l$ stay equal by changing $s_k$ to $\tilde{s}_k$, but the $l$'th payoff increases, we have:
+        \begin{multline*}
+                         u_k(\tilde{s}_k, s_{-k}) 
+                       = \bigpars{u_k^{1}(\tilde{s}_k, s_{-k}), \dots, u_k^l(\tilde{s}_k, s_{-k}), \dots, u_k^{m}(\tilde{s}_k, s_{-k})} \\
+            \greaterRlex \bigpars{u_k^{1}(s_k, s_{-k}), \dots, u_k^l(s_k, s_{-k}), \dots, u_k^{m}(s_k, s_{-k})}
+                       = u_k(s_k, s_{-k}) 
+        \end{multline*}
+        So $(s_1, s_2)$ is not a Nash equilibrium of $G$.
+        
+        For “$\Leftarrow$”, assume that the additional condition holds.
+        W.l.o.g consider an alternative strategy $\tilde{s}_1$ for player 1, for which we want to show $u_1(\tilde{s}_1, s_2) \leqRlex u_1(s_1, s_2)$.
+        If $\supp (\tilde{s}_1) \nsubseteq T_1$, by the additional condition, $\tilde{s}_1$ plays a non-best-response strategy to $s_2$ in $\Gproj{m}$, so it can not be a best response. Therefore $u_1^m(\tilde{s}_1, s_2) < u_1^m(s_1, s_2)$.
+        If instead $\supp (\tilde{s}_1) \subseteq T_1$, and $\tilde{t}_1 \in T_1$ denotes the corresponding restricted strategy,
+        we have $\forall i: u_1^i(\tilde{s}_1, s_2) = \bar{u}_1^i(\tilde{t}_1, t_2) \leq \bar{u}_1^i(t_1, t_2) = u_1^i(s_1, s_2)$ because $(t_1, t_2)$ is a Nash equilibrium in every $\Gprojsub{i}$. Therefore $u_1(\tilde{s}_1, s_2) \leqRlex u_1(s_1, s_2)$.
+    \end{proof}
+
+    The additional condition for equivalence in Theorem \ref{thm:rlexGameProjectedSubgameCharacterization} is needed, as we show by another example:
+    \begin{ex}
+        Consider the ref-lex-game with player 1/player 2 payoffs:
+        \begin{gather*}
+            \centering
+            \begin{tabular}{c|c|c|c|}
+            	      & $b_1$  & $b_2$  &  $b_3$  \\ \hline
+            	$a_1$ & (0, 1) & (0, 2) & (0, -1) \\ \hline
+            	$a_2$ & (0, 2) & (0, 1) & (0, -2) \\ \hline
+            	$a_3$ & (1, 2) & (1, 1) & (1, -3) \\ \hline
+            \end{tabular}\qquad
+            \begin{tabular}{c|c|c|c|}
+            	      &  $b_1$   &  $b_2$   &  $b_3$  \\ \hline
+            	$a_1$ &  (0, 2)  &  (0, 1)  & (0, 0)  \\ \hline
+            	$a_2$ &  (0, 1)  &  (0, 2)  & (0, 0)  \\ \hline
+            	$a_3$ & (-1, -1) & (-1, -1) & (-1, 0) \\ \hline
+            \end{tabular}
+        \end{gather*}
+        \sloppypar{
+        In $\Gproj{2}$ with payoffs $\smallmat{1 & 2 & -1 \\ 2 & 1 & -2 \\ 2 & 1 & -3} / \smallmat{2 & 1 & 0 \\ 1 & 2 & 0 \\ -1 & -1 & 0}$,
+        the unique equilibrium is $(s_1, s_2) = \bigpars{(\frac{1}{2}, \frac{1}{2}, 0), (\frac{1}{2}, \frac{1}{2}, 0)}$. However the pure best responses of player 1 to $s_2$ are not just the first and second row, but the third row as well.
+        The game $\Gproj{1}$ is a simple zero-sum game with payoffs $\pm \smallmat{0 & 0 & 0 \\ 0 & 0 & 0 \\ 1 & 1 & 1}$, where the third row is obviously preferable for player 1.
+        In the projected subgame $\Gprojsub{1}$ with payoffs $\pm \smallmat{0 & 0 \\ 0 & 0}$, $(t_1, t_2) = \bigpars{(\frac{1}{2}, \frac{1}{2}), (\frac{1}{2}, \frac{1}{2})}$ is clearly a Nash equilibrium, satisfying \eqref{eq:allProjectedSubgamesHaveTheNashEquilibrium}.
+        However in $G$, $s_1$ is not a best response to $s_2$ (giving player 1 a payoff of $(0, 1.5)$), since the strategy $(0, 0, 1)$ gives an $\leqRlex$-better payoff of $(1, 1.5)$, so $(s_1, s_2)$ is not a Nash equilibrium of $G$.
+        }
+    \end{ex}
+
+    To summarize our results: Any Nash equilibrium of a ref-lex-game $G$ must be an equilibrium of its highest-coordinate game $\Gproj{m}$.
+    If $\Gproj{m}$ has a non-pure equilibrium $(s_1, s_2)$,
+%    where $\Gproj{m}$ has a unique non-pure Nash equilibrium $(s_1, s_2)$, $G_{(\leqRlex,\leqRlex)}$ has a Nash equilibrium iff it has the equilibrium $(s_1, s_2)$, and
+    \begin{align*}
+         &\forall i = 1, \dots, m-1: \Gproj{i} \text{ has the Nash equilibrium } (s_1, s_2) \\
+         \Rightarrow\quad &G_{(\leqRlex,\leqRlex)} \text{ has the Nash equilibrium } (s_1, s_2) \\
+         \Rightarrow\quad &\forall i = 1, \dots, m-1: \Gprojsub{i} \text{ has the Nash equilibrium } (t_1, t_2) 
+    \end{align*}
+    This clearly places strict requirements on ref-lex-games to have Nash equilibria. It's possible that the game has a pure equilibrium;
+    But if it does not, then for the game to have an equilibrium, \emph{exactly the same} equilibrium as in $G_m$ must occur in all projected subgames $\Gprojsub{i}$.
+    For further work, it might be interesting to look at the proportion of ref-lex-games that have non-pure equilibria, or the probability that a ref-lex-game picked randomly in some way has an equilibrium (or has a non-pure equilibrium). Given the requirements for non-pure equilibria to exist, it seems a plausible conjecture that the set of ref-lex games with non-pure equilibria is a null set with respect to some reasonable measure.
+    
+    \subsubsection{Equilibria in Distribution-Valued Tail-Order Games}
+    A consequence of these results is that distribution-valued games even with only finitely-supported distributions do not have equilibria in general.
+    A concrete example of this was already given in the first example \ref{ex:reflectedLexicographicallyOrderedGame}, since the payoff vectors all sum to $1$ (i.e. represent probability distributions).
+    While we did not investigate other types of distributions, we can hardly expect things to get different there; for example, any equilibrium-less game with finite common support can be converted to a game with absolutely continuous payoff with the same equilibria, by performing a convolution with a absolutely continuous distribution with small support centered around zero.
+    % TODO possibly illustrate this point
+    
+    Note that we only discussed the case of games with respect to ${(\leqRlex,\leqRlex)}$, not the case ${(\leqRlex,\geqRlex)}$ that occurs for zero-sum games.
+    But for any vector-valued game $G$, we can define $\hat{G}$ as the game where the payoffs of player 2 are multiplied by $(-1)$ -- then $G_{{(\leqRlex,\geqRlex)}}$ and $\hat{G}_{{(\leqRlex,\leqRlex)}}$ have the same equilibria, and we can apply above results to $\hat{G}$.
+    By symmetry, the same of course works $G_{{(\geqRlex,\leqRlex)}}$, which captures the assumption of loss distributions instead of payoff distributions made in \cite{bib:rassGameRiskManagI}.
+    
+    
+    
+    \subsection{Kakutani's Theorem and Lexicographically-Ordered Games}
+    We can in principle apply the proof idea of Theorem \ref{thm:existenceOfMixedStrategyEquilibria}, which proved the existence of mixed-strategy equilibria for real-valued games using Kakutani's fixed point theorem, to other, arbitrary payoff models. Recall that Kakutani's fixed point theorem worked on the best-reply correspondence $r: \Delta \to \Pot(\Delta)$, which maps real-valued vectors to sets of real-valued vectors. Since these real-valued vectors do not represent payoffs, but rather mixed-strategy profiles, the domain and codomain of $r$ are independent of the payoff model.
+    
+    Since the theorem could in principle be applied, but tail-ordered distribution-valued games (and more specifically, ref-lex-ordered vector-valued games) do not have mixed-strategy equilibria in general, some condition of Kakutani's theorem must be violated. For better understanding, it's interesting to see which condition does not hold for best responses in the lexicographical ordering:
+    It turns out that the property that fails to hold is that $r$ must have a \emph{closed graph}.
+    % TODO cite a reference for this idea of “closed as subset of \R^m^2... but which?
+    The inherent reason for this is that $\leqRlex$ is not closed as a subset of $(\R^m)^2$:
+    For example, $(0, 1/n) \greaterRlex (1, 0) ~ \forall n \in \N$, but in the limit as $n \to \infty$, $(0, 0) \lessRlex (1, 0)$.
+    (Recall that in the proof were Kakutani's theorem was used, we explicitly mentioned that $\leq$ as subset of $\R^2$ is closed -- often stated as the “sandwich theorem” -- but this would go wrong for a lexicographical ordering).
+    
+    This missing property of the order in turn leads to $r$ not having a closed graph. For example, again consider the game from example \ref{ex:reflectedLexicographicallyOrderedGame}, with a Nash equilibrium $(s_1, s_2) = \pars{(\frac{2}{3}, \frac{1}{3}), (\frac{1}{3}, \frac{2}{3})}$.
+    If we define a sequence of player-2-strategies converging to $s_2$ by $s_2^{(n)} \coloneqq \pars{\frac{1}{3} + \frac{1}{2n}, \frac{2}{3} - \frac{1}{2n}}$, then one can calculate that in $\Gproj{3}$, player 1's only best response to each $s_2^{(n)}$ is the strategy $(0, 1)$, since the second row gives slightly bigger payoff than the first row (yet, both converge to the same limit with increasing $n$, one from above and one from below). Therefore $(0, 1)$ is also the unique best response in $G$.
+    However in the limit, the $\Gproj{3}$-payoffs of both rows become equal, and the second coordinate makes the first row preferable for $\leqRlex$ (as already calculated in \ref{ex:reflectedLexicographicallyOrderedGame} before). Therefore $(1, 0)$ is the unique best response to $s_2$. This shows that $r$ does not have a closed graph.
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
     

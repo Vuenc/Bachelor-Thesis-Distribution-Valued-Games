@@ -155,6 +155,14 @@
 \newcommand{\smallmat}[1]{\left(\begin{smallmatrix}#1\end{smallmatrix}\right)}
 \newcommand{\undersetbrace}[2]{\underset{#2}{\underbrace{#1}}}
 
+% function restriction: \restr{f}{A}
+\newcommand\restr[2]{{% we make the whole thing an ordinary symbol
+        \left.\kern-\nulldelimiterspace % automatically resize the bar with \right
+        #1 % the function
+        \vphantom{\big|} % pretend it's a little taller at normal size
+        \right|_{#2} % this is the delimiter
+}}
+
 % theorem-like environments
 
 \theoremstyle{definition}
