@@ -1,5 +1,5 @@
 % !TeX spellcheck = en_US
-% Dirty hack to disable recompiling the bibliography every time, reducing compilation times. Comment out to re-compile bibliography.
+% Dirty hack to disable recompiling the bibliography every time, reducing compilation times. Comment out with another % to re-compile bibliography.
 % !TeX TXS-program:recompile-bibliography = donothing
 
 % Use biber as bibliography tool
@@ -7,7 +7,7 @@
 
 \documentclass[a4paper]{scrreprt}
 
-\usepackage[draft]{graphicx}
+\usepackage{graphicx}
 \input{todonotes-preamble.tex}
 \input{preamble-en.tex}
 
@@ -35,7 +35,7 @@
 \newcommand{\B}{\mathcal{B}}
 \newcommand{\D}{\mathcal{D}}
 
-\ihead{Vincent Bürgin}
+\ihead{Bachelor Thesis - Vincent Bürgin}
 \ohead{[Work in Progress]}
 
 \begin{document}
@@ -47,56 +47,59 @@
     \chapter{Basic Concepts from Probability and Decision Theory}
     
     \section{Probability Theory}
+    \todo{Briefly introduce required basic concepts like (probability) measures, random variables, the Borel sigma algebra, Lebesgue integration, moments, etc.}
     
     \section{Decision Theory}
+    \todo{(Possibly) introduce concepts like preference relations, utility functions, etc.}
     
     
     \chapter{Non-Cooperative Game Theory}
     \label{chap:nonCooperativeRealValuedGameTheory}
-    In this chapter, we will have a look at the basic notions of non-cooperative game theory.
+    In this chapter, we will introduce the basic notions of non-cooperative game theory.
     Game theory is applied in scenarios where multiple agents, called \emph{players}, make decisions independently of another, and each try to achieve the best outcome for themselves.
-    We are explicitly excluding \emph{cooperative game theory} from our discussions, where the players can cooperate and form coalitions to achieve a better overall outcome, and the main issue is how to split up the common payoff between the players.
-    In the \emph{non-cooperative game theory} we are dealing with, on the other hand, players can be thought of as neither being able to communicate, nor to make binding agreements. 
-    The classical example of this is the prisoners dilemma:
+    We are explicitly excluding \emph{cooperative game theory} from our discussions, where the players can cooperate and form coalitions to achieve a better overall outcome.
+%    , and the main issue is how to split up the common payoff between the players.
+    In the \emph{non-cooperative game theory} we are dealing with, on the other hand, players can be thought of as neither being able to communicate, nor to make binding agreements.
+    % TODO cite the interpretation of no communication/no binding agreements
+    The classical example of a non-cooperative game is the \emph{prisoner's dilemma}:
     \begin{ex}[Prisoner's Dilemma]
-        Two criminals have committed a capital crime together. They were caught, and now are being held in different cells, with no way to communicate, and will soon be interrogated.
+%        Two criminals have committed a capital crime together. They were caught, and now are being held in different cells, with no way to communicate, and will soon be interrogated.
+        Two partners in crime were caught and are now being held in different cells. They have no way to communicate, and will soon be interrogated.
         They know, however, that law enforcement only has substantial evidence against them for a small part of the crime; if none of the two confess, both of them will only be sentenced to one year in prison.
         The dilemma is that both will be offered to confess to the crime, and also snitch on the other criminal. Now if one of them confesses and testifies against the other, he can be placed in a witness protection program and go free, while the other one will go to prison for five years. If both confess, however, they will both be sentenced to four years in prison, with their confession being held for them as mitigating circumstances.
         
-        The game can be represented by a matrix, where the years in prison for the first and second player, respectively, are given as vectors:
-        The rows are the possible actions of player 1, the columns the actions of player 2 (not confess vs. confess).
-        
-        \begin{table*}[h]
+        The game can be represented by a table: the rows represent the player 1 strategies, the columns the player 2 strategies.
+        The table entries contain the years in prison player 1/player 2 faces, respectively.
+        \begin{gather*}
             \centering
-            $\begin{pmatrix}
-                (1, 1) & (5, 0) \\
-                (0, 5) & (4, 4)
-            \end{pmatrix}$
-        \end{table*}
+            \begin{tabular}{r|c|c|}
+            	                    & p2 does not confess & p2 confesses \\ \hline
+            	p1 does not confess &       1\;/\;1       &   5\;/\;0    \\ \hline
+            	   p1 confesses     &       0\;/\;5       &   4\;/\;4    \\ \hline
+            \end{tabular}
+        \end{gather*}
     
         Obviously if the prisoners could make a binding agreement, they would be best of by both not confessing, and both only facing one year in prison.
-        However, if one prisoner does not confess, he risks being ratted out by the other prisoner and face even more time in prison; 
-        Therefore, somewhat counter-intuitively, the non-cooperative game theorist's solution is that both prisoners confess and both face four years in prison instead of just one, only to prevent being betrayed by the other prisoner.
+        However, if one prisoner does not confess, he risks being betrayed by the other prisoner and face even more time in prison; 
+        Therefore the solution in non-cooperative game theory, somewhat counter-intuitively, is that both prisoners confess and both face four years in prison instead of just one. The reason is that they want to avoid being betrayed by the other prisoner.
         \label{ex:prisonersDilemma}
         \label{ex:gameTheoryIntroductoryExample}
     \end{ex}
 
-    We will now define such games formally.
+    We will now define such games and their solution concepts formally.
 
     % TODO find a definition properly supported by the literature!
-    % TODO really one-shot? Not better strategic-form? Multi-Stage games can also be encoded like this...
-    % TODO from now on, we call these games
-    \begin{defn}
-        A \emph{real-valued one-shot simultaneous move game} $(n, (S_1, \dots, S_n), (u_1, \dots, u_n))$ consists of 
+    \begin{defn}[see \cite{bib:fudenbergGameTheory,bib:matsumotoGameTheory,bib:nisanAlgorithmicGameTheoryCh1Basic}]~\\
+        A real-valued \emph{normal form game} $(n, (S_1, \dots, S_n), (u_1, \dots, u_n))$ consists of 
         \begin{itemize}
             \item the number of players $n$,
             \item for each player $k$, a set $S_k$ of available strategies,
-            \item for each player $k$, a payoff function $u_k: S \to \R$, where $S = \bigtimes\limits_{1\leq i \leq n} S_i$ denotes the set of all possible combinations of the players' strategies (elements of $S$ are also called \emph{strategy profiles}). 
+            \item for each player $k$, a payoff function $u_k: S \to \R$, where $S = \bigtimes\limits_{1\leq i \leq n} S_i$ denotes the set of all possible combinations of the players' strategies (elements of $S$ are also called \emph{strategy profiles} \cite{bib:fudenbergGameTheory}). 
         \end{itemize}
         \label{defn:realValuedGames}
     \end{defn}
     
-    Instead of specifying payoff functions $u_k$, we could equivalently specify cost functions $c_k$ with the semantics that players want to maximize payoffs, but minimize costs. We can switch between those viewpoints by setting $u_k = - c_k$. For a strategy profile $s = (s_1, \dots, s_n) \in S$ and some player $k$, it is sometimes convenient to use the notation $s_{-k}$ for $s$ with the $k$'th coordinate left out, and write $u_k(s_k, s_{-k})$ instead of $u_k(s)$.
+    Instead of specifying payoff functions $u_k$, we could equivalently specify cost functions $c_k$ with the semantics that players want to maximize payoffs, but minimize costs. For example, the “years in prison” in Example \ref{ex:prisonersDilemma} correspond to costs instead of payoffs. We can switch between those viewpoints by setting $u_k = - c_k$. For a strategy profile $s = (s_1, \dots, s_n) \in S$ and some player $k$, it is sometimes convenient to use the notation $s_{-k}$ for $s$ with the $k$'th coordinate left out, and write $u_k(s_k, s_{-k})$ instead of $u_k(s)$. \cite{bib:nisanAlgorithmicGameTheoryCh1Basic}
     % TODO “and we will use what is most convenient; but mean payoffs unless noted otherwise”?
     
     A common special case are zero-sum games:
@@ -110,19 +113,20 @@
     one player wins exactly what the other loses, and there would be no reason for the players to cooperate in any way. As \cite{bib:fudenbergGameTheory} notes, the important feature of these games is that the payoffs sum to a constant, while choosing this constant as zero is only for normalization.
     
     \section{Solution Concepts}
-    Reasoning about rational strategies, as done in example \ref{ex:gameTheoryIntroductoryExample}, is formalized by \emph{solution concepts}, most prominently the concept of \emph{Nash equilibria}. The first, somewhat simpler concept is that of \emph{dominant strategies}, where the best strategy is optimal regardless of the other players' actions:
+    Reasoning about rational strategies, as done in example \ref{ex:gameTheoryIntroductoryExample}, is formalized by \emph{solution concepts}, most prominently the concept of \emph{Nash equilibria}. The first, somewhat simpler concept is that of \emph{dominant strategies}, where a player's best strategy is independent the other players' actions:
     
-    \begin{defn}[Dominant strategy]
+    \begin{defn}[Dominant strategy, see \cite{bib:nisanAlgorithmicGameTheoryCh1Basic}]
         A strategy $s_k \in S_k$ for player $k$ is a \emph{dominant strategy} if 
         \[ \forall \tilde{s} \in S: u_k(s_k, \tilde{s}_{-k}) \geq u_k(\tilde{s}) \]
+        A strategy profile $(s_1, \dots, s_n) \in S$ is a \emph{dominant strategy solution} if all its individual strategies $s_i$ are dominant strategies.
     \end{defn}
     
-    In the prisoners' dilemma \ref{ex:prisonersDilemma}, confessing to the authorities is actually a dominant strategy for both prisoners:
-    For example, if player 2 confesses, then player 1 is better off by also confessing; but if player 2 does not confess, player 1 is \emph{also} best off by confessing, i.e. snitching on player 2 and going into witness protection without a prison sentence.
+    In the prisoners' dilemma \ref{ex:prisonersDilemma}, confessing is actually a dominant strategy for both prisoners:
+    For example, if player 2 confesses, then player 1 is best off by also confessing; but if player 2 does not confess, player 1 is \emph{also} best off by confessing, i.e. betraying player 2 and going into witness protection without a prison sentence.
     But often there are no dominant strategies, and the answer what a player should do is not so clear.
-    A more sophisticated solution concept are Nash equilibria, encoding that for a given strategy profile, no player has an incentive to deviate on their own. Nash equilibria represent a certain form of stability in a strategy profile.
+    A more sophisticated solution concept are Nash equilibria, which encode that for a given strategy profile, no player has an incentive to deviate on their own. Nash equilibria represent a certain form of stability in a strategy profile.
     
-    \begin{defn}[Nash equilibrium]
+    \begin{defn}[Nash equilibrium, see \cite{bib:fudenbergGameTheory}]
         A strategy profile $s \in S$ is a \emph{Nash equilibrium} if
         \[
             \forall k, \forall \tilde{s}_k \in S_k:~ u_k(s_k, s_{-k}) \geq u_k(\tilde{s}_k, s_{-k})
@@ -130,63 +134,71 @@
         \label{def:nashEquilibriumRealValued}
     \end{defn}
     
-    \begin{lemma}[Row/Column Criterion] 
+    \begin{lemma}[Row/Column Criterion, see {\cite[p.14]{bib:matsumotoGameTheory}}]
         % TODO call this saddle-point criterion?
         % TODO similar formulation as minimax?
         % TODO connection with von-Neumann-theorem?
         % TODO talk about how matrices specify payoffs earlier
         In a two-player game with finite strategy sets, where the payoffs are specified by two matrices $A, B$, the Nash equilibria correspond
         exactly to the set of indices $(i, j)$ where the entry $a_{ij}$ in $A$ is maximal in its column, and the entry $b_{ij}$ in $B$ is maximal in its row.
-        If the game is zero-sum this also corresponds to the indices where $a_{ij}$ is both maximal in its column, and minimal in its row.
+        If the game is zero-sum, these are just the indices where $a_{ij}$ is both maximal in its column, and minimal in its row.
     \end{lemma}
     \begin{proof}
-        % TODO proof of row/column crit really necessary?
-        \todo{Prove (if necessary)}
+        Follows directly from the definition: player 1 has no incentive to deviate from a strategy profile $s = (s_1, s_2)$ iff the payoff under it is maximal in its column, since a deviation could only lead to another payoff in the same column (the column is determined by $s_2$ which player 1 can not change). The same argument applies for player 2.
     \end{proof}
 
 
     % TODO cite Matsumuto, p. 15/does this hold in the non-finite case? (i.e., mixed strategies)
     \begin{lemma}
-        In a zero-sum game, all Nash equilibria have the same payoff.
+        If a real-valued two-player normal form game is a zero-sum game, all Nash equilibria have the same payoff.
+        The payoff of player 1 under an equilibrium is then called the \emph{value} of the game.
     \end{lemma}
     \begin{proof}
-        % TODO really needed?
-        \todo{Prove (if necessary)}
+        \cite[p.15]{bib:matsumotoGameTheory} gives a proof for the finite case using the row-column criterion, but the proof idea works in the general setting:
+        Let $(s_1, s_2)$, $(\tilde{s}_1, \tilde{s}_2)$ be two equilibria.
+        Then
+        \begin{gather*}
+            u_1(s_1, s_2) \geq u_1(\tilde{s}_1, s_2) = -u_2(s_2, \tilde{s}_1) \geq -u_2(\tilde{s}_2, \tilde{s}_1) = u_1(\tilde{s}_2, \tilde{s}_1)
+        \end{gather*}      
     \end{proof}
     
     The next example illustrates our solution concepts:
     
     \begin{ex}[Dominant Strategy Solutions and Nash Equilibria]
         In example \ref{ex:prisonersDilemma} we saw a game with a solution strategy profile made up of dominant strategies, which was also the unique Nash equilibrium of the game.
-        The game in 
-        the next figure a) % TODO reference next figure, a)
-        shows that Nash equilibria and dominant strategies are indeed different concepts. No player has a dominant strategy, but yet the game has a Nash equilibrium: if both players play their first strategy, the payoff 1 for player 1 is maximal in its column, and the payoff 1 for player 2 is maximal in its row. Therefore, there is no incentive to deviate from this strategy pair.
+        Now the game in (a)
+        shows that Nash equilibria and dominant strategies are indeed different concepts. No player has a dominant strategy, but yet the game has a Nash equilibrium: if both players play their first strategy, the payoff 1 for player 1 is maximal in its column, and the payoff 1 for player 2 is maximal in its row.
         
-        The game in
-        the next figure b) % TODO reference next figure, a)
+        The game in (b)
         shows that Nash equilibria need not be unique: Both the upper-left and the lower-right cell correspond to Nash equilibria.
         
-        % TODO ultimately, multi-figure!
         \begin{figure}[h]
             \centering
-            \begin{tabular}{|c|c|}
-                \hline
-                (1, 1) & (0, 0) \\ 
-                \hline
-                (0, 3) & (1, 2) \\
-                \hline
-            \end{tabular}
-            \begin{tabular}{|c|c|}
-                \hline
-                (1, -1) & (0, -2) \\ 
-                \hline
-                (0, -2) & (5, 3) \\
-                \hline
-            \end{tabular}
+            \begin{subfigure}[t]{0.49\textwidth}
+                \centering
+                \begin{tabular}{c|c|c|}
+                	   &   b1    &   b2    \\ \hline
+                	a1 & 1\,/\,1 & 0\,/\,0 \\ \hline
+                	a2 & 0\,/\,3 & 1\,/\,2 \\ \hline
+                \end{tabular}
+                \caption{Game with Nash equilibrium, but no dominant strategy solution}
+                \label{fig:nashEquilibriumNoDominantStrategy}
+            \end{subfigure}
+            \begin{subfigure}[t]{0.49\textwidth}
+                \centering
+                \begin{tabular}{c|c|c|}
+                    &   b1    &   b2    \\ \hline
+                    a1 & 1\,/\,-1 & 0\,/\,-2 \\ \hline
+                    a2 & 0\,/\,-2 & 5\,/\,3 \\ \hline
+                \end{tabular}
+                \caption{Game with two Nash equilibria}   
+                \label{fig:twoNashEquilibria}
+            \end{subfigure}
         \end{figure}
     \end{ex}
     
     \section{Mixed-Strategy Extensions}
+%    The examples up to here all had a finite number of strategies to pick from, usually called \emph{pure strategies}.
     
     \begin{ex}[Rock-Paper-Scissors]
         We will now consider a game-theoretic version of the well-known game \emph{Rock-Paper-Scissors}.
@@ -201,134 +213,127 @@
             \end{tabular}
         \end{figure}
     
-        It is obvious that there is no Nash equilibrium: for example, if player 1 plays rock, player 2 would be able to beat it py playing paper, but in turn player 1 had an incentive to switch to scissors, and so on. Exactly this kind of instability is supposed to be avoided by Nash equilibria, but as this example shows, not all games do have Nash equilibria.
+        It is obvious that there is no Nash equilibrium: for example, if player 1 plays rock, player 2 would be able to beat it by playing paper; but in turn player 1 had an incentive to switch to scissors, and so on. Exactly this kind of instability is supposed to be avoided by Nash equilibria, but as this example shows, not all games do have Nash equilibria.
         
-        But if played in reality, this problem does not occur: instead of picking one single action and playing it, players usually try to randomize their strategies. While a player always playing the same strategy can be easily beaten, this is not the case for a player picking each of the three strategies with equal probability. This idea can also be incorporated in our model, and is formalized by \emph{mixed-strategies}. In this context, the original strategies are called \emph{pure strategies}.
+        But if played in reality, this problem does not occur: instead of picking one single action and playing it, players usually try to randomize their strategies. While a player always playing the same strategy can be easily beaten, this is not the case for a player picking each of the three strategies with equal probability. This idea is formalized by \emph{mixed-strategies}. In this context, the original strategies are called \emph{pure strategies}.
         \label{ex:rockPaperScissors}
     \end{ex}
 
-    \begin{defn}
-        Let $G = (n, (S_1,\dots, S_n), (u_1, \dots, u_n))$ be a strategic-form game with a finite strategy space $S$. % TODO strategic form correct now?
-        Its \emph{mixed extension} is defined by $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$
-        where for $k = 1,\dots,n$:
-        \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
-%            \item 
-%            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $(p_1, \dots, p_{\abs{S_k}})$ has the semantics that the $i$'th pure strategy is played with probability $p_i$.
-%            \[
-%            \Delta_k \coloneqq \bigg\{ (p_1, \dots, p_{\abs{S_k}}) \in \R^{\abs{S_k}} ~ \bigg\vert ~ \sum_{i=1}^{\abs{S_k}} p_i = 1 \bigg\} 
-%            \]
-%            
-%            \item $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles
-%            
-%            \item
-%            The utility function $U_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
-%            \[
-%            U_k: 
-%            %                (\delta_1, \dots, \delta_n) 
-%            ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
-%            \mapsto
-%            \sum_{i_1=1}^{\abs{S_{i_1}}} \dots \sum_{i_n=1}^{\abs{S_{i_n}}} p_{1,i_1} \dots p_{n,i_n} * u_i( ? )
-%            \]
-            
+    \begin{defn}[Mixed Extensions (e.g. \cite{bib:matsumotoGameTheory})]
+        Let $G = (n, (S_1,\dots, S_n), (u_1, \dots, u_n))$ be a normal-form game with a finite strategy space $S$.
+        Its \emph{mixed extension} is defined by $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (\hat{u}_1, \dots, \hat{u}_n))$,
+        where for each player $k = 1,\dots,n$:
+        \begin{itemize}
             \item 
-            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $p : S_k \to \Rp, p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$:   
-            % TODO as technicality, it's somewhat problematic to treat mixed strategies as functions as opposed to \R^n tuples when later applying Kakutani's fixed point theorem...
+            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $p : S_k \to \Rp, p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$:
             \[
                 \Delta_k \coloneqq \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } 
             \]
+            The $p \in \Delta_k$ can be viewed as real-valued vectors summing to one, but for notational convenience we model them as functions mapping strategies to their probability. We will switch between these two views as required.
+            \footnote{The exact notation used wildly differs in the literature; our notation $\Delta_k$ for the mixed-strategy sets is used, for example, in \cite{bib:quantPropernessProtectiveness}.}
             
             \item $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles.
             
             \item
-            The utility function $U_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
+            The utility function $\hat{u}_k: \Delta \to \R$ maps to each mixed strategy profile the \emph{expected value} of the $k$'th players payoff under that strategy profile:
             \begin{gather}
-                U_k: 
+                \hat{u}_k: 
                 (p_1, \dots, p_n) 
 %                ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
                 \mapsto
-                \sum_{(s_1, \dots, s_n) \in S} \biggpars{\prod_{i=1}^{n} p(s_i)} * u_k( (s_1, \dots, s_n) )
+                \sum_{(s_1, \dots, s_n) \in S} \biggpars{\prod_{i=1}^{n} p_i(s_i)} * u_k( (s_1, \dots, s_n) )
                 \label{eq:mixedStrategyUtility}
             \end{gather}
         \end{itemize}
+        We write $\supp \delta_k$ for the support of a mixed strategy $\delta_k \in \Delta_k$, i.e. the set of pure strategies it mixes between with positive probability.
     \end{defn}
     
     Note that the resulting mixed extension is still a game that fits definition \ref{defn:realValuedGames}.
     Since payoffs can be specified by matrices, mixed extensions of two-player finite % TODO define finite games
     games are usually called \emph{bimatrix games}, or just \emph{matrix games} in the zero-sum case.
-    From now on, we will mostly consider mixed extensions of games without explicitly noting it, and, for example, say that a given game has an equilibrium in \emph{mixed strategies} but none in \emph{pure strategies} to distinguish between the cases.
+    We will state results for general games where possible, and use the notations $S_k$ and $u_k$ instead of $\Delta_k$ and $\hat{u}_k$ (so by writing $S_k$ or $u_k$, we do \emph{not} automatically only refer to finite games). When talking about finite games and their mixed extensions, we will for example say that a given game has an equilibrium in \emph{mixed strategies} but none in \emph{pure strategies} to distinguish between the cases.
     
-    Allowing mixed strategies is very important for the existence of equilibria. In a certain sense, “most” games do not have pure equilibria: as noted in \cite{bib:matsumotoGameTheory} % TODO cite p. 15f of Matsumoto for “probability of equilibrium” argument
-    the probability that a random matrix (zero-sum) game with $n$ and $m$ pure strategies for player 1 and 2, respectively, has a pure equilibrium, is $\frac{m! n!}{(m+n-1)!}$ if all matrix entries are iid. 
-    % TODO check if iid was introduced in the prob. theory chapter
-    % TODO but approaches 1-1/e in the non-zs case ?!
-    sampled from some continuous probability distribution. On the other hand, John Nash % TODO cite John Nash proof
-    famously proved that any finite game has a mixed-strategy equilibrium. 
+    Allowing mixed strategies is very important for the existence of equilibria. There are many games that do not have pure equilibria: 
+    \begin{thm}[Probability of Equilibria]~
+        \begin{enumerate}
+            \item
+            Consider finite two-player \emph{matrix} (i.e. zero-sum) games with $n$ and $m$ pure strategies for player 1 and 2, where each of the $n*m$ payoffs is picked iid. from some continuous probability distribution.
+            The probability that such a game has an equilibrium in pure strategies is $p_{n, m} = \frac{m! n!}{(m+n-1)!}$, which approaches zero for large $n, m$ (see \cite[p.15]{bib:matsumotoGameTheory}, cited from \cite{bib:goldbergProbabilityOfEquilibria}).
+            For example, $p_{2, 2} = \frac{2}{3}, p_{3, 3}=\frac{3}{10}$.
+            
+            \item 
+            Consider finite \emph{bimatrix} games with $n$ pure strategies for both player 1 and 2, where each of the $2n^2$ payoffs is picked iid. from some continuous probability distribution.
+            The probability that such a game has an equilibrium in pure strategies is $p'_{n} = 1 - (1-1/n)^n$, which approaches $1 - 1/e \approx 0.632$
+            (see \cite{bib:goldbergProbabilityOfEquilibria}, also \cite[Exercise 1.2]{bib:nisanAlgorithmicGameTheoryCh1Basic}).
+            For example, $p'_{2} = 0.75, p'_{3} \approx 0.704, p'_{10} \approx 0.651$.
+        \end{enumerate}
+    \end{thm}
+    So in the two-player case, increasingly large random zero-sum games have pure-strategy equilibria with a probability close to zero; Random non-zero-sum games have pure-strategy equilibria with a surprisingly high probability, but still about one third of those game do not have pure equilibria.
+    On the other hand, finite games with $k$ players always have a mixed-strategy equilibrium, as famously proved by John Nash in \cite{bib:nashOnePageProofOfEquilibria}.
     % TODO check Matsumoto p. 55 / Fudenberg p. 29 for example
     
-    
-    % TODO at some point here, start thinking of pre-conditions of the following theorems: Maybe define G as a (some sort of) game, or mention in every theorem that it concerns a “Type Bla” game
-    
-    
     \begin{thm}[Existence of Mixed-Strategy Equilibria]
-        Every finite strategic-form game has a mixed-strategy equilibrium. \cite{bib:fudenbergGameTheory}
-        % TODO Find a more fitting formulation of Existence of Mixed-Strategy Equilibria if necessary?
-        \todo{Prove Existence of Mixed-Strategy Equilibria (if necessary), here or later}
+        Every finite real-valued normal-form game has a Nash equilibrium in mixed strategies.
         \label{thm:existenceOfMixedStrategyEquilibria}
     \end{thm}
-    % TODO either only cite proof of the Existence of Mixed-Strategy Equilibria, or give proof later since at least Katukani's fixed-point theorem and best responses need introduction
-    We will give a a proof of this theorem in section \ref{sec:existenceOfMixedStrategyEquilibria}, but first introduce some more concepts relevant for the proof.
+    We will give a a proof of this theorem in Section \ref{sec:existenceOfMixedStrategyEquilibria}, but first introduce some more concepts relevant for the proof.
     
     \begin{ex} % TODO or make this RockPaperScissors example “... continued”
-        The Rock-Paper-Scissors game from example \ref{ex:rockPaperScissors}
+        The Rock-Paper-Scissors game from Example \ref{ex:rockPaperScissors}
         has the mixed-strategy Nash equilibrium $((\frac{1}{3}, \frac{1}{3}, \frac{1}{3}), (\frac{1}{3}, \frac{1}{3}, \frac{1}{3}))$.
         This should be intuitively clear to anyone who has played the game in reality, and we will later prove this when looking at methods to compute equilibria.
+        % TODO check that the RockPaperScissors-Equilibrium was actually proven in the computation section
     \end{ex}
     
-    A similar way to think of Nash equilibria, which has interesting consequences for mixed-strategy games, is by \emph{best responses}.
+    A different way to characterize Nash equilibria, which has interesting consequences for mixed-strategy games, is by \emph{best responses}.
     
-    \begin{defn}
-        % TODO what are the conditions on the game to have best responses? Most of all, is it appropriate to use the notation u_k instead of U_k?
-        Let $s \in S$ be a strategy profile. For each player $k$, we define 
+    \begin{defn}[Best responses, see \cite{bib:fudenbergGameTheory}]
+        Let $G$ be a real-valued normal-form game, and $s \in S$ a strategy profile. For each player $k$, we define 
         \[
-            r_k: S \to S_k,~ r_k(s) = \biggset{s_k \in S_k \bigmid u_k(s_k, s_{-k}) = \sup_{\tilde{s}_k \in S_k} u_k(\tilde{s}_k, s_{-k}) }
+            r_k: S \to \Pot(S_k),~ r_k(s) = \biggset{s_k \in S_k \bigmid u_k(s_k, s_{-k}) = \sup_{\tilde{s}_k \in S_k} u_k(\tilde{s}_k, s_{-k}) }
         \]
-        We call a strategy $s_k \in r_k(s)$ a \emph{best response} to $s$ (or alternatively to $s_k$).
-        Since $r_k(s)$ does only depend on $s_{-k}$, we can also write $r_k(s_{-k})$ where more convenient. % TODO Find reference for the s_{-k} notation? Also, maybe cite Fudenberg p. 29 for the “does not depend” part (even though obvious)
-        \footnote{Nevertheless, $r_k$ is defined to take arguments from $S$ as this will simplify an application of the Kakutani fixed point theorem later. % TODO Change this if we never apply the Kakutani fixed point theorem
-        }
+        We call a strategy $s_k \in r_k(s)$ a \emph{best response} to $s$ (or alternatively to $s_{-k}$).
+        Since $r_k(s)$ does only depend on $s_{-k}$, we can also write $r_k(s_{-k})$ where more convenient (\cite{bib:fudenbergGameTheory}).
+        \footnote{Nevertheless, $r_k$ is defined to take arguments from $S$ as this will notationally simplify the proof of Theorem \ref{thm:existenceOfMixedStrategyEquilibria}.}
     \end{defn}
     
     This gives a different characterization of the Nash equilibrium, as a strategy profile which for each player is a best response to itself.
     
     \begin{thm}
-        A strategy profile $s \in S$ is a Nash equilibrium iff 
+        In a real-valued normal-form game $G$, a strategy profile $s \in S$ is a Nash equilibrium iff 
         \[
             \forall k = 1, \dots, n: s_k \in r_k(s)
         \]
         \label{thm:nashEquilibriumCharacterizationByBestResponses}
     \end{thm}
     \begin{proof}
-        \todo{Prove (if necessary) the best-response characterization of equilibria}
+        If $s_k \in r_k(s)$ for all player $k$, no player has an incentive to deviate from $s$, since $s_k$ gives the maximal payoff with respect to $s_{-k}$.
+        However if for some $k$, $s_k \notin r_k(s)$, there exists some strategy $\tilde{s}_k$ giving player $k$ a better payoff with respect to $s_{-k}$.
     \end{proof}
 
-    An important fact for best-response mixed strategies is that they are always mixing between best-response pure strategies:
+    An important fact is that best-response mixed strategies are always mixing between best-response pure strategies:
 
     % TODO cite best-response mixing, e.g, Nisan p.30 (51) or maybe p.55 (76)
     % TODO maybe introduce the support of a mixed strategy?
     % TODO as always, preconditions?
-    \begin{thm}
-        Let $s_k$ be a mixed strategy for player $k$, which is mixing between pure strategies $s_{k,1}, \dots, s_{k,m}$.
+    \begin{thm}[see {\cite[Theorem 2.1]{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}}]
+        \label{thm:bestResponseMixing}
+        In a mixed-extension-game $G$,
+        let $s_k$ be a mixed strategy for player $k$, which is mixing between pure strategies $s_{k,1}, \dots, s_{k,m}$.
         Then for any strategy profile $s \in S$:
         \[
             s_k \in r_k(s) \lra \forall j: s_{k, j} \in r_k(s)
         \]
-        \label{thm:bestResponseMixing}
     \end{thm}
     \begin{proof}
-        \todo{Prove the best-response mixing theorem}  
+        The payoff function $u_k(\dummydot, s_{-k})$ is “linear in the probabilities” (\cite[p.11]{bib:fudenbergGameTheory})
+        (more formally, a restriction of a linear map on the convex set of valid probability vectors).
+        Assume one $s_{k, j}$ has a worse payoff than $s_k$: then some $s_{k, i}$ must have a better payoff than $s_k$. so $s_k$ is not a best response.
+        For the converse, assume that all $ s_{k, j} $ are best responses, i.e. have equal payoff. By the linearity, $s_k$ has the same payoff.
     \end{proof}
 
     \begin{cor}
+        \label{cor:equilibriumStrategiesSupportHaveEqualPayoffs}
         If $s = (s_1, \dots, s_n) \in S$ is a Nash equilibrium, and the $k$'th player's strategy $s_k$
         mixes between pure strategies $s_{k,1}, \dots, s_{k,m}$, then the payoff of all the $s_{k,j}$ with respect to $s_{-k}$ is equal;
         Furthermore, the payoff of any strategy mixing between them is the same as well:
@@ -337,7 +342,6 @@
             \forall \tilde{s}_k \in \Delta_k: \supp \tilde{s}_k \subseteq \supp s_k \Rightarrow u_k(\tilde{s}_k, s_{-k}) = u_k(s_k, s_{-k})
         \end{gather}
         % TODO Introduce supp somewhere above!
-        \label{cor:equilibriumStrategiesSupportHaveEqualPayoffs}
     \end{cor}
     \begin{proof}
         Since $s$ is a Nash equilibrium, the mixed strategy $s_k$ is a best response to $s$ by theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}.
@@ -346,140 +350,15 @@
         Furthermore, a mixed strategy mixing between pure strategies with equal payoff necessarily also has the same payoff by the linearity of the expected value (cf. equation \eqref{eq:mixedStrategyUtility}).
     \end{proof}
     
-    The interpretation of Theorem \ref{thm:bestResponseMixing} and Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs} is that a player, given some strategies by other players, does not mix her own strategies in order to achieve a better payoff; the purpose of mixing strategies is rather to keep up an equilibrium, since only the right mixing leads to a situation where the other players have no incentive to deviate.
-    We will need these results in later chapters when analyzing more general games with lexicographically-ordered outcomes, but most importantly, we will see how they can be applied to compute Nash equilibria in the following section.
-    
-    \section{Computation of Nash Equilibria}
-    
-    \subsection{Exact Computation}
-    Mixed Nash equilibria in bimatrix games can be computed exactly by a simple method called the \emph{support enumeration algorithm}.
-    We assume the game's payoffs are specified by matrices $A, B \in \R^{n\times m}$, and the players have pure strategies $S_1 = \set{s_1,\dots,s_n}$, $S_2 = \set{t_1,\dots,t_m}$, respectively.
-    Observe that \eqref{eq:mixedStrategyUtility} simplifies in the following way: if $x = (x_1,\dots,x_n) \in \Rp^n$ represents a mixed strategy of player 1 and $y (y_1,\dots,y_m) \in \Rp^m$ one of player 2, then the players' payoffs are given by $u_1(x,y) = x\transposed A y$ and $u_2(x,y) = x\transposed B y$. 
-    % TODO But u_i by definition does not take a real vector as argument...
-    % TODO maybe theoremize this section on the support-enumeration algorithm?
-    
-    
-    
-    
-    
-    If $(x, y)$ is a Nash equilibrium, then the pure player 1 strategies with positive probability in $x$ must all be best responses to $y$, i.e. they all have equal payoff, and no other pure strategy can have greater payoff under $y$:
-    \begin{gather}
-        \forall i: x_i > 0 \Rightarrow (Ay)_i = \max_{j} (Ay)_j
-        \label{eq:equalMaxPureStrategyPayoffsLinearSystem}
-        % TODO definitely cite “Best Response Conditions” from NisanCh2!
-    \end{gather}
-    The same holds with the player roles reversed.
-    
-    Suppose we want to find an equilibrium where player one mixes between rows with indices in $I \subseteq \set{1, \dots, n}$, and player 2 mixes between columns with indices in $J \subseteq \set{1, \dots, m}$. Then player 1 must mix in a way that makes player 2 indifferent between the columns in $J$, and player 2 must mix in a way that makes player 1 indifferent between the rows in $I$.
-    This is expressed in two linear systems of equations:
-    \begin{gather}
-        (Ay)_{i_k} = (Ay)_{i_1} ~(\forall i_k \in I \setminus\set{i_1}), \qquad\;\, \sum_{j \in J} y_j = 1 \\
-        (xB)_{j_k} = (xB)_{j_1} ~(\forall j_k \in J \setminus\set{j_1}), \qquad \sum_{i \in I} x_i = 1
-    \end{gather}
-    If some $(x, y)$ solve these systems of equations, they are a candidate for a mixed-strategy Nash equilibrium.
-    It remains to check that all probabilities in the solution are positive. Also we have to make sure the mixed strategies do not only have equal, but also maximal payoffs: i.e. for each $\tilde{i}\in I^\complement$ check that $(Ay)_{\tilde{i}} \leq (Ay)_{i_1}$ (and analogously for $J$).
-    
-    The resulting algorithm is known as the \emph{support enumeration algorithm}: We iterate over all possible pairs of support $(I, J)$, and for each one go through the steps outlined above. 
-    
-    % TODO support-enumeration algorithm has no discussion of degenerate games yet; not sure if this works for degenerate game; did therefore also not discuss that in non-degen games, |I|=|J| can be assumed, speeding up by sqrt(n pi)
-    
-%    Suppose that the Nash equilibrium $(x, y)$ is unknown. We want to find $(x, y)$ for a pair of pure strategy supports represented by sets of indices $I \subseteq \set{1, \dots, n}$, $J \subseteq \set{1, \dots, m}$.
-%    We use \eqref{eq:equalMaxPureStrategyPayoffsLinearSystem} and the condition $\sum_i y_i = 1$ to obtain a linear system % TODO this is not yet a linear system? Also, I, J missing
-%    of equations which we solve for $y_i$. 
-%    If this system has a unique solution, we just have to check that all $y_i \geq 0$, and then know a mixed strategy for player 2 under which 
-%    
-%    Suppose that there is a Nash equilibrium $(s_1, s_2)$ where player 1 is playing $s_1 \in \Delta_1$, with
-%    $\supp(s_1) = \set{s_{1,1}, \dots, s_{1,l}}$. By Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs}, the pure strategies all have equal payoff under $s_2$:
-%    \begin{gather}
-%        \forall i = 2, \dots, l: ~ u_1(s_{1, i}, s_2) = u_1(s_{1, 1}, s_2)
-%    \end{gather}
-%    Letting $s_2 = (q_1, \dots, q_m) \in \R^m$ we get a system of linear equations:
-%    % TODO and identifying the pure player 1 strategies with real-valued vectors?
-%    \begin{gather}
-%        \label{eq:equalPureStrategyPayoffsLinearSystem}
-%        \forall i = 2, \dots, l: ~ s_{1,i}\transposed * A * (q_1, \dots, q_m) = s_{1,1}\transposed * A * (q_1, \dots, q_m) \\
-%        q_1 + \dots + q_m = 1
-%    \end{gather}
-%    We can solve this system for $(q_1, \dots, q_m)$ to obtain a mixed strategy $s_2$ of player 2 under which all player-1-strategies in $\supp(s_1)$ have the same payoff.
-%    % TODO “a” mixed strategy. What if there are none? What if there are many?
-%    Now in order to make player 2 mix between the strategies in $\supp(s_2)$, player 1's mixed strategy $s_1$ would have to be such that under $s_1$, all the pure strategies in $\supp(s_2)$ have the same payoff under $s_1$. We can apply the same technique as in \eqref{eq:equalPureStrategyPayoffsLinearSystem} and create a linear system of equations to obtain the mixed strategy $(p_1,\dots,p_n)$ of player 1.
-    
-    
-%    Denote by $e_i^{(k)} \in \R^k$ the $k$-dimensional unit vector with a one in the $i$'th position.
-%    Suppose there is an equilibrium where player 1 is mixing between pure strategies $\tilde{S_1} \subseteq S_1$, 
-%    and player 2 is mixing between pure strategies $\tilde{S_2} \subseteq S_2$.
-%    Then for $k=1,2$:
-%    \begin{gather}
-%        \forall \tilde{s_i}, \tilde{s_j} \in \tilde{S_k}: u_k(\tilde{s_i}) = u_k(\tilde{s_j})
-%        % TODO find better symbols!
-%    \end{gather}
-%    Substituting
-
-    %TODO Example of computation for RockPaperScissors
-    
-    The support enumeration algorithm is obviously quite inefficient, since it enumerates all subsets of the pure strategy sets for both players, and therefore is exponential in the number of strategies.
-    \cite{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation} investigates more sophisticated methods: The \emph{vertex enumeration algorithm} finds possible supports of mixed strategies by iterating over the vertices of certain polyhedra (“best-response polytypes”) and outputs all Nash equilibria.
-    The \emph{Lemke-Howson algorithm} finds one Nash equilibrium by traversing a path in the previously-mentioned polytypes.
-    However, these improvements still have exponential worst-cases, and complexity-theoretic results suggest that finding Nash equilibria in general, even in two-player games, is an intractable problem. As discussed in detail in \cite{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}, the problem \textsc{Nash} of finding a Nash equilibrium is complete for the complexity class PPAD, which contains other problems for which an efficient algorithm is thought unlikely to exist, like finding fixed points in the context of Brouwer's fixed point theorem.
-    Finding Nash equilibria does not fit into the more common intractability notion of NP completeness, because Nash equilibria are guaranteed to exist -- the problem can therefore not be stated as a decision problem. However, there are a number of closely related variations where existence is not guaranteed and which are known to be NP-complete: %TODO citation for NP-complete NASH variants (Gilboa and Zemel, 1989) - see Nisan chapter 2 p.33
-    For example, deciding whether a game has more than one equilibrium, whether an equilibrium with at least a given utility exists, and whether an equilibrium exists with a given strategy in/not in its support, are all NP-complete problems.
-    
-    
-    
-    \subsection{Approximate Computation: Fictitious Play}
-    % TODO cite a good source for fictitious play; possibly lecture notes? Or is there a better reference?
-    A different approach for finding equilibria is to simulate repeated play of the game by agents that are learning from past outcomes.
-    We again assume a bimatrix game with payoff matrices $A, B$.
-    In each new round, each player averages over the past strategies of his opponent. Under the assumption that the opponent will play this average mixed strategy, he picks his own pure strategy for this round that maximizes his payoff. Formally, denote by $s_k \in S_1, t_k \in S_2$ the strategies played in the $k$'th round, and $x_k, y_k$ the corresponding average strategies, defined iteratively by:
-    \begin{gather*}
-        x_k = \frac{1}{k} \sum_{i=1}^{k} s_k, \quad y_k = \frac{1}{k} \sum_{i=1}^{k} t_k \\
-        s_1 \in S_1, t_1 \in S_2 \text{ arbitrary} \\
-        s_{k+1} = \argmax\limits_{\tilde{s} \in S_1} u_1(\tilde{s}, y_k) \\ % TODO typeset subscript below argmax
-        t_{k+1} = \argmax\limits_{\tilde{t} \in S_2} u_2(x_k, \tilde{t})
-    \end{gather*}
-    
-    In the special case of zero-sum games, this process was shown to converge by \cite{bib:robinsonFictitiousPlay}.
-    There are, however, examples of non-zero-sum bimatrix games where fictitious play does not converge.
-    % TODO find example of non-convergent fict. play
-    
-    \begin{thm}[Convergence of Fictitious Play \cite{bib:robinsonFictitiousPlay}]
-        If the game is a zero-sum game ($A=-B$), then 
-        \begin{enumerate}
-            \item The sequence $(u_1(x_k, y_k))_{k \in \N}$ converges towards the value of the game (i.e. $u_1(x, y)$ under a Nash equilibrium $(x, y)$).
-            \item The sequence $((x_k, y_k))_{k \in \N}$ converges towards a Nash equilibrium $(x, y)$.
-        \end{enumerate}
-    \end{thm}
-    \begin{proof}
-        \todo{Probably leave out this proof of Fictitious Play convergence.}
-    \end{proof}
-
-    % TODO rewrite occurences of it's, didn't, don't etc. (However, consider: “If you are making an off-the-cuff or informal remark within an otherwise formal paper, it is okay to use a contraction as part of your writing voice”)
-    Note that it's quite possible that for no value of $k$, $(x_k, y_k)$ actually forms a Nash equilibrium.
-    To deal with situations like this, there is the notion of $\epsilon$-Nash equilibria, where deviation from the equilibrium at most gains players $\epsilon$ additional payoff. % TODO Cite definition of epsilon-equilibria!
-    By continuity of the payoff functions, we see that for any $\epsilon$, for $k$ large enough, $(x_k, y_k)$ is an $\epsilon$-Nash equilibrium.
-    
-    \begin{defn}
-        Let $\epsilon > 0$.
-        A strategy profile $s = (s_1, \dots, s_n) \in S$ is an $\epsilon$-Nash equilibrium if
-        \[
-            \forall k: \forall \tilde{s_k} \in S_k: u_k(s_k, s_{-k}) \geq u_k(\tilde{s_k}, s_{-k}) - \epsilon
-        \]
-    \end{defn}
-
-    \begin{cor}
-        % TODO Epsilon-Equilibrit this is completely without solid proof whatsoever. 
-        For any $\epsilon > 0$, there is some $K \in \N$ such that $\forall k \geq K$ the result after $k$ rounds of fictitious play $(x_k, y_k)$ is an $\epsilon$-Nash equilibrium .
-    \end{cor}
-
+    A possible interpretation of Theorem \ref{thm:bestResponseMixing} and Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs} is that a player, given some strategies by other players, does not mix his own strategies in order to achieve a better payoff; the purpose of mixing strategies is rather to keep up an equilibrium, since only the right mixing leads to a situation where the other players have no incentive to deviate.
+    We will need these results in later chapters when analyzing more general games with lexicographically-ordered outcomes, but most importantly, we will see how they can be applied to compute Nash equilibria later in this chapter.
     
     \section{Proof that Mixed-Strategy Equilibria Exist}
     \label{sec:existenceOfMixedStrategyEquilibria}
-    % TODO move mixed-strategy-proof section before the computation section
-    The existence of mixed-strategy equilibria (Theorem \ref{thm:existenceOfMixedStrategyEquilibria}) was first proven by John Nash in a one-page article. %TODO cite Nash's article
+    The existence of mixed-strategy equilibria (Theorem \ref{thm:existenceOfMixedStrategyEquilibria}) was first proven by John Nash in a one-page article \cite{bib:nashOnePageProofOfEquilibria}.
     His proof is based on the characterization of Nash equilibria by best responses (Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}) and non-constructively finds an equilibrium point by Kakutani's Fixed Point Theorem, a generalization of Brouwer's Fixed Point Theorem to set-valued functions.
-    % TODO non-constructiveness: possibly already discussed in computation section
     
-    \begin{defn}
+    \begin{defn}[eg. {\cite[p.30]{bib:fudenbergGameTheory}}]
         % TODO find a good reference for the closed-graph-formulation of Kak'sFP
         Let $S \subseteq \R^n$. A set-valued function $\phi: S \to \Pot(S)$ \emph{has a closed graph} if for all convergent sequences $(x_n)_{n \in \N}$, $(y_n)_{n \in \N}$ in $S$,
         \[
@@ -488,10 +367,9 @@
     \end{defn}
 
     Having a closed graph clearly is a kind of continuity property for set-valued functions.
-    Kakutani's original paper instead uses the concept of \emph{upper semi-continuity}, which is equivalent in the case we are looking at.
-    % TODO cite closed graph = upper semi-cont. ? At least, Kakutani defines upper-semi-continuity just as we define closed graph
+    Kakutani's original paper instead uses the concept of \emph{upper semi-continuity}, which is equivalent in the case we are looking at (since in the following theorem $S$ is compact, and $\phi$ takes only closed sets as values; see \cite{bib:kakutaniFixedPointTheorem}, \cite{bib:borderFixedPointTheorems}).
 
-    \begin{thm}[Kakutani's Fixed Point Theorem]
+    \begin{thm}[Kakutani's Fixed Point Theorem, see \cite{bib:kakutaniFixedPointTheorem}, {\cite[p.29f]{bib:fudenbergGameTheory}}]
         % TODO find a good reference for the formulation of Kak'sFP
         Let $S \subseteq \R^n$. Let $\phi: S \to \Pot(S)$ be a function with the following properties:
         \begin{enumerate}
@@ -507,22 +385,22 @@
     \begin{proof}[Proof of \ref{thm:existenceOfMixedStrategyEquilibria}]
         % TODO note that for the equilibrium existence proof it's necessary to talk about real vectors, while otherwise our usual notations are more convenient
         In the context of this proof, let each player $k$ have $m_k$ different pure strategies and set $m \coloneqq m_1 + \dots + m_n$.
-        We represent mixed strategy profiles as points in $\R^m$: Let $\Delta_k \coloneqq \set{(p_1, \dots, p_{m_k}) \in \R^{m_k} \mid \sum_{i=1}^{m_k} p_i = 1}$ (the standard $(m_k - 1)$-simplex) and let $\Delta \coloneqq \bigtimes_{k=1}^n \Delta_k \subseteq \R^m$.
+        We represent mixed strategy profiles as points in $\R^m$: Let $\Delta_k \coloneqq \set{(p_1, \dots, p_{m_k}) \in \R^{m_k} \mid \sum_{i=1}^{m_k} p_i = 1}$ (the standard $(m_k - 1)$-simplex) and let $\Delta \coloneqq \bigtimes_{k=1}^n \Delta_k \subseteq \R^m$. (In other words, here we don't use our previous convention that mixed strategies are functions $p: S_k \to \Rp$, but instead interpret them as real vectors).
         
-        We next define $r: \Delta \to \Pot(\Delta)$ as the \emph{best-response correspondence}. Recall that $r_k: \Delta \to \Delta_k$ maps mixed-strategy profiles to the set of \emph{best-response mixed strategies} for the $k$'th player: Now $r$ incorporates this information for all players at once, mapping mixed-strategy profiles to the set of \emph{best-response mixed-strategy profiles}.
+        \sloppypar{We next define $r: \Delta \to \Pot(\Delta)$ as the \emph{best-response correspondence}. 
+        Recall that ${r_k: \Delta \to \Delta_k}$ maps mixed-strategy profiles to the set of \emph{best-response mixed strategies} for the $k$'th player: Now $r$ incorporates this information for all players at once, mapping mixed-strategy profiles to the set of \emph{best-response mixed-strategy profiles}.}
         \begin{gather}
             r: \Delta \to \Pot(\Delta), (\delta_1, \dots, \delta_n) \mapsto r_1(\delta_1, \dots, \delta_n) \times \dots \times r_n(\delta_1, \dots, \delta_n)
             \label{eq:bestResponseCorresponenceDefinition}
         \end{gather}
-        By Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}, Nash equilibria are exactly the fixed points of $r$, i.e. strategy profiles that are best responses to themselves: So if we can show that the conditions of Kakutani's Fixed Point Theorem are satisfied, we have proven that Nash equilibria exist.
+        By Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}, mixed-strategy Nash equilibria are exactly the fixed points of $r$, i.e. strategy profiles that are best responses to themselves: So if we can show that the conditions of Kakutani's Fixed Point Theorem are satisfied, we have proven that mixed-strategy Nash equilibria exist.
         
         \ref{item:KakFP-nonEmptyCompactConvexDomain}, conditions on $\Delta$: The $\Delta_k$ are clearly non-empty, compact and convex as simplices. Therefore $\Delta$ also is non-empty,
         compact as the Cartesian product of compact sets, and convex as the Cartesian product of convex sets. % TODO cite source that products of compact/convex sets are compact/convex.
         
-        \ref{item:KakFP-nonEmptyConvexClosedOutputs}, for all $s \in \Delta$, the set $r(s)$ of best-response profiles is non-empty, convex and closed: It suffices to show that these conditions hold for each $r_k(s)$, since $r(s)$ is the product of those. By Theorem \ref{thm:bestResponseMixing}, best-response mixed strategies are always convex combinations of best-response pure strategies, so the $r_k(s)$ are simplices as well, i.e. compact and convex. The $r_k(s)$ are non-empty because at least one of the finitely many pure strategies must have a maximal payoff value: mixed strategies cannot have larger payoffs than the best of their support's pure strategies.
-        % TODO think about this argument; we are talking about strategy profiles, not strategies
+        \ref{item:KakFP-nonEmptyConvexClosedOutputs}, for all $s \in \Delta$, the set $r(s)$ of best-response profiles is non-empty, convex and closed: It suffices to show that these conditions hold for each $r_k(s)$, since $r(s)$ is the product of those. By Theorem \ref{thm:bestResponseMixing}, best-response mixed strategies are always convex combinations of best-response pure strategies, so the $r_k(s)$ are simplices as well, i.e. compact and convex. The $r_k(s)$ are non-empty because at least one of the finitely many pure strategies must have a maximal payoff value with respect to $s$: mixed strategies cannot have larger payoffs than the best of their support's pure strategies.
         
-        \ref{item:KakFP-closedGraph}, $r$ has a closed graph: we need to show that if a sequence of mixed-strategy profiles converges to some limit, and has a sequence of best-response profiles also converging, then the limit of the latter sequence is a best response to the limit of the former. Let $(\delta^{(i)})_{i \in \N}$ be a sequence of profiles, and $(a^{(i)})_{i \in \N}$ a sequence of best responses to it:
+        \ref{item:KakFP-closedGraph}, $r$ has a closed graph: we need to show that if a sequence of mixed-strategy profiles converges to some limit, and has a sequence of best-response profiles also converging, then the limit of the best responses is a best response to the limit of the strategy profiles. Let $(\delta^{(i)})_{i \in \N}$ be a sequence of profiles, and $(a^{(i)})_{i \in \N}$ a sequence of best responses to it:
         \begin{align*}
             &\delta^{(i)} = (\delta_1^{(i)}, \dots, \delta_n^{(i)}) \toinfty{i} (\delta_1, \dots, \delta_n) =: \delta, \\
             &a^{(i)} = (a^{(i)}, \dots, a^{(i)}) \toinfty{i} (a_1, \dots, a_n) =: a, \quad
@@ -534,10 +412,8 @@
         \begin{gather*}
             u_k(a^{(i)}_k, \delta^{(i)}_{-k}) \geq u_k(b_k, \delta^{(i)}_{-k})
         \end{gather*}
-        In the limit as $i \to \infty$, by continuity of the payoff function $u_k$, 
-        % TODO technically, we did not prove the continuity of the u_k anywhere
-        the left side goes to $u_k(a_k, \delta_{-k})$ while the right side goes to $u_k(b_k, \delta_{-k})$.
-        Recall that the ordering $\leq$ on the reals has the property of being closed under limits (in other words, its closed as a subset of $\R \times \R$).
+        The payoff function $u_k$ is continuous (remember that it's a linear function restricted to a convex set). Therefore in the limit as $i \to \infty$, the left side goes to $u_k(a_k, \delta_{-k})$ while the right side goes to $u_k(b_k, \delta_{-k})$.
+        Recall that the ordering $\leq$ on the reals has the property of being closed under limits (in other words, it is closed as a subset of $\R \times \R$).
         \footnote{By the “sandwich theorem”. While this may seem obvious, we emphasize it here since this continuity property does not hold for general orderings on topological spaces:
         in particular, it will be important later that it does \emph{not hold} for the lexicographical ordering on $\R^n$.}
         % TODO find a reference for “closed as subset of \R^2”
@@ -545,9 +421,112 @@
         \begin{gather*}
             u_k(a_k, \delta_{-k}) \geq u_k(b_k, \delta_{-k})
         \end{gather*}
-        Therefore $a_k$ maximizes the payoff over all responses to $\delta_{-k}$, and $a_k \in r(\delta_{-k})$. This shows that $r$ has a closed graph.
-        So $r$ satisfies the conditions of Kakutani's theorem and therefore has a fixed point, which is a Nash equilibrium for the game.
+        So $a_k$ maximizes the payoff over all responses to $\delta_{-k}$, and $a_k \in r(\delta_{-k})$. This shows that $r$ has a closed graph.
+        Thus $r$ satisfies the conditions of Kakutani's theorem and therefore has a fixed point, which is a Nash equilibrium for the game.
     \end{proof}
+    
+    
+    \section{Computation of Nash Equilibria}
+    It is important to have a way to compute Nash equilibria, especially for practical purposes, but also for theoretical justification of Nash equilibria as a prediction of rational behavior: As \cite[p.30]{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash} cites Kamal Jain, “If your laptop cannot
+find it, neither can the market.” There are various exact and numerical algorithms to compute Nash equilibria, and for the two-player case we will look at one particularly simple exact method which can be done by hand, and the \emph{Fictitious Play} algorithm which simulates several rounds of play, where the strategies get refined based on the opponent's past actions.
+    
+    \subsection{Exact Computation}
+    Mixed Nash equilibria in bimatrix games can be computed exactly by a simple method called the \emph{support enumeration algorithm}.
+    We follow the presentation from \cite{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation}.
+    We assume the game's payoffs are specified by matrices $A, B \in \R^{n\times m}$, and the players have pure strategies $S_1 = \set{s_1,\dots,s_n}$, $S_2 = \set{t_1,\dots,t_m}$, respectively.
+    Observe that \eqref{eq:mixedStrategyUtility} simplifies in the following way: if $x = (x_1,\dots,x_n) \in \Rp^n$ represents a mixed strategy of player 1 and $y = (y_1,\dots,y_m) \in \Rp^m$ one of player 2, then the players' payoffs are given by $u_1(x,y) = x\transposed A y$ and $u_2(x,y) = x\transposed B y$. 
+    % TODO But u_i by definition does not take a real vector as argument...
+    % TODO maybe theoremize this section on the support-enumeration algorithm?
+    
+    If $(x, y)$ is a Nash equilibrium, then the player 1 strategies in $\supp(x)$ must all be best responses to $y$, i.e. they all have equal payoff, and no other pure strategy can have greater payoff under $y$. This is a consequence of Theorem \ref{thm:bestResponseMixing}, and in \cite[p.55]{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation} is stated in the following form:
+    \begin{gather}
+        \forall i: x_i > 0 \Rightarrow (Ay)_i = \max_{j} (Ay)_j
+        \label{eq:equalMaxPureStrategyPayoffsLinearSystem}
+    \end{gather}
+    The same holds with the player roles reversed.
+    
+    Suppose we want to find an equilibrium where player one mixes between rows with indices in $I \subseteq \set{1, \dots, n}$, and player 2 mixes between columns with indices in $J \subseteq \set{1, \dots, m}$. Then player 1 must mix in a way that makes player 2 indifferent between the columns in $J$, and player 2 must mix in a way that makes player 1 indifferent between the rows in $I$.
+    This is expressed in two linear systems of equations:
+    \begin{gather}
+        (Ay)_{i_k} = (Ay)_{i_1} ~(\forall i_k \in I \setminus\set{i_1}), \qquad\;\, \sum_{j \in J} y_j = 1 \\
+        (xB)_{j_k} = (xB)_{j_1} ~(\forall j_k \in J \setminus\set{j_1}), \qquad \sum_{i \in I} x_i = 1
+    \end{gather}
+    If some $(x, y)$ solve these systems of equations, they are a candidate for a mixed-strategy Nash equilibrium.
+    It remains to check that all probabilities in the solution are positive. Also we have to make sure the mixed strategies do not only have equal, but also maximal payoffs: i.e. for each $\tilde{i}\in I^\complement$ check that $(Ay)_{\tilde{i}} \leq (Ay)_{i_1}$ (and analogously for $J$).
+    
+    The resulting algorithm is known as the \emph{support enumeration algorithm}: We iterate over all possible pairs of support $(I, J)$, and for each one go through the steps outlined above. For games which are \emph{non-degenerate}, which is defined as a mixed strategy of support size $k$ having at most $k$ best responses, it's sufficient to only consider pairs where $\abs{I} = \abs{J}$. Degenerate games can occur if there are linear dependencies in the payoff matrices.
+    % TODO check if linear dependency <=> degenerate is correct! 
+    % TODO not 100% sure if this works for degenerate game; did not discuss that |I|=|J| speeds up by about sqrt(n pi)
+    % TODO Example of computation for RockPaperScissors
+    
+    \begin{ex}[Computation of Rock-Paper-Scissors Equilibrium]
+        We can compute the rock-paper-scissors equilibrium from Example \ref{ex:rockPaperScissors} using the support enumeration algorithm.
+        We will not go through the whole computation, but only look at the cases $I = J = \set{1, 2}$, $(I, J) = (\set{2, 3}, \set{1, 2})$ (which both are not an equilibrium) and $I = J = \set{1, 2, 3}$ (which is an equilibrium). Remember that the payoff matrices were given by $\pm \smallmat{0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0}$. We denote by $p_1, p_2, p_3$ the probabilities the strategy of player 1 assigns to the rows, and by $q_1, q_2, q_3$ the probabilities the strategy of player 2 assigns to the columns.
+        
+        For the first case, $p_1, p_2$ should be chosen in a way that makes player 2 indifferent between the first two columns. The corresponding equations are $0p_1 - 1p_2 = 1p_1 + 0p_2$ and $p_1 + p_2 = 1$. Since there is no solution, this does not lead to an equilibrium.
+        
+        For the second case, the corresponding equations are $-p_2 + p_3 = -p_3, p_2 + p_3 = 1$ with the solution $p_2 = \frac{2}{3}, p_3 = \frac{1}{3}$. The payoff player 2 has for each of the first two columns in this case is $-\frac{1}{3}$. However the payoff player 2 has for the third column is $\frac{2}{3}$, so the first two columns are not best responses: This combination does also not lead to an equilibrium.
+        
+        Finally for the third case, the equations are $-p_2 + p_3 = p_1 - p_3$, $-p_2 + p_3 = -p_1 + p_3$, and $p_1 + p_2 + p_3 = 1$, with the solution $p_1 = p_2 = p_3 = \frac{1}{3}$. Similarly the equations for player 2 to make player 1 indifferent between all rows are $-q_2 + q_3 = q_1 - q_3$, $-q_2 + q_3 = -q_1 + q_2$, and $q_1 + q_2 + q_3 = 1$, again with the solution $q_1 = q_2 = q_3 = \frac{1}{3}$. Since all solutions are positive, and no other rows/columns could be better responses, this shows that $\pars{(\frac{1}{3}, \frac{1}{3}, \frac{1}{3}), (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})}$ is a Nash equilibrium of the Rock-Paper-Scissors game.
+    \end{ex}
+    
+    \subsubsection{Complexity Considerations}
+    The support enumeration algorithm is obviously quite inefficient, since it enumerates all subsets of the pure strategy sets for both players, and therefore is exponential in the number of strategies.
+    \cite{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation} investigates more sophisticated methods: The \emph{vertex enumeration algorithm} finds possible supports of mixed strategies by iterating over the vertices of certain polyhedra (“best-response polytypes”) and outputs all Nash equilibria.
+    The \emph{Lemke-Howson algorithm} finds one Nash equilibrium by traversing a path in the previously-mentioned polytypes.
+    However, these improvements still have exponential worst-cases, and complexity-theoretic results suggest that finding Nash equilibria in general, even in two-player games, is an intractable problem. As discussed in detail in \cite{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}, the problem \textsc{Nash} of finding a Nash equilibrium is complete for the complexity class PPAD, which contains other problems for which an efficient algorithm is thought unlikely to exist, like finding fixed points in the context of Brouwer's fixed point theorem.
+    Finding Nash equilibria does not fit into the more common intractability notion of NP completeness, because Nash equilibria are guaranteed to exist -- the problem can therefore not be stated suitably as a decision problem. However, there are a number of closely related variations where existence is not guaranteed and which are known to be NP-complete: %TODO citation for NP-complete NASH variants (Gilboa and Zemel, 1989) - see Nisan chapter 2 p.33
+    For example, deciding whether a game has more than one equilibrium, whether an equilibrium with at least a given utility exists, and whether an equilibrium exists with a given strategy in/not in its support, are all NP-complete problems (\cite{bib:gilboaEquilibriaComplexityConsiderations}, cited in \cite{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}).
+    
+    
+    
+    \subsection{Approximate Computation: Fictitious Play}
+    % TODO cite a good source for fictitious play; possibly lecture notes? Or is there a better reference?
+    A different approach for finding equilibria is to simulate repeated play of the game by players that are learning from past outcomes.
+    We follow the presentation of \cite{bib:daskalakisFictitiousPlayLectureNotes}.
+    We again assume a bimatrix game with payoff matrices $A, B$.
+    In every new round, each player averages over the past strategies of their opponent. Under the assumption that the opponent will play this average mixed strategy, the players picks their own pure strategy for this round that maximizes their payoff. Formally, denote by $s_k \in S_1, t_k \in S_2$ the strategies played in the $k$'th round, and $x_k, y_k$ the corresponding average strategies, defined iteratively by:
+    \begin{gather*}
+        x_k = \frac{1}{k} \sum_{i=1}^{k} s_k, \quad y_k = \frac{1}{k} \sum_{i=1}^{k} t_k \\
+        s_1 \in S_1, t_1 \in S_2 \text{ arbitrary} \\
+        s_{k+1} \in \mathop{\argmax}\limits_{\tilde{s} \in S_1} (u_1(\tilde{s}, y_k)), \quad % TODO typeset subscript below argmax
+        t_{k+1} \in \mathop{\argmax}\limits_{\tilde{t} \in S_2} (u_2(x_k, \tilde{t}))
+    \end{gather*}
+    Since there are possibly multiple best strategies at some points, let's just say the algorithm always prefers the one with the lowest index.
+    
+    In the special case of zero-sum games, this process was shown to converge by \cite{bib:robinsonFictitiousPlay}; we will state the result without proof.
+    In the non-zero-sum case, however, there are examples of bimatrix games where fictitious play does not converge.
+    % TODO find example of non-convergent fict. play
+    
+    \begin{thm}[Convergence of Fictitious Play, \cite{bib:robinsonFictitiousPlay}]
+        \label{thm:fictitiousPlayConverges}
+        If the game is a zero-sum game, i.e. $A=-B$, then 
+        \begin{enumerate}
+            \item The sequence $(u_1(x_k, y_k))_{k \in \N}$ converges towards the value of the game
+%             (i.e. $u_1(x, y)$ under a Nash equilibrium $(x, y)$).
+            \item The sequence $((x_k, y_k))_{k \in \N}$ converges towards a Nash equilibrium $(x, y)$.
+        \end{enumerate}
+    \end{thm}
+
+    % TODO rewrite occurences of it's, didn't, don't etc. (However, consider: “If you are making an off-the-cuff or informal remark within an otherwise formal paper, it is okay to use a contraction as part of your writing voice”)
+    Note that it is quite possible that for no value of $k$, $(x_k, y_k)$ actually forms a Nash equilibrium.
+    To deal with situations like this, there is the notion of $\epsilon$-approximate Nash equilibria, where deviation from the equilibrium at most gains players $\epsilon$ additional payoff.
+        
+    \begin{defn}
+        Let $\epsilon > 0$.
+        A strategy profile $s = (s_1, \dots, s_n) \in S$ is an \emph{$\epsilon$-approximate Nash equilibrium} if
+        \[
+            \forall k: \forall \tilde{s_k} \in S_k: u_k(s_k, s_{-k}) \geq u_k(\tilde{s_k}, s_{-k}) - \epsilon
+        \]
+    \end{defn}
+
+    The second result of \ref{thm:fictitiousPlayConverges} can now be stated as follows:
+    \begin{cor}
+        If the game is zero-sum, for any $\epsilon > 0$, there is some $K \in \N$ such that for all $k \geq K$ the result after $k$ rounds of fictitious play $(x_k, y_k)$ is an $\epsilon$-Nash equilibrium.
+    \end{cor}
+
+    
+    
     
     
     
@@ -557,7 +536,7 @@
     Now that we covered the basic concepts of standard game theory, we are ready to introduce the new theory of games that have probability distributions as payoffs.
     The model was first introduced by Stefan Rass % TODO cite
     in the context of IT security, and in this model probabilistic outcomes are rated based on a stochastic order called the \emph{tail order} which we will introduce later.
-    In our discussion, we will first introduce and formalize the model of distribution-valued games in a slightly more general way by leaving the stochastic order open to be specified, before we focus on the special case of the stochastic tail order.
+    In our discussion, we will first introduce a more general model of generalized payoff spaces and based on this formalize a model of distribution-valued games where the stochastic order is open to be specified. We will then focus on the special case of the stochastic tail order.
     
     \section{Normal-Form Games with Preordered Payoff Spaces}
     \label{sec:preorderedPayoffSpaceGames}
@@ -570,7 +549,7 @@
             &\forall a \in A: a \leq a \tag{Reflexivity} \\
             &\forall a, b, c \in A: a \leq b, b \leq c \implies a \leq c \tag{Transitivity}
         \end{align*}
-        Additional properties that a preorder does \emph{not need} to satisfy are:
+        Additional properties of orders that a preorder \emph{does not need} to satisfy are:
         \begin{align*}
             &\forall a, b \in A: a \leq b, a \geq b \implies a = b \tag{Antisymmetry} \\
             &\forall a, b \in A: a \leq b \vee a \geq b \tag{Totality}
@@ -593,7 +572,7 @@
         If $\leq_i \mathbin{=} \leq$ for all $i$, we also write $G_\leq$.
         % TODO overthink G_{\dleq} notation; the notation could also be convenient for the zero sum game
     \end{defn}
-    We adopt the convention that the greater distribution w.r.t. a preorder is preferred, e.g. if $x \leq y$, then $y$ is preferred. However as in real-valued games, it will sometimes be more convenient to talk about costs instead of utility (cf. Definition \ref{defn:realValuedGames}). Since we can not simply define $c_k = -u_k$ in the general setting of a preordered set $A$, we will resort to a slight abuse of notation and define $c_k(s) \popref c_k(\tilde{s}) \colonlra u_k(s) \pononpref u_k(\tilde{s})$ whenever using cost instead of utility functions is more appropriate.
+    We adopt the convention that the greater distribution w.r.t. a preorder is preferred, e.g. if $x \leq y$, then $y$ is preferred. However as in real-valued games, it will sometimes be more convenient to talk about costs instead of utility (cf. Definition \ref{defn:realValuedGames}). Since we can not simply define $c_k = -u_k$ in the general setting of a preordered set $A$, we will resort to a slight abuse of notation and define $c_k(s) \popref c_k(\tilde{s}) \colonlra u_k(s) \pononpref u_k(\tilde{s})$ whenever using cost functions instead of utility functions is more appropriate.
     
     \begin{defn}[Nash Equilibrium of Game with Preordered Payoffs]
         A \emph{Nash equilibrium} of $G_{(\leq_1, \dots, \leq_n)}$ (or a \emph{Nash equilibrium of $G$ with respect to $(\leq_1, \dots, \leq_n)$})
@@ -619,8 +598,7 @@
     
     Similar to the real-valued scenario, a subset of games we are especially interested in are the two-player zero-sum games.
     But we are in some trouble defining what zero-sum is supposed to mean: Obviously, in our general setting we have no notion of two payoffs $a_1, a_2 \in A$ summing to zero.
-    We can base our definition on another crucial property of zero-sum games: Zero-sum games are \emph{antagonistic} -- when one player wins, the other loses.
-    % TODO cite “antagonistic games” paper
+    We can base our definition on another crucial property of zero-sum games: Zero-sum games are \emph{antagonistic} -- when one player wins, the other loses (\cite{bib:andersonAntagonisticGames} defines this concept formally). This property \emph{can} be stated in terms of our model.
     
     \begin{defn}[Antagonistic and Zero-Sum Games]
         A two-player game with preordered payoffs $G_{(\leq_1, \leq_2)}$ is \emph{antagonistic} if
@@ -633,25 +611,25 @@
     
     % TODO either introduce antagonistic games here, or in the standard game theory section
     For the sake of equilibria, it does not matter if a game is zero-sum or only antagonistic, since the only thing that matters for equilibria is how the values that actually occur as payoffs are ordered.
-    But if we want to define mixed extensions for subclasses of preordered-payoff-games (which of course requires more structure on $A$ than in the general case), our zero-sum property will ensure that the mixed extension of a finite zero-sum game will also be zero sum, while mixed extensions of antagonistic games need not be antagonistic. This is analogous to real-valued games, where mixed extensions preserve the zero-sum property, but not necessarily the antagonism property.
+    But if we want to define mixed extensions for subclasses of preordered-payoff-games (which of course requires more structure on $A$ than in the general case), our zero-sum property will ensure that the mixed extension of a finite zero-sum game will also be zero sum, while mixed extensions of antagonistic games need not be antagonistic. This is analogous to real-valued games, where mixed extensions preserve the zero-sum property, but not necessarily the antagonism property
     \footnote{Note that not only zero-sum satisfy this property, but constant-sum games as well, so our naming convention seems a bit arbitrary.
         Yet “zero-sum” appears like the most recognizable and easily-understood term for this concept, so we'll stick to this name even though nothing actually sums to zero.}
-    % TODO reference standard game theory section about antagonistic games for the antagonistic mixing; Cite antagonistic games paper
+    (see \cite{bib:andersonAntagonisticGames}).
     
-    In order to define mixed extensions, the payoff set $A$ must have additional vector-space structure. Since mixed strategies correspond to convex combinations of pure strategies, we require $A$ be a convex subset of a vector space over the reals.
+    Defining mixed extensions is possible if the payoff space $A$ has additional vector-space structure. Since mixed strategies correspond to convex combinations of pure strategies, we require $A$ be a convex subset of a vector space over the reals.
     \begin{defn}[Mixed extension]
         Let $G = (n, A, (S_1, \dots, S_n), (u_1, \dots, u_n))$ be a finite game with preordered payoff space,
-        where $A$ is a subset of a real vector space with operations $(+, *)$.
-        Its \emph{mixed extension} $\hat{G} = (n, A, (\Delta_1, \dots, \Delta_n), (U_1, \dots, U_n))$ consists of the following (where $k \in \set{1, \dots, n}$):        
+        where $A$ is a convex subset of a real vector space with operations $(+, *)$.
+        Its \emph{mixed extension} $\hat{G} = (n, A, (\Delta_1, \dots, \Delta_n), (\hat{u}_1, \dots, \hat{u}_n))$ consists of the following components for each player $k$:
         \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
             \item $\Delta_k \coloneqq \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ are the mixed strategies, $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ the mixed strategy profiles.
             
             \item
-            The utility function $U_k: \Delta \to A$ maps each mixed strategy profile to
+            The utility function $\hat{u}_k: \Delta \to A$ maps each mixed strategy profile to
             its payoff:
 %            the \emph{mixed distribution} of the $k$'th players payoff distribution under that strategy profile:
             \begin{gather}
-            U_k: 
+            \hat{u}_k: 
             (p_1, \dots, p_n) 
             %                ((p_{1,1},\dots,p_{1,\abs{S_1}}),\dots,(p_{n,1},\dots,p_{n,\abs{S_n}})
             \mapsto
@@ -665,14 +643,14 @@
     When talking about the \emph{bimatrix game} specified by two matrices, we mean the mixed extension of the finite game corresponding to the matrices.
     In the zero-sum case, where only one matrix is specified, we will talk about \emph{matrix games}.
     
-    % TODO really isomorphic? Or rather equilibrium-equivalent?
+    \todo{Think about the name. Maybe “equilibrium-equivalent” is clearer than “isomorphic”. Also, maybe the definition is too complicated.}
     % TODO isn't this definition too complicated? Why not just say that u_k(s1) \leq u_k(s2) \lra v_k(s1) \leq v_k(s2)?
     As a last concept, we define the notion of \emph{isomorphic} games, which lets us switch between different payoff spaces that behave the same with respect to the right orderings.
     \begin{defn}
         Let $G$, $H$ be two $n$-player games with preordered payoff spaces sharing the same strategy sets $S_i$, where $G$ has payoffs in $A$ and utility functions $u_i$,
         and $H$ has payoffs in $B$ and utility functions $v_i$.
         Let $G$ be equipped with $(\leq_1^G, \dots, \leq_n^G)$, and $H$ is equipped with $(\leq_1^H, \dots, \leq_n^H)$.
-        Furthermore let $\bar{A} \coloneqq \bigcup_k u_k(S)$, $\bar{B} \coloneqq \bigcup_k v_k(S)$ be the sets of payoff values actually taken for some strategy profiles.
+        Furthermore let $\bar{A} \coloneqq \bigcup_k u_k(S)$, $\bar{B} \coloneqq \bigcup_k v_k(S)$ be the sets of payoff values actually attained for some strategy profiles.
         Then $G_{(\leq_1^G, \dots, \leq_n^G)}$, $H_(\leq_1^H, \dots, \leq_n^H)$
         are \emph{isomorphic} if there is a bijection $\phi: \bar{A} \to \bar{B}$ such that
         \begin{gather}
@@ -738,12 +716,13 @@
                 P_1 \leqE P_2 \colonlra \text{ $P_1, P_2$ are $L_1$ and $E(P_1) \leq E(P_2)$} 
             \end{gather*}
             Then $\leqE$ is a stochastic ordering, but neither antisymmetric nor total. Antisymmetry fails since many distributions can have the same expected value, in which case $\leqE$ is indifferent between them. Totality fails because not all distributions are integrable, i.e. have a well-defined expected value. However $\leqE$ is a total stochastic order on $L_1 \subseteq \DP$, which includes all distributions with bounded support.
+            \todo{Not sure if it's appropriate to treat $L_1$ as a set of measures; normally it's rather a set of (equivalence classes of) functions.}
             
             \item Let the \emph{usual stochastic order} $\leqst$ (see \cite{bib:shakedStochasticOrders}) be defined by 
             \begin{gather*}
                 P_1 \leqst P_2 \colonlra \forall x \in \R: P_1((x, \infty)) \leq P_2((x, \infty))
             \end{gather*}
-            Phrased in terms of distribution functions, this holds iff $F_1 \geq F_2$ point-wise. The ordering captures a strong notion of one distribution tending to take smaller values than the other. Because of this strong requirement, it's not surprising that $\leqst$ is not total and there are many pairs of incomparable distributions. However it is antisymmetric, because $\leqst$ is indifferent only between distributions with equal distribution functions, and a distribution function uniquely determines the distribution.
+            Phrased in terms of distribution functions, this holds iff $F_1 \geq F_2$ point-wise. The ordering captures a strong notion of one distribution tending to take smaller values than the other. Because of this strong requirement, it's not surprising that $\leqst$ is not total and there are many pairs of incomparable distributions. However the ordering is antisymmetric, because $\leqst$ is indifferent only between distributions with equal distribution functions, and a distribution function uniquely determines the distribution.
         \end{enumerate}
     \end{ex}
 
@@ -759,6 +738,7 @@
     %    \let\dstrpref\dless
     %    \let\dstrnonpref\dgreater
 
+    We now define distribution-valued games, using the framework developed in Section \ref{sec:preorderedPayoffSpaceGames}:
     \begin{defn}[Distribution-Valued Game]
         A \emph{distribution-valued game} $G$ is a game with preordered payoff space, where the payoff space is $\DP$.
     \end{defn}
@@ -771,11 +751,11 @@
     The definition of zero-sum games may need some additional discussion: the argument for the definition given in Section \ref{sec:preorderedPayoffSpaceGames} was that without knowing more about the structure of the payoff space, we could not define zero-sum games by requiring that payoffs actually sum to zero.
     On the other hand, now that we have a more concrete payoff space, possibly a more natural definition could be made.    
     However several “natural candidates” for such a definition do not work: Let $s \in S$ be some strategy profile.
-    Clearly, we can not require $u_1(s) + u_2(s) = 0$, since probability measures only assign non-negative values.
+    Clearly, we can not require $u_1(s) + u_2(s) = 0$ (the zero-everywhere measure), since probability measures only assign non-negative values.
     If instead we let $X_1 \sim u_1(s), X_2 \sim u_2(s)$ be independent random variables modeling the random payoffs for the players, and require that $X_1 + X_2 = 0$ almost surely, this also fails: this condition will never hold except for trivial distributions, because the sum of independent random variables is distributed as the convolution of their distributions.
     % TODO reference convolution theorem/distribution of sum of independent RVs
-    Alternatively, we could require that the distributions $u_1(s), u_2(s)$ are symmetrically mirrored inverses around the origin, e.g. for all Borel sets $B$, $u_1(s)(B) = u_2(s)(-B)$ (e.g. 
-    if the distributions have densities $f_1, f_2$, this would mean $\forall x: f_1(x) = f_2(-x)$).
+    Alternatively, we could require that the distributions $u_1(s), u_2(s)$ are symmetrically mirrored inverses around the origin, i.e. for all Borel sets $B$, $u_1(s)(B) = u_2(s)(-B)$. E.g. 
+    if the distributions have densities $f_1, f_2$, this would mean $\forall x: f_1(x) = f_2(-x)$.
     While this requirement seems to make sense, this symmetry is not necessarily reflected by the stochastic orders: There is no requirement for stochastic orders to satisfy $P_1(\dummydot) \dleq P_2(\dummydot) \lra P_1(-\dummydot) \dgeq P_2(-\dummydot)$, and indeed this does not hold for the stochastic tail order we will introduce later.
     Since no alternative definition seems meaningful, we stick to the zero-sum definition made in \ref{def:zeroSumPreorderedPayoffs}.
 
@@ -790,16 +770,18 @@
         $\hat{G}^{(\R)}$ has the same equilibria as $\hat{G}^{(\DP)}_{\leqE}$.
     \end{ex}
     Games constructed like $\hat{G}^{(\DP)}$ might be interesting in their own right, with respect to other stochastic orders than $\leqE$:
-    The model allows to talk about the “payoff distribution” of the real-valued game $G$, and rate outcomes by other orders than the expected value. In decision-theoretic terms, this allows us to model risk-averse and risk-seeking attitudes, as opposed to the risk-neutral attitude of expected value. Our main interest however will lie in mixed extensions of games where the pure-strategy payoffs already are (non point-mass) distributions.
+    The model allows to talk about the “payoff distribution” of the real-valued game $G$, and rate outcomes by other orders than the expected value. 
+    % TODO not sure if this really lets us model risk-* attitudes better than expected utility theory itself.
+    In decision-theoretic terms, this allows us to model risk-averse and risk-seeking attitudes, as opposed to the risk-neutral attitude of expected value. Our main interest however will lie in mixed extensions of games where the pure-strategy payoffs already are (non point-mass) distributions.
 
     
     \section{The Stochastic Tail Order}
     We have laid out the foundations of distribution-valued games in the last section, but the usefulness of the model heavily depends on choosing the right stochastic orders.
     The stochastic orders we've seen so far are not extremely satisfying: $\leqE$ basically leads us back to the theory of real-valued games by taking expected values; $\leqst$ takes more information from the distributions into account, but fails to compare many distributions since a decision is only made for distributions where one distribution function dominates the other in a strong way.
-    In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers defined the stochastic tail order, which we will denote by $\leqtail$ \cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}.
+    In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers (\cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}) defined the stochastic tail order, which we will denote by $\leqtail$ .
     It was introduced in the context of risk assessment for critical infrastructure, where risks with higher impact are to  be avoided at all costs, even if very unlikely.
-    Therefore it's usually not applied on \emph{payoff distributions}, but rather on \emph{loss} (or \emph{cost}) \emph{distributions}.
-    The ordering is defined based on moment sequences, but we will later show that in many cases, it can essentially be understood as a kind of lexicographic ordering.
+    Therefore it is usually not applied on \emph{payoff distributions}, but rather on \emph{loss} (or \emph{cost}) \emph{distributions} (a detail that mostly does not affect our presentation of the theory, however).
+    The ordering is defined based on moment sequences, but we will later show that in many cases, it can essentially be understood as a kind of lexicographical ordering.
 
     \subsection{Definition and Basic Properties}    
     \newcommand{\Lallmoms}{L}
@@ -811,7 +793,7 @@
         Define the set of distributions which have moments of arbitrary order as
         \todo{The suggestive letter $L$ as in $L_p$ is a bit dubious, since we are talking about measures, not functions.}
         \begin{gather*}
-            \Lallmoms \coloneqq \bigset{P \in \DP \bigmid \lintegral{R}{\abs{x}^k}{P} < \infty}
+            \Lallmoms \coloneqq \bigset{P \in \DP \bigmid \forall k: \lintegral{R}{\abs{x}^k}{P} < \infty}
         \end{gather*}
     \end{defn}
 
@@ -819,7 +801,7 @@
         % TODO does the tail order definition make sense for distributions taking values < 1, or < 0?
         The \emph{stochastic tail order} $\leqtail$ is defined by
         \begin{gather*}
-            P_1 \leqtail P_2 \colonlra \bigpars{P1, P2 \in \Lallmoms} \wedge \bigpars{m_k(P_1) \leq m_k(P_2) \text{ for all but finitely many $k \in \N_0$}}
+            P_1 \leqtail P_2 \colonlra \bigpars{P_1, P_2 \in \Lallmoms} \wedge \bigpars{m_k(P_1) \leq m_k(P_2) \text{ for all but finitely many $k \in \N_0$}}
         \end{gather*}
     \end{defn}
 
@@ -833,9 +815,9 @@
     
     Now that we know that $\leqtail$ is a stochastic order, we can ask if it is anti-symmetric and/or total.
     In the general context, it has neither of the properties: $\leqtail$ can not compare distributions which don't have moments of all orders, therefore it is not total on $\DP$.
-    Also there exist examples of different distributions in $\Lallmoms$ which have equal moment sequences, violating anti-symmetry. However as \cite{bib:rassGameRiskManagI} notes that for any pair of distributions which both have their moment generating functions existing in a neighborhood around 0, equal moment sequences imply equal distributions.
+    Also there exist examples of different distributions in $\Lallmoms$ which have equal moment sequences, violating anti-symmetry (see \cite[p.49, 3.15]{bib:romanoCounterexamplesInProbability} for an example). However \cite{bib:rassGameRiskManagI} notes that for any pair of distributions which both have their moment generating functions existing in a neighborhood around 0, equal moment sequences imply equal distributions.
     % TODO wait, but moment sequences only need to be eventually equal for violated anti-symmetry?
-    Therefore $\leqtail$ is anti-symmetric on any subset $D \subseteq \DP$ of distributions having moment generating functions.
+%    Therefore $\leqtail$ is anti-symmetric on any subset $D \subseteq \DP$ of distributions having moment generating functions.
     % TODO Introduce moment generating functions somewhere earlier
     % TODO Formalize Rass' (?) result about moment generating functions, at least in a lemma without proof
     % TODO give examples about for how a wide range of distributions the generating functions result implies anti-symmetry
@@ -847,7 +829,7 @@
     Before we do so, let's first get a better understanding of what the tail order means apart from moment sequences.
     In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values $\geq 1$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Also the discussion focuses on distributions which have finite support, or are absolutely continuous with additional requirements on the densities. We will generally adopt the former assumption for our further discussion, and write $\Fgeq \coloneqq \set{P \in \DP \mid P([1, \infty)) = 1}$.
     % TODO reformulate “will at time use slightly relaxed assumptions on AC” bit
-    However we will at times slightly relax their assumptions on absolutely continuous distributions.
+    However we will at times relax their assumptions on absolutely continuous distributions, and always mention the exact requirements.
     
     An important insight is that the tail order behaves essentially like a lexicographical ordering in many cases.
     \begin{thm}
@@ -935,23 +917,47 @@
     \end{thm}
     \begin{proof}
         \ref{item:discreteTailOrder-DominatingPointSuffCondition}:
-        \todo{The assumption that the support can be ordered like that is invalid. The whole proof needs to be fixed.}
         Similar to the proof of Theorem \ref{thm:acTailOrderSuffConditions}, we want to show that $m_k(P_2) - m_k(P_1) > 0$ for all large enough $k$.
-        Let $v_1 < v_2 < \dots$ denote the values that get assigned positive probability mass by either $f$ or $g$, in ascending order.
-        Let $n$ be such that $x_0 = v_n$. Then we get
+        Let $V \coloneqq \supp(f) \cup \supp(g)$, and let $V_l \coloneqq V \cap (-\infty, x_0), V_r \coloneqq V \cap [x_0, \infty)$.
+%        Let $v_1 < v_2 < \dots$ denote the values that get assigned positive probability mass by either $f$ or $g$, in ascending order.
+%        Let $n$ be such that $x_0 = v_n$. Then we get
+%        \begin{multline*}
+%            m_k(P_2) - m_k(P_1)
+%            = \sum_{i \geq 1} g(v_i)*v_i^k - \sum_{i \geq 1} f(v_i)*v_i^k \\
+%            = \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + \sum_{i = n}^{\infty} (g(v_i) - f(v_i))*v_i^k
+%            \geq \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + (g(v_n) - f(v_n)) * v_n^k
+%        \end{multline*}
+        Then we get:
         \begin{multline*}
             m_k(P_2) - m_k(P_1)
-            = \sum_{i \geq 1} g(v_i)*v_i^k - \sum_{i \geq 1} f(v_i)*v_i^k \\
-            = \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + \sum_{i = n}^{\infty} (g(v_i) - f(v_i))*v_i^k
-            \geq \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + (g(v_n) - f(v_n)) * v_n^k
+            = \sum_{v \in V} (g(v) - f(v))*v^k \\
+            = \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + \biggpars{\sum_{v \in V_r} (g(v) - f(v))*v^k} \\
+            \geq \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
         \end{multline*}
-        Similar to before, we find $c_{l} > 0$ such that $\forall i < n: g(v_i) - f(v_i) \geq - c_{l}$, and let $- n c_l \eqqcolon c_{\text{left}}$. Also, let $c_{\text{right}} \coloneqq g(v_n) - f(v_n)$. We get
+        
+%        Similar to before, we find $c_{l} > 0$ such that $\forall v \in V_l: g(v) - f(v) \geq - c_{l}$, and let $- n c_l \eqqcolon c_{\text{left}}$. Also, let $c_{\text{right}} \coloneqq g(v) - f(v)$. We get
+%%        \begin{multline*}
+%%            \biggpars{ \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k} + (g(v_n) - f(v_n)) * v_n^k
+%%            % TODO problematic if n = 1, so v_0 does not exist?
+%%            \geq -n c_l v_{n-1}^k + c_{\text{right}}*v_n^k = c_{\text{right}}*v_n^k  - c_{\text{left}}*v_{n-1}^k
+%%        \end{multline*}
+%        \begin{multline*}
+%            \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
+%        \end{multline*}
+%        Since $v_{n-1} < v_n$, this difference is positive for all $k$ large enough, and $P_1 \lesstail P_2$.
+
+        Since $f, g$ are probability mass functions, we have $(g-f) \geq (-1)$. 
+        Pick some $u < x_0$ such that $P_1([u, x_0)) < \frac{1}{2}(g(x_0) - f(x_0))$.
+        Then in particular, 
+        \begin{gather*}
+            \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} > -u^k - \frac{1}{2}(g(x_0) - f(x_0))*x_0^k
+        \end{gather*}
+        From this we get:
         \begin{multline*}
-            \biggpars{ \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k} + (g(v_n) - f(v_n)) * v_n^k
-            % TODO problematic if n = 1, so v_0 does not exist?
-            \geq -n c_l v_{n-1}^k + c_{\text{right}}*v_n^k = c_{\text{right}}*v_n^k  - c_{\text{left}}*v_{n-1}^k
+           \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
+           > -u^k + \frac{1}{2}(g(x_0) - f(x_0))*x_0^k
         \end{multline*}
-        Since $v_{n-1} < v_n$, this difference is positive for all $k$ large enough, and $P_1 \lesstail P_2$.
+        Since $u < x_0$, this is positive for all $k$ large enough.
         
         \ref{item:discreteFiniteTailOrder-DominatingPointEquivalence}:
         By \ref{item:discreteTailOrder-DominatingPointSuffCondition}, the condition in \eqref{eq:discreteFiniteTailOrder-DominatingPointEquivalence} is sufficient; We need to show that in the finite case, it is also necessary.
@@ -979,8 +985,8 @@
     \end{cor}
     \begin{proof}
         This follows directly from Theorem \ref{thm:discreteTailOrderSuffConditions} and its proof via the definition of $\leqRlex$.
-    \end{proof}
-
+    \end{proof}    
+    %TODO it would be great to state theorems involving the distribution functions.
     In the more general case of distributions in $\Fgeq \cap L$ which are either absolutely continuous or discrete, but supported on a countably infinite set, Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} only give sufficient conditions. Both can not be made into equivalences, as the following counter-examples show.
     \begin{ex}~
         \label{ex:tailOrderSufficientConditionsCounterexamples}
@@ -1020,7 +1026,7 @@
                 = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j (c-1)\biggpars{\sum_{k \geq 1}\frac{c^{-jk}}{c^k}}
                 = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \frac{1}{c^{1+j}-1}
             \end{multline*}
-            We would like to prove $P_c \lesstail P_d ~ \forall 1 < c < d$, but it's hard to show that above formula is increasing with $c$.
+            We would like to prove $P_c \lesstail P_d ~ \forall\, 1 < c < d$, but it's hard to show that above formula is increasing with $c$.
             Computer calculations suggest that the moment sequence of $P_c$ increases pointwise as $c$ increases, however we have no rigorous argument yet.
           
             \begin{figure}
@@ -1157,14 +1163,17 @@
     
     In \cite{bib:rassGameRiskManagI,bib:rassTotalOrderingOnLossDistributions}, the discussion focuses on the particular subset of distributions that have \emph{bounded support which is a subset of $[1, \infty)$} and are either \emph{discrete with finite support}, or \emph{absolutely continuous with a continuous density function}.
     In \cite[Lemma 2]{bib:rassTotalOrderingOnLossDistributions} and \cite[Lemma 2.4]{bib:rassGameRiskManagI}, the claim is that such distributions are always $\leqtail$-comparable.
-    A proof is given for the absolutely continuous case; however, it contains an error, as it more-or-less applies the argumentation of Theorem \ref{thm:acTailOrderSuffConditions} and implicitly assumes that of two density functions, one dominates the other from some point on. As shown in Example \ref{ex:tailOrderSufficientConditionsCounterexamples}, pairs of distributions exist where this is not the case, and which also are in $\Fgeq$, bounded, and have continuous density functions.
+    A proof is given for the absolutely continuous case; however, it contains an error, as it applies an argument similar to Theorem \ref{thm:acTailOrderSuffConditions} and implicitly assumes that of two density functions, one dominates the other from some point on
+    \footnote{Meanwhile, the error was fixed in \cite{bib:rassGameRiskManagI}, and a new version was uploaded to arxiv stating all requirements.}.
+    As shown in Example \ref{ex:tailOrderSufficientConditionsCounterexamples}, pairs of distributions exist where this is not the case, and which also are in $\Fgeq$, bounded, and have continuous density functions.
     
     \subsubsection{The Moment Problem and its Variants}
     Since our question crucially depends on properties of moment sequences, it will be helpful to know about the properties of moment sequences.
-    The question to find out whether a given sequence $(m_n)_n$ is a moment sequence for some measure $\mu$ on $\R$ is known as the \emph{moment problem}, and there are several variants studied in the literature:
+    The question to find out whether a given sequence $(m_n)_n$ is a moment sequence for some Borel measure $\mu$ on $\R$ is known as the \emph{moment problem}, and there are several variants studied in the literature:
 %    to characterize moment sequences is known as the \emph{moment problem}, and there are several variants:
     The \emph{Hamburger moment problem} concerns measures supported on a subset of $\R$, the \emph{Stieltjes moment problem} is about measures supported on a subset of $[0, \infty)$,
     and the \emph{Hausdorff moment problem} deals with measures supported on a subset of $[0, 1]$. For all three versions, conditions are known that are both sufficient and necessary for $(m_n)_n$ to be a moment sequence of the respective kind.
+    There is extensive literature on the subject, for example \cite{bib:shohatTheProblemOfMoments}, \cite{bib:akhiezerClassicalMomentProblem}, or the more modern \cite{bib:schmuedgenTheMomentProblem}.
     The Hamburger moment problem is too general for our case, since negative values in the support can lead to alternating moment sequences, making the tail order non-total.
     % TODO and negative values in the support make it useless, too.
 %    We will introduce the characterizations by Stieltjes and Hausdorff, which are more interesting for us.
@@ -1207,7 +1216,7 @@
     However, we can make use of a result relating Stieltjes and Hamburger moment sequences:
     A moment sequence is called \emph{Hamburger-}/\emph{Stieltjes-}/\emph{Hausdorff-determinate} if there is a \emph{unique} measure of the respective type generating the sequence. The result we'll use is that Stieltjes-determinateness in general does not imply Hamburger-determinateness:
     
-    \begin{thm}
+    \begin{thm}[See \cite{bib:linMomentProblemRecentDevelopments}, in turn citing {\cite[p.240]{bib:akhiezerClassicalMomentProblem}} and \cite{bib:chiharaIndeterminateHamburgerMomentProblems}]
         % TODO cite Akhiezer/Dong Lin/Chihara
         There exists a moment sequence $(m_n)_{n \geq 0}$ that is Stieltjes-determinate, but not Hamburger-determinate.
     \end{thm}
@@ -1247,7 +1256,7 @@
     \todo{Give a counterexample explicitly.}
     
     \subsubsection{Distributions with Non-Negative Bounded Support}
-    Next we look into distributions with support in a bounded interval $[a, b]$, $0 \leq a < b$.
+    Next we look at distributions with support in a bounded interval $[a, b]$, $0 \leq a < b$.
     This is related to the Hausdorff moment problem where the bounded interval is $[0, 1]$.
     A sufficient and necessary condition for a sequence to be a Hausdorff moment sequence is based on repeatedly taking differences of successive terms.
     \begin{defn}
@@ -1258,7 +1267,7 @@
         \]
     \end{defn}
 
-    \begin{thm}
+    \begin{thm}[\cite{bib:hausdorffMomentprobleme}]
         A sequence $m = (m_n)_{n \in \N_0}$ is a Hausdorff moment sequence, i.e. is the moment sequence of a measure $\mu$ on with support in $[0, 1]$,
         if and only if
         \begin{gather}
@@ -1289,13 +1298,13 @@
 
     However, our focus is not so much on distributions with support in $[0, 1]$, but rather with support in $[1, b]$ for some $b > 1$.
     Moment sequences behave somewhat differently in that case: While they are monotonically decreasing in the former case, they are monotonically increasing in the latter, even growing without bound if there is some mass to the right of $1$.
-    Yet we can easily obtain a necessary criterion similar to \eqref{eq:completelyMonotonicSequence} for a sequence to be the moment sequence of such a distribution:
+    Yet we can obtain a necessary criterion looking similar to \eqref{eq:completelyMonotonicSequence} for a sequence to be the moment sequence of such a distribution:
     \begin{cor}
+        \label{cor:hausdorff-1-b-necessaryCondition}
         For any moment sequence $m$ of a measure $\mu$ supported on a subset of $[1, b]$, all successive differences are non-negative:
         \begin{gather}
             \forall n, k \in \N: (\Delta^k m)_n \geq 0
         \end{gather}
-        \label{cor:hausdorff-1-b-necessaryCondition}
     \end{cor}
     \begin{proof}
         Just as in the last proof, we have that $(\Delta^k m)_n = \lintegral{[1, b]}{x^n (x-1)^k}{\mu(x)}$.
@@ -1305,12 +1314,12 @@
     Another similar necessary condition can be stated for moment sequences of distributions on $[0, b]$, using a somewhat modified difference operator:
     \newcommand{\DeltaB}[1]{\Delta\hspace{-.225cm}{\mathrel{\raisebox{0.045cm}{\scalebox{.9}{$\scriptscriptstyle#1$}}}\hspace{.22cm}}}
     \begin{lemma}
+        \label{lemma:hausdorff-0-b-necessaryCondition}
         Let $\DeltaB{b}: \R^{\N_0} \to \R^{\N_0}$, $(\DeltaB{b} m)_n \coloneqq m_{n+1} - b * m_n$.
         Then for any moment sequence $m$ of a measure $\mu$ supported on a subset of $[0, b]$:
         \begin{gather}            
             \forall n, k \in \N: (-1)^k (\DeltaB{b}^k m)_n \geq 0
         \end{gather}
-        \label{lemma:hausdorff-0-b-necessaryCondition}
     \end{lemma}
     \begin{proof}
         Analogously to the proof of \ref{thm:hausdorffMomentSequenceCharacterization},
@@ -1319,17 +1328,17 @@
     \end{proof}
 
     % TODO basically, we woould need a sufficient condition to construct a counterexample; if we can proof that no alternating counterexample exists, a necessary condition will be enough.
-    While \ref{cor:hausdorff-1-b-necessaryCondition} and \ref{lemma:hausdorff-0-b-necessaryCondition} give necessary conditions, it would be very useful to have a condition that is also sufficient. However, using \ref{lemma:hausdorff-0-b-necessaryCondition} we can show that \ref{cor:hausdorff-1-b-necessaryCondition} can not be a sufficient condition.
+    While \ref{cor:hausdorff-1-b-necessaryCondition} and \ref{lemma:hausdorff-0-b-necessaryCondition} give necessary conditions, it would be very useful to have a condition that is also sufficient. However, using \ref{lemma:hausdorff-0-b-necessaryCondition} we can show that \ref{cor:hausdorff-1-b-necessaryCondition} can not be a sufficient condition, as the next example shows.
     
     \begin{ex}
         We construct a sequence that satisfies the condition of \ref{cor:hausdorff-1-b-necessaryCondition} and is infinitely alternating around a moment sequence:
         Let sequences $s, q$ be given by $s_n = 4^n$, $q_n = (-1)^n\frac{1}{2^n}$, $n \in \N_0$. $s$ is clearly a moment sequence; we show that $(s_n + q_n)_{n \in \N_0}$ satisfies the conditions of \ref{cor:hausdorff-1-b-necessaryCondition}:
         By induction, one can show that $(\Delta^k s)_n = 3^k 2^n$ and $(\Delta^k q)_n = 3^k\frac{(-1)^{n+k}}{2^{n+k}}$.
         Since the $\Delta$-operator is linear, we have $(\Delta^k (s+q))_n = 3^k\bigpars{2^n + \frac{(-1)^{n+k}}{2^{n+k}}} \geq 0$ for all $n, k$.
-        So $s+q$ is infinitely alternating around the moment sequence $s$ and satisfies \ref{cor:hausdorff-1-b-necessaryCondition}, which would make it a candidate for a counterexample.
+        So $s+q$ is infinitely alternating around the moment sequence $s$ and satisfies \ref{cor:hausdorff-1-b-necessaryCondition}, which would make it a candidate for a counterexample to the tail order being total for non-negative bounded distributions. 
         
         However, $s+q$ does not satisfy \ref{lemma:hausdorff-0-b-necessaryCondition} for any reasonable choice of $b$:
-        If $s+q$ was the moment sequence of some measure $\mu$ with support in $[0, b]$, then certainly $\forall n \geq 0: s_n + q_n < b^n$.
+        If $s+q$ was the moment sequence of some measure $\mu$ with support in $[0, b]$, then $\forall n \geq 0: s_n + q_n < b^n$.
         We can take the generous bound $s_n + q_n \leq 5^n$ which is satisfied, since $s_n \leq 4^n, q_n < 1$ - so the support of $\mu$ would definitely be a subset of $[0, 5]$.
         However, calculations show that $(\DeltaB{5}^2 (s+q))_1 = -\frac{89}{8} < 0$, so by \ref{lemma:hausdorff-0-b-necessaryCondition}, $(s+q)$ is not a moment sequence of such a measure.
     \end{ex}
@@ -1343,22 +1352,21 @@
     While the necessary condition of \ref{lemma:hausdorff-0-b-necessaryCondition} might be enough to transfer a positive result from $[0, 1]$ to $[0, b]$, it does not suffice if a counterexample is found: Even if we found two alternating sequences satisfying the conditions of \ref{lemma:hausdorff-0-b-necessaryCondition}, this would still not ensure that corresponding Borel measures exist, since the only proved the condition to be necessary, not sufficient.
     Yet another issue is that we are especially interested in distributions that 
 %    either have finite support, or 
-    are absolutely continuous (or with finite support, but there no counterexamples exist by \ref{thm:discreteTailOrderSuffConditions}); so even if we found a counter-example and proved that the two sequences belonged to measures on $[0, b]$, this would still not ensure the measures are absolutely continuous.
+    are absolutely continuous (or with finite support, but there no counterexamples exist by \ref{thm:discreteTailOrderSuffConditions}); so even if we found a counterexample and proved that the two sequences belonged to measures on $[0, b]$, this would still not ensure the measures are absolutely continuous.
     
-    An interesting note is that in some references it is suggested that Hausdorff's characterization can easily be generalized to any interval $[a, b]$.
+    An interesting note is that in some references it is suggested that Hausdorff's characterization can easily be generalized to any interval $[a, b]$ (for example, the review \cite{bib:bultheelBookReviewMomentProblem} on Schmüdgen's book \cite{bib:schmuedgenTheMomentProblem}).
     However, I could not yet find a formalization of this as a necessary and sufficient criterion. If something in this direction could be found, this would definitely be a helpful step, either for transferring a proof from $[0, 1]$ to $[1, b]$, or for proving counterexample sequences to have corresponding measures.
-    
+     
     
     \section{Equilibria in Tail-Ordered Games}
-    We will now look into equilibria of distribution-valued games with respect to the stochastic tail order.
-    Importantly, unlike their real-valued counterparts, these games fail to have mixed-strategy equilibria in general.
-    % TODO do we only look at two-player, zero-sum?
+    We will now look at equilibria of distribution-valued games with respect to the stochastic tail order.
+    An important result of this section is that, unlike their real-valued counterparts, these games fail to have mixed-strategy equilibria in general.
     
     We first
     % TODO do we really *first* restrict ourselves to LEX-Games, or permanently?
     restrict our attention to games with finitely supported distributions as payoffs.
     As shown in Corollary \ref{cor:discreteFiniteTailOrder-RLexEquivalence}, for such distributions the tail order can be reduced to lexicographical comparison.
-    To make our discussion notationally easier, we will games with finite common support of the payoff distributions as real-valued vectors of probabilities, ordered by the reflect lexicographical order.
+    To make our discussion notationally easier, we will represent games with finite common support of the payoff distributions as real-valued vectors of probabilities, ordered by the reflect lexicographical order.
     \begin{defn}
         A \emph{vector-valued game} of dimension $m \in \N$ is a game $G_{\leqRlex}$ with preordered payoff space $\R^m$.
         If it it equipped with the preorder $\leqRlex$, we call it a \emph{reflected-lexicographically ordered} (also \emph{ref-lex-ordered}) game.
@@ -1391,7 +1399,7 @@
             \end{tabular}
         \end{gather}
         The game is a two-player matrix game (i.e. zero-sum), so we only specify payoffs for the first player.
-        An equivalent tail-ordered distribution-valued game can be constructed from it for a specified support set of size 3;
+        An equivalent tail-ordered distribution-valued game can be constructed from it for any specified support set of size 3;
         Which specific support is chosen however does not matter for the tail order.
 %        $G$ has no mixed-strategy equilibrium with respect to $\leqtail$.
     \end{ex}
@@ -1423,7 +1431,6 @@
     
     \begin{lemma}
         Let $G$ be a vector-valued bimatrix game with values in $\R^m$.
-        \todo{Make clear if/how this generalizes to $G_{(\leqRlex,\geqRlex)}$, $G_{(\geqRlex,\leqRlex)}$, $G_{(\geqRlex,\geqRlex)}$}
         Then the set of equilibria of $G_{(\leqRlex,\leqRlex)}$ is a subset of the set of equilibria of the projected game $\Gproj{m}$:
         Any equilibrium $(s_1, s_2)$ of $G_{(\leqRlex,\leqRlex)}$ is also an equilibrium of $\Gproj{m}$.
     \end{lemma}
@@ -1448,9 +1455,9 @@
     \end{cor}
 
     \begin{thm}
-        % TODO there seems no reason for non-pure to be needed here or elsewhere. Check!
         Let $G$ be a vector-valued bimatrix game with values in $\R^m$, and define the projected games $\Gproj{1}, \dots, \Gproj{m}$ as above.
-        Suppose that $\Gproj{m}$ has the non-pure\footnote{With \emph{non-pure}, we mean “properly mixed”, whereas \emph{mixed equilibria} include pure and properly mixed equilibria (i.e. $(s_1, s_2)$ is non-pure if at least one of $s_1, s_2$ is not a pure strategy)}
+        Suppose that $\Gproj{m}$ has the 
+%        non-pure\footnote{With \emph{non-pure}, we mean “properly mixed”, whereas \emph{mixed equilibria} include pure and properly mixed equilibria (i.e. $(s_1, s_2)$ is non-pure if at least one of $s_1, s_2$ is not a pure strategy)}
         Nash equilibrium $(s_1, s_2)$.    
         Then
         \begin{align}
@@ -1518,7 +1525,7 @@
     % TODO do we really need uniqueness of the mixed strategy?
     % TODO fix all occurences of \in T_1 where it refers to mixed strategies!
     \begin{thm}
-        Let $G$ be a vector-valued bimatrix game with values in $\R^m$, where $\Gproj{m}$ has the non-pure equilibrium $(s_1, s_2)$.
+        Let $G$ be a vector-valued bimatrix game with values in $\R^m$, where $\Gproj{m}$ has the equilibrium $(s_1, s_2)$.
         Let $T_1 \coloneqq \supp(s_1) \subseteq S_1, T_2 \coloneqq \supp(s_2) \subseteq S_2$.
         Define projected subgames $\Gprojsub{i}$ with pure-strategy spaces $T_1, T_2$, and payoff functions $\bar{u}_k^i \coloneqq \restr{u_k^i}{T_1 \times T_2}$.
         Also, denote by $t_1, t_2$ the equilibrium strategies $s_1, s_2$ restricted to their support.
@@ -1587,7 +1594,7 @@
     \end{ex}
 
     To summarize our results: Any Nash equilibrium of a ref-lex-game $G$ must be an equilibrium of its highest-coordinate game $\Gproj{m}$.
-    If $\Gproj{m}$ has a non-pure equilibrium $(s_1, s_2)$,
+    If $\Gproj{m}$ has an equilibrium $(s_1, s_2)$, then
 %    where $\Gproj{m}$ has a unique non-pure Nash equilibrium $(s_1, s_2)$, $G_{(\leqRlex,\leqRlex)}$ has a Nash equilibrium iff it has the equilibrium $(s_1, s_2)$, and
     \begin{align*}
          &\forall i = 1, \dots, m-1: \Gproj{i} \text{ has the Nash equilibrium } (s_1, s_2) \\
@@ -1596,12 +1603,14 @@
     \end{align*}
     This clearly places strict requirements on ref-lex-games to have Nash equilibria. It's possible that the game has a pure equilibrium;
     But if it does not, then for the game to have an equilibrium, \emph{exactly the same} equilibrium as in $G_m$ must occur in all projected subgames $\Gprojsub{i}$.
-    For further work, it might be interesting to look at the proportion of ref-lex-games that have non-pure equilibria, or the probability that a ref-lex-game picked randomly in some way has an equilibrium (or has a non-pure equilibrium). Given the requirements for non-pure equilibria to exist, it seems a plausible conjecture that the set of ref-lex games with non-pure equilibria is a null set with respect to some reasonable measure.
+    For further work, it might be interesting to look at the proportion of ref-lex-games that have non-pure equilibria
+    \footnote{With \emph{non-pure}, we mean “properly mixed”, whereas \emph{mixed equilibria} include pure and properly mixed equilibria (i.e. $(s_1, s_2)$ is non-pure if at least one of $s_1, s_2$ is not a pure strategy)}
+    , or the probability that a ref-lex-game picked randomly in some way has an equilibrium (or has a non-pure equilibrium). Given the harsh requirements for non-pure equilibria to exist, it seems a plausible conjecture that the set of ref-lex games with non-pure equilibria is a null set with respect to some reasonable measure, or at least the probability of having non-pure equilibria becomes very small with increasing game size.
     
     \subsubsection{Equilibria in Distribution-Valued Tail-Order Games}
     A consequence of these results is that distribution-valued games even with only finitely-supported distributions do not have equilibria in general.
     A concrete example of this was already given in the first example \ref{ex:reflectedLexicographicallyOrderedGame}, since the payoff vectors all sum to $1$ (i.e. represent probability distributions).
-    While we did not investigate other types of distributions, we can hardly expect things to get different there; for example, any equilibrium-less game with finite common support can be converted to a game with absolutely continuous payoff with the same equilibria, by performing a convolution with a absolutely continuous distribution with small support centered around zero.
+    While we did not investigate other types of distributions, we can hardly expect things to get different there; for example, any equilibrium-less game with finite common support can be converted to a game with absolutely continuous payoff with the same equilibria, by performing a convolution with a absolutely continuous distribution with a small enough support centered around zero.
     % TODO possibly illustrate this point
     
     Note that we only discussed the case of games with respect to ${(\leqRlex,\leqRlex)}$, not the case ${(\leqRlex,\geqRlex)}$ that occurs for zero-sum games.
@@ -1630,5 +1639,5 @@
     \chapter{Distribution-Valued Game Theory in Security of Critical Infrastructures}
     
 %    \nocite{*}
-%    \printbibliography
+    \printbibliography
 \end{document}
