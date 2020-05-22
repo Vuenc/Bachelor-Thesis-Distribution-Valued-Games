@@ -7,7 +7,7 @@
 
 \documentclass[a4paper]{scrreprt}
 
-\usepackage{graphicx}
+\usepackage[draft]{graphicx}
 \input{todonotes-preamble.tex}
 \input{preamble-en.tex}
 
@@ -699,6 +699,10 @@ find it, neither can the market.” There are various exact and numerical algori
     \newcommand{\lessRlex}{<_{\textsc{Rlex}}}
     \newcommand{\geqRlex}{\geq_{\textsc{Rlex}}}
     \newcommand{\greaterRlex}{>_{\textsc{Rlex}}}
+    \newcommand{\leqtw}[1][]{\dleq_{\text{\tiny tw,$\scriptscriptstyle\ifstrempty{#1}{\mathcal{I}}{#1}$}}}
+    \newcommand{\geqtw}[1][]{\dgeq_{\text{\tiny tw,$\scriptscriptstyle\ifstrempty{#1}{\mathcal{I}}{#1}$}}}
+    \newcommand{\lesstw}[1][]{\dless_{\text{\tiny tw,$\scriptscriptstyle\ifstrempty{#1}{\mathcal{I}}{#1}$}}}
+    \newcommand{\greatertw}[1][]{\dgreater_{\text{\tiny tw,$\scriptscriptstyle\ifstrempty{#1}{\mathcal{I}}{#1}$}}}
     
     \begin{defn}[Stochastic Order]
         % TODO think about if the name “stochastic preorder” would be more appropriate
@@ -1634,7 +1638,62 @@ find it, neither can the market.” There are various exact and numerical algori
     However in the limit, the $\Gproj{3}$-payoffs of both rows become equal, and the second coordinate makes the first row preferable for $\leqRlex$ (as already calculated in \ref{ex:reflectedLexicographicallyOrderedGame} before). Therefore $(1, 0)$ is the unique best response to $s_2$. This shows that $r$ does not have a closed graph.
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
+    \newcommand{\Fab}{\mathfrak{F}_{[a, b]}} % The set of distributions with support in [a, b]
+    A modification of the ideas on distribution-valued games and the stochastic order was proposed in \cite{bib:tweakableStochasticOrders}.
+    The paper is based on the rationale that the tail order is inherently pessimistic: As its name says, the decision is based entirely on the \emph{tail} of the distribution. Since it is applied to loss functions, an arbitrarily small probability off a high loss can overshadow everything to the left, or in other words: the ordering only considers the worst case.
+        
+    The \emph{tweakable stochastic order} defined in \cite{bib:tweakableStochasticOrders}, on the other hand,
+    is designed such that it can be tweaked to a decision maker's risk attitude, represented by a utility function.
+    For finitely-supported distributions, it includes as special cases the maximally risk-averse $\leqtail$, and the expected-value-ordering $\leqE$ which is considered risk-neutral.
     
+    
+    We define the tweakable stochastic order $\leqtw$, slightly adjusted to match the framework presented so far.
+    Let $[a, b]$ be an interval where $1 < a < b$. Let $\mathcal{I}$ be an partition of that interval, i.e. a finite subset of $[a, b]$ with elements $a = x_1 < x_2 < \dots < x_{n+1} = b$.
+    Let $\Fab \coloneqq \set{P \in \DP \mid \supp(P) \subseteq [a, b]}$.
+    For some Borel probability measure $P$ and some set $A \in \B$ denote by $E_A(P) \coloneqq \lintegral{A}{x}{P(x)}$ its expected value if restricted to $A$. 
+%    For a Borel probability measure $P$ and for $1 \leq i \leq n$, denote by $P_i$ its restriction to the 
+%%    half-open 
+%    interval $[x_i, b]$, in the sense that $P_i(A) \coloneqq P(A \cap [a, x_i])$ for $A \in \B$.
+    % TODO really half-open interval? Then b is not covered!
+    \begin{defn}
+        \label{def:tweakableStochasticOrder}
+        Let $P_1, P_2 \in \Fab$ be probability measures.
+        Then the \emph{tweakable stochastic order} $\leqtw$ given the partition $\mathcal{I}$ is defined by
+%        \footnote{While $E$ is usually defined only for probability measures, and possibly $P_i([a, b]) < 1$, the definition of $E(P_i)$ as the first moment of $P_i$ still works.}
+%        \begin{gather*}
+%            P_1 \leqtw P_2 \colonlra \bigpars{E_{[x_1, x_2)}(P_{1}), \dots, E_{[x_n, b]}(P_1)} \leqRlex \bigpars{E_{[x_1, x_2)}(P_2), \dots, E_{[x_n, b]}(P_2)}
+%        \end{gather*}
+        \begin{gather*}
+            P_1 \leqtw P_2 \colonlra \bigpars{E_{[x_1, b]}(P_{1}), \dots, E_{[x_n, b]}(P_1)} \leqRlex \bigpars{E_{[x_1, b]}(P_2), \dots, E_{[x_n, b]}(P_2)}
+        \end{gather*}
+%        The comparison is not defined for distributions whose support is not a subset of $[a, b]$.
+        Distributions not in $\Fab$ are incomparable by $\leqtw$.
+    \end{defn}
+
+%    Definition \ref{def:tweakableStochasticOrder} partitions the interval $[a, b]$ into intervals $[x_1, x_2), [x_2, x_3), \dots, [x_n, b]$. 
+%    In each of these intervals, the expected value is taken; the resulting vectors are compared by the reflected lexicographic order.
+%    The original definition in \cite{bib:tweakableStochasticOrders} does not use intervals $[x_1, x_2), [x_2, x_3), \dots, [x_n, b]$, but rather intervals $[x_1, b], [x_2, b], \dots, [x_n, b]$. The two definitions are equivalent, since a lexicographic comparison is used:    
+    The definition uses overlapping intervals $[x_1, b], [x_2, b], \dots, [x_n, b]$. In each of these intervals, the expected value is taken; the resulting vectors are compared by the reflected lexicographic order. We could instead partition $[a, b]$  into intervals $[x_1, x_2), [x_2, x_3), \dots, [x_n, b]$, which is equivalent since a lexicographic comparison is used:
+
+    \begin{lemma}
+        Let $P_1, P_2 \in \Fab$.
+        Then
+        \begin{alignat*}{3}
+                                     &\bigpars{E_{[x_1, x_2)}(P_{1}), \dots, E_{[x_n, b]}(P_1)}\; &\leqRlex \bigpars{E_{[x_1, x_2)}(P_2), \dots, E_{[x_n, b]}(P_2)} \\
+            \Longleftrightarrow\quad &\bigpars{E_{[x_1, b]}(P_{1}), \dots, E_{[x_n, b]}(P_1)} &\leqRlex \bigpars{E_{[x_1, x_2)}(P_2), \dots, E_{[x_n, b]}(P_2)}
+        \end{alignat*}
+    \end{lemma}
+    \begin{proof}
+%        Suppose the first equation holds strictly. Then for some $k \in \set{1, \dots, n}$, we have $E_{[x_k, x_{k+1})}(P_{1}) < E_{[x_k, x_{k+1})}(P_{2})$,
+%        and for all $i>k$, $E_{[x_i, x_{i+1})}(P_{1}) = E_{[x_i, x_{i+1})}(P_{2})$.
+%        Therefore for all $i > k$, $E_{[x_i, b)}(P_{1}) = \sum_{j \geq i} E_{[x_j, x_{j+1})}(P_{1}) = \sum_{j \geq i} E_{[x_j, x_{j+1})}(P_{2}) = E_{[x_i, b)}(P_{2})$, and by the same argument, $E_{[x_k, b)}(P_{1}) < E_{[x_k, b)}(P_{2})$.
+        Observe that for any $P_l$, $E_{[x_k, b]}(P_l) = \bigpars{\sum_{i=k}^{n-1} E_{[x_i, b)}(P_l)} + E_{[x_k, b]}(P_l)$.
+        The reflected lexicographic ordering considers the $k$'th coordinate iff all higher coordinates are equal in both vectors:
+        This means that for the ordering, it does not matter if values of higher coordinates are added to lower coordinates consistently on both sides.
+        Since this is what happens in the above sum representation, we get the equivalence.
+    \end{proof}
+
+    Since $\leqRlex$ is total, $\leqtw$ is a total order on $\Fab$ (yet obviously not on $\DP$). It is not anti-symmetric, since it is indifferent between any two distributions with equal expected values in each of the partition intervals.
     
     \chapter{Distribution-Valued Game Theory in Security of Critical Infrastructures}
     
