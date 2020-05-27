@@ -7,7 +7,7 @@
 
 \documentclass[a4paper]{scrreprt}
 
-\usepackage[draft]{graphicx}
+\usepackage{graphicx}
 \input{todonotes-preamble.tex}
 \input{preamble-en.tex}
 
@@ -1781,25 +1781,58 @@ find it, neither can the market.” There are various exact and numerical algori
     However, it also shows that the equilibrium heavily depends on how the players weigh their objectives. Since there are infinitely many weight vectors, one should expect that there can be infinitely many Pareto-Nash equilibria. 
     
     % TODO possibly other formulation: it's visually appealing...
-    To get a better intuition of which Pareto-Nash equilibria a game can have, one can experiment with different weights and visualize the resulting equilibria profiles in a plot where the strategies in the profile are represented as points.
+    To get some intuition of which Pareto-Nash equilibria a game can have, one can experiment with different weights and visualize the resulting equilibria profiles in a plot where the strategies in the profile are represented as dots.
     \autoref{fig:paretoNashEquilibriaShowcase} % TODO figure showing Pareto-Nash equilibria
-    shows examples of such plots for randomly generated 2-player games with 3 strategies for each player, and a varying number $m$ of objectives: For each equilibrium profile, the strategies of player 1/2 are represented by a red/green point, projected from the two-dimensional mixed-strategy-simplex in three-dimensional space to the plane.
-    The example showcase the possible complexity of the set of Pareto-Nash equilibria:
-    While in some games, all equilibria just mix between two of the three strategies, in others some clearly recognizable patterns appear, where for example many equilibrium points concentrate on curves.
+    shows examples of such plots for randomly generated 2-player games with 3 strategies for each player, and a varying number $m$ of objectives: For each equilibrium profile, the strategies of player 1/2 are represented by a red/green dot, projected from the two-dimensional mixed-strategy-simplex in three-dimensional space to the plane.
+    The examples showcase the possible complexity of the set of Pareto-Nash equilibria:
+    In some games, all equilibria just mix between two of the three strategies; in others, equilibria seem to follow certain patterns which can be recognized in the visual representation.
+%    , where for example many equilibrium points concentrate on curves.
     Another observation is that in all cases, there are equilibrium profiles far apart from another, so equilibria obtained by different weightings need not be “similar”, but can be completely different.
     In particular, this motivates that for an algorithm which calculates a specific Pareto-Nash equilibrium, it is reasonable to take a weighting vector as input instead of choosing one on its own.
     \begin{figure}[h]
-%        \centering
+        \centering
+        \begin{subfigure}[t]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/paretoNash-curvyRegionsManyOutliers-k5.pdf}
+            \caption{Zero-Sum Game, $m=5$}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/paretoNash-curves1-k2.pdf}
+            \caption{Zero-Sum Game, $m=2$}
+        \end{subfigure}
+        
+        \vspace*{0.01\textwidth}
+        
+        \begin{subfigure}[t]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/paretoNash-bimatrix-k3.pdf}
+            \caption{Non-Zero-Sum Game, $m=3$}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/paretoNash-emptyCenter-k5.pdf}
+            \caption{Zero-Sum Game, $m=5$, seemingly no equilibria with full support}
+        \end{subfigure}
+%        \vspace*{0.01\textwidth}
+%        
 %        \begin{subfigure}[b]{0.49\textwidth}
-%            \includegraphics[width=\textwidth]{Pictures/}
+%            \includegraphics[width=\textwidth]{Pictures/paretoNash-clusters-k5.pdf}
 %            \caption{}
-%            \label{fig:}
+%        \end{subfigure}
+%        \begin{subfigure}[b]{0.49\textwidth}
+%            \includegraphics[width=\textwidth]{Pictures/paretoNash-denseCurvyRegions-k3.pdf}
+%            \caption{}
 %        \end{subfigure}
 %        
 %        \vspace*{0.01\textwidth}
 %        
+%        \begin{subfigure}[b]{0.49\textwidth}
+%            \includegraphics[width=\textwidth]{Pictures/paretoNash-curves2-k2.pdf}
+%            \caption{}
+%        \end{subfigure}
+%        \begin{subfigure}[b]{0.49\textwidth}
+%            \includegraphics[width=\textwidth]{Pictures/paretoNash-scatteredWithLines-k5.pdf}
+%            \caption{}
+%        \end{subfigure}
         \label{fig:paretoNashEquilibriaShowcase}
-        \caption{Different sets of Pareto-Nash equilibria visualized}
+        \caption{Different sets of Pareto-Nash equilibria visualized (10\,000 points each)}
     \end{figure}
     
     
