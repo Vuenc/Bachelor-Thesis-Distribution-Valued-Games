@@ -1105,8 +1105,8 @@ find it, neither can the market.” There are various exact and numerical algori
                 m_n(P_c) 
                 = \sum_{k \geq 1} (c-1) \frac{1}{c^k} (2-\frac{1}{c^k})^n
                 = \sum_{k \geq 1} (c-1) \frac{(2c^k-1)^n}{c^{kn+k}} \\
-                = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j (c-1)\biggpars{\sum_{k \geq 1}\frac{c^{-jk}}{c^k}}
-                = \sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \frac{1}{c^{1+j}-1}
+                = (c-1)\sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \biggpars{\sum_{k \geq 1}\frac{c^{-jk}}{c^k}}
+                = (c-1)\sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \frac{1}{c^{j+1}-1}
             \end{multline*}
             We would like to prove $P_c \lesstail P_d ~ \forall\, 1 < c < d$, but it's hard to show that above formula is increasing with $c$.
             Computer calculations suggest that the moment sequence of $P_c$ increases pointwise as $c$ increases, however we have no rigorous argument yet.
@@ -1235,7 +1235,7 @@ find it, neither can the market.” There are various exact and numerical algori
         \end{enumerate}
     \end{ex}
     
-    \subsection{Totality of Restricted Versions of the Tail Order}
+    \subsection{The Tail Order and Totality: Restricting the Ordered Space}
     When we introduced the tail order, we already discussed its anti-symmetry and totality properties: In short, $\leqtail$ in general is neither total nor anti-symmetric; For anti-symmetry, good counterexamples of distributions with equal moment sequences exist, however anti-symmetry \emph{does} hold on the reasonably large subset of distributions with bounded support.
     For totality, the situation is less clear: the only counterexamples we saw so far were trivially not $\leqtail$-comparable because they did not even have moments of all orders.
     A natural question thus is if there is some useful subset of $\DP$ where $\leqtail$ is total. Most generally, is $\leqtail$ total on $L$, i.e. are distributions comparable as soon as  they have moments of all orders? This first question is easy to answer: $\leqtail$ is not total on the whole of $L$, because distributions can take negative values that can make the moment sequences alternating. 
@@ -1496,7 +1496,7 @@ find it, neither can the market.” There are various exact and numerical algori
     % TODO we have a problem since we should interpret these as losses. Or change the example. Maybe give (u_1(pure strategy one) < u_1(mixed_strategy) < u_1(pure strategy two))
     Computations done with the game-theoretic library included in the mathematical software \texttt{SageMath} % TODO properly reference this
     show that $\Gproj{3}$ has exactly one equilibrium, with mixed strategies $s_1 = (\frac{2}{3}, \frac{1}{3})$ for player 1 and $s_2 = (\frac{1}{3}, \frac{2}{3})$ for player 2, yielding a payoff of $\frac{1}{6}$ to player 1.
-    Applying this strategy to our original game $G$ yields the payoff distribution $u = (\frac{28}{90}, \frac{47}{90}, \frac{1}{6})$.
+    Applying this strategy to our original game $G$ yields the payoff vector $u = (\frac{28}{90}, \frac{47}{90}, \frac{1}{6})$.
     From Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs} we know that if any player unilaterally deviates from this strategy profile, the payoff stays the same: 
 %    For example, if player 1 plays the pure strategy $(0, 1)$ and player 2 continues to play $s_2$, the payoff for player 1 will still be $\frac{1}{6}$.
     For example, if player 1 plays the pure strategy $(1, 0)$ and player 2 continues to play $s_2$, the payoff for player 1 will still be $\frac{1}{6}$.
@@ -1704,7 +1704,7 @@ find it, neither can the market.” There are various exact and numerical algori
     \subsection{Kakutani's Theorem and Lexicographically-Ordered Games}
     We can in principle apply the proof idea of Theorem \ref{thm:existenceOfMixedStrategyEquilibria}, which proved the existence of mixed-strategy equilibria for real-valued games using Kakutani's fixed point theorem, to other, arbitrary payoff models. Recall that Kakutani's fixed point theorem worked on the best-reply correspondence $r: \Delta \to \Pot(\Delta)$, which maps real-valued vectors to sets of real-valued vectors. Since these real-valued vectors do not represent payoffs, but rather mixed-strategy profiles, the domain and codomain of $r$ are independent of the payoff model.
     
-    Since the theorem could in principle be applied, but tail-ordered distribution-valued games (and more specifically, ref-lex-ordered vector-valued games) do not have mixed-strategy equilibria in general, some condition of Kakutani's theorem must be violated. For better understanding, it's interesting to see which condition does not hold for best responses in the lexicographical ordering:
+    Since the theorem could in principle be applied, but tail-ordered distribution-valued games (and more specifically, ref-lex-ordered vector-valued games) do not have mixed-strategy equilibria in general, some condition of Kakutani's theorem must be violated. For a better understanding, it's interesting to see which condition does not hold for best responses in the lexicographical ordering:
     It turns out that the property that fails to hold is that $r$ must have a \emph{closed graph}.
     % TODO cite a reference for this idea of “closed as subset of \R^m^2... but which?
     The inherent reason for this is that $\leqRlex$ is not closed as a subset of $(\R^m)^2$:
@@ -1720,7 +1720,7 @@ find it, neither can the market.” There are various exact and numerical algori
     
     \section{The Tweakable Stochastic Order}
     A modification of the ideas on distribution-valued games and the stochastic order was proposed in \cite{bib:tweakableStochasticOrders}.
-    The paper starts with the insight that the tail order is inherently pessimistic: As its name says, the decision is based entirely on the \emph{tail} of the distribution. Since it is applied to loss functions, an arbitrarily small probability off a high loss can overshadow everything to the left, or in other words: the ordering only considers the worst case.
+    The paper starts with the insight that the tail order is inherently pessimistic: As its name says, the decision is based entirely on the \emph{tail} of the distribution. Since it is applied to loss functions, an arbitrarily small probability off a high loss can overshadow everything on the left, or in other words: the ordering only considers the worst case.
         
     The \emph{tweakable stochastic order} defined in \cite{bib:tweakableStochasticOrders}, on the other hand,
     is designed such that it can be tweaked to a decision maker's risk attitude, represented by a utility function.
