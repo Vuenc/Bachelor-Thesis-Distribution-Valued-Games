@@ -47,10 +47,66 @@
     \chapter{Introduction}
     
     % TODO make the following one chapter?
-    \chapter{Basic Concepts from Probability and Decision Theory}
+    \chapter{Mathematical Preliminaries: Probability and Decision Theory}
     
     \section{Probability Theory}
     \todo{Briefly introduce required basic concepts like (probability) measures, random variables, the Borel sigma algebra, Lebesgue integration, moments, etc.}
+    While calculating with probabilities when there are finitely many possible outcomes is conceptually simple, things get more involved when infinity comes into play.
+    Modern probability theory presents a coherent framework to deal with both finitely many and infinitely many outcomes using measure theory. This section quickly goes over the basic concepts and notations needed in this thesis.
+    
+    Assume $\Omega$ is some set, usually representing probabilistic outcomes. 
+    A \emph{sigma algebra} $\A \subseteq \Pot(\Omega)$ represents probabilistic events and is a non-empty system of subsets of $\Omega$ which is closed under complements and intersections.
+    A \emph{signed measure} $\mu$ on $(\Omega, \A)$ is a map $\mu: \A \to \R \cup \set{-\infty, \infty}$ satisfying $\mu(\emptyset) = 0$, and $\mu(\bigcup_{n \in \N} A_n) = \sum_{n \in \N}\mu(A_n)$ for any countable collection $(A_n)_{n \in \N}$ of pairwise-disjoint sets from $\A$.
+    $\mu$ is a \emph{measure} if it only takes non-negative values.
+    A \emph{probability measure} $P$ is a measure satisfying $P(\Omega) = 1$.
+    $(\Omega, \A, P)$ form a \emph{probability space}, and for any set $A \in \A$, $P(A)$ represents its probability.
+    A convex combination (\emph{mixture}) of probability measures $P_1, P_2$ is again a probability measure (i.e. if $\alpha \in [0, 1]$, $\alpha P_1 + (1-\alpha) P_2$ is a probability measure).
+    
+    If $\Omega = \R$, one needs to find a suitable sigma algebra: While $\Pot(\R)$ is a sigma algebra, it is “too large” as it contains non-well behaved sets which prevent useful measures (\emph{Vitali's Theorem}).
+    One resorts to the \emph{Borel sigma algebra} $\B$, defined as the smallest sigma algebra containing all intervals $[a, b] \subseteq \R$.
+    The sets $B \in \B$ are called \emph{Borel sets}, and measures on $\B$ \emph{Borel measures}.
+    The most ubiquitous Borel measure is the \emph{Lebesgue measure} $\lambda$ which assigns Borel sets their natural “volume” and is uniquely determined by mapping intervals to their length, i.e. $\lambda([b, a]) \coloneqq b-a$.
+    % TODO does lambda also need to map half-open/open intervals to their lengths for this to be unique?
+
+    A function $f: \Omega \to \R$ is \emph{Borel-measurable} if $\forall B \in \B: f\inv(B) \in \A$.
+    It \emph{Lebesgue integral with respect to a Borel measure $\mu$}, denoted by $\lintegral{}{f}{\mu}$, can be defined in three cases:
+    If $f$ only takes non-negative values, it is at least \emph{quasi-integrable}. If it takes negative values, and either its positive part $f^+ = \max(0, f)$ or its negative part $f^- = \max(0, -f)$ have a finite integral, $f$ is also quasi-integrable.
+    If both parts have a finite integral, $f$ is \emph{integrable}, or equivalently $\lintegral{}{\abs{f}}{\mu} < \infty$: This means that $\lintegral{}{f}{\mu}$ is finite.
+    The integration can be restricted to some $A \in \A$, denoted $\lintegral{A}{f}{\mu}$. To specify the integration variable, one writes $\lintegral{A}{f(x)}{\mu(x)}$.
+    If $\mu = \lambda$ and $\Omega = \R$, the integral is equivalent to the Riemann integral in most cases that occur in practice.
+    
+%    The \emph{Lebesgue integral with respect to a Borel measure $\mu$} is denoted by $\lintegral{A}{f}{\mu} \eqqcolon \lintegral{A}{f(x)}{\mu(x)}$-
+%    The function $f$ needs to be \emph{measurable}: $\forall B \in \B$, $f\inv(B) \in \A$.
+%    In addition, it needs to be \emph{quasi-integrable}, i.e. either only take positive values, or 
+%     where $f$ is a \emph{measurable, quasi-integrable} function: 
+    
+    A \emph{real-valued random variable} on $(\Omega, \A)$ is a function $X: \Omega \to \R$ which is Borel-measurable, i.e. $\forall B \in \B: X\inv(B) \in \A$. 
+    A convenient notation for such preimages is $\set{X \in B} \coloneqq X\inv(B)$, such that $P(\set{X \in B})$ denotes the “probability that $X$ takes a value in $B$”.
+    $X$ induces a Borel probability measure, its \emph{pushforward measure} or \emph{distribution} $P^X: B \mapsto P(\set{X \in B})$. One can think of $P^X$ as only describing the random variable's distribution while ignoring the details of the underlying $(\Omega, P)$.
+    Closely related is the \emph{(cumulative) distribution function} (cdf) $F_X: \R \to [0, 1], x \mapsto P(\set{X \leq x})$.
+    $P^X$ and $F_X$ uniquely determine each other, both representing the distribution of $X$; on the other hand, there can be many different random variables all having the same distribution.
+    Yet many properties of $X$ only depend on $P^X$, and can therefore be phrased in terms of probability measures, leaving out the additional details encoded by $X$.
+    
+%    $X$ is \emph{discrete} if $P^X(S) = 1$ for a countable set $S = \set{x_1, x_2, \dots}$: Its distribution can then be represented by a \emph{probability mass function} (pmf) $f: \R \to [0, 1], x \mapsto P^X(\set{x})$ satisfying $\sum_{x_i \in S} f(x_i) = 1$, and $x \notin S \Rightarrow f(x) = 0$.
+%    $X$ is \emph{absolutely continuous} (AC) if it has a \emph{density function} (pdf) $f: \R \to \Rp$, such that $\forall B \in \B: P^X(B) = \lintegral{B}{f(x)}{\lambda(x)}$.
+%    Both are special cases of a more general concept: $X$ is \emph{absolutely continuous wrt. a measure $\mu$} if it has a density function $f$ such that $\forall B \in \B: P^X(B) = \lintegral{B}{f(x)}{\mu(x)}$; the discrete definition is equivalent to setting $\mu = \#$ (the \emph{counting measure}) which assigns to each set its cardinality, and using the mass function as density.
+%    $X$ is \emph{continuous} if $F_X$ is continuous, and then $P(\set{X = c}) = 0$ for all $c \in \R$.
+%    If $X$ is AC, it is continuous, but the converse is not true in general (a counterexample is the \emph{Cantor distribution}).
+    
+    Let $P$ be a Borel probability measure.
+    $P$ is \emph{discrete} if $P(S) = 1$ for a countable set $S = \set{x_1, x_2, \dots}$: It can then be represented by a \emph{probability mass function} (pmf) $f: \R \to [0, 1], x \mapsto P(\set{x})$ satisfying $\sum_{x_i \in S} f(x_i) = 1$, and $x \notin S \Rightarrow f(x) = 0$.
+    $P$ is \emph{absolutely continuous} (AC) if it has a \emph{density function} (pdf) $f: \R \to \Rp$, such that $\forall B \in \B: P(B) = \lintegral{B}{f(x)}{\lambda(x)}$.
+    $P$ is \emph{continuous} if its distribution function $F$ is continuous, or equivalently $P(\set{X = c}) = 0$ for all $c \in \R$.
+    Absolutely continuous probability measures are continuous, but the converse is not true in general (a counterexample is the \emph{Cantor distribution}): In particular, there are probability measures which are neither AC nor discrete (nor a mixture of AC and discrete measures).
+    Both absolute continuity and discreteness are special cases of a more general concept: $P$ has a density $f$ \emph{with respect to a measure $\mu$} if $\forall B \in \B: P^X(B) = \lintegral{B}{f(x)}{\mu(x)}$; For discrete distributions, the mass function $f$ can be seen as a density with respect to the \emph{counting measure} $\#$ which assigns to each set its cardinality.
+    If $P$ has a $\mu$-density $f$, this allows to compute the integral of some $P$-integrable function $g$ with respect to $P$ as $\lintegral{A}{g}{P} = \lintegral{A}{f g}{\mu}$.
+    
+    Define the \emph{expected value} of a random variable/Borel probability measure as $E(X) \coloneqq \lintegral{\Omega}{X}{P} = \lintegral{\R}{x}{P^X(x)} \eqqcolon E(P^X)$. It is only defined if $X$ is integrable, i.e. $E(\abs{X}) = \lintegral{\Omega}{\abs{X}}{P} < \infty$. 
+    The expected value is the first of the distribution's \emph{moments}:
+    If $p \in \N$, we say that $X$ is \emph{$p$-integrable}, or $X \in \mathcal{L}_p$, if $E(\abs{X}^p) < \infty$;
+    In this case, define the \emph{$p$'th moment} of $X$ as $E(X^p)$. Analogously, define the $p$'th moment of a Borel measure $P$ by $\lintegral{\R}{x^k}{P(x)}$ if $\lintegral{\R}{\abs{x}^k}{P(x)} < \infty$.
+    
+    % TODO do we need “almost surely”?
     
     \section{Decision Theory}
     \todo{(Possibly) introduce concepts like preference relations, utility functions, etc.}
