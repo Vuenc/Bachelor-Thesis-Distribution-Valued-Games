@@ -29,7 +29,7 @@
 
 \DeclareMathOperator{\A}{\mathcal{A}}
 \DeclareMathOperator{\F}{\mathcal{F}}
-\newcommand{\Rp}{\mathbb{R}_+}
+\newcommand{\Rp}{\mathbb{R}_{\geq 0}}
 \let\epsilon\varepsilon
 \let\phi\varphi
 \newcommand{\B}{\mathcal{B}}
@@ -41,7 +41,11 @@
 \let\realincludegraphics\includegraphics
 \renewcommand{\includegraphics}[2][]{\realincludegraphics[#1]{Lowres#2}}
 
+\title{\huge Distribution-Valued Games}
+\subtitle{\LARGE Overview, Analysis, and a \\Segmentation-Based Approach}
+
 \begin{document}
+    \maketitle
     \tableofcontents
     
     \chapter{Introduction}
@@ -121,19 +125,23 @@
     \label{chap:nonCooperativeRealValuedGameTheory}
     In this chapter, we will introduce the basic notions of non-cooperative game theory.
     Game theory is applied in scenarios where multiple agents, called \emph{players}, make decisions independently of another, and each try to achieve the best outcome for themselves.
-    We are explicitly excluding \emph{cooperative game theory} from our discussions, where the players can cooperate and form coalitions to achieve a better overall outcome.
+    We are excluding \emph{cooperative game theory} from our discussions, which lets the players cooperate and form coalitions to achieve a better outcome, but uses quite a different underlying theory.
 %    , and the main issue is how to split up the common payoff between the players.
-    In the \emph{non-cooperative game theory} we are dealing with, on the other hand, players can be thought of as neither being able to communicate, nor to make binding agreements.
+    In the \emph{non-cooperative game theory} we are dealing with, on the other hand,
+%    , players can be thought of as neither being able to communicate, nor to make binding agreements.
+    players can not make binding agreements \cite{bib:harsanyiTheoryOfEquilibriumSelection}.
     % TODO cite the interpretation of no communication/no binding agreements
     The classical example of a non-cooperative game is the \emph{prisoner's dilemma}:
     \begin{ex}[Prisoner's Dilemma]
 %        Two criminals have committed a capital crime together. They were caught, and now are being held in different cells, with no way to communicate, and will soon be interrogated.
-        Two partners in crime were caught and are now being held in different cells. They have no way to communicate, and will soon be interrogated.
-        They know, however, that law enforcement only has substantial evidence against them for a small part of the crime; if none of the two confess, both of them will only be sentenced to one year in prison.
-        The dilemma is that both will be offered to confess to the crime, and also snitch on the other criminal. Now if one of them confesses and testifies against the other, he can be placed in a witness protection program and go free, while the other one will go to prison for five years. If both confess, however, they will both be sentenced to four years in prison, with their confession being held for them as mitigating circumstances.
         
-        The game can be represented by a table: the rows represent the player 1 strategies, the columns the player 2 strategies.
-        The table entries contain the years in prison player 1/player 2 faces, respectively.
+        Two criminals were caught and are being held in different cells. The police does not have substantial evidence against them, so each of them is offered a deal: if one prisoner confesses to the crime and hands over evidence that helps prosecuting his partner, the prisoner can go into a witness protection program and stay out of prison, while the partner will be sentenced to five years in prison. Yet if both prisoners choose to confess, the prosecution does not need a key witness, and both will have to serve an (only slightly reduced) sentence of four years. However, if both prisoners refuse to confess, the prosecution, based on the little evidence they have, will only be able to sentence them to one year in prison each.
+%        Since they have no way to coordinate their actions, both wonder what to do.
+        
+        The game can be represented by a table: 
+        The rows represent the player 1 strategies, the columns the player 2 strategies,  and the cells contains the years they face in prison, respectively.
+%        Each row/column represents a strategy by player 1/2,.
+%        The table entries contain the years in prison player 1/player 2 faces, respectively.
         \begin{gather*}
             \centering
             \begin{tabular}{r|c|c|}
@@ -143,14 +151,18 @@
             \end{tabular}
         \end{gather*}
     
-        Obviously if the prisoners could make a binding agreement, they would be best of by both not confessing, and both only facing one year in prison.
-        However, if one prisoner does not confess, he risks being betrayed by the other prisoner and face even more time in prison; 
-        Therefore the solution in non-cooperative game theory, somewhat counter-intuitively, is that both prisoners confess and both face four years in prison instead of just one. The reason is that they want to avoid being betrayed by the other prisoner.
+        
+        So what should the prisoners do?
+        Were they able to make a contract about the situation, they would surely agree about not confessing, and both only spend one year in prison.. But since this is obviously not possible, each prisoner's fate depends on the decision of his partner, and both have to watch out not to be betrayed by their partner and get an even longer prison sentence than by confessing.
+%        Obviously if the prisoners could make a binding agreement, they would be best of by both not confessing, and both only facing one year in prison.
+%        However, if one prisoner does not confess, he risks being betrayed by the other prisoner and face even more time in prison; 
+        Therefore in non-cooperative game theory, somewhat counter-intuitively, the solution to the game is that both prisoners confess and both face four years in prison instead of just one.
+        They both have to accept going to prison for four years, since they can not make binding agreements, and this is the only way to avoid being betrayed by the other prisoner.
         \label{ex:prisonersDilemma}
         \label{ex:gameTheoryIntroductoryExample}
     \end{ex}
 
-    We will now define such games and their solution concepts formally.
+    We will now define such games and their solution concepts mathematically.
 
     % TODO find a definition properly supported by the literature!
     \begin{defn}[see \cite{bib:fudenbergGameTheory,bib:matsumotoGameTheory,bib:nisanAlgorithmicGameTheoryCh1Basic}]~\\
@@ -173,11 +185,15 @@
         \[ \forall s \in S: u_1(s) + u_2(s) = 0 \]
     \end{defn}
 
-    In a zero-sum game, the two players are completely antagonistic: % TODO formally justify this term?
-    one player wins exactly what the other loses, and there would be no reason for the players to cooperate in any way. As \cite{bib:fudenbergGameTheory} notes, the important feature of these games is that the payoffs sum to a constant, while choosing this constant as zero is only for normalization.
+    In a zero-sum game, the two players play strictly “against each other”, and are adversaries in every possible scenario:
+    one player wins exactly what the other loses, and there is no outcome that corresponds to mutual benefit. As \cite{bib:fudenbergGameTheory} notes, the important feature of these games is that the payoffs sum to a constant: 
+    This is because positive affine transformations $x \mapsto ax + b$, $a > 0$, of all the payoffs keep the equilibria of the game unchanged.
+    Choosing the constant that the adverse payoffs sum to as zero is only for normalization.
     
     \section{Solution Concepts}
-    Reasoning about rational strategies, as done in example \ref{ex:gameTheoryIntroductoryExample}, is formalized by \emph{solution concepts}, most prominently the concept of \emph{Nash equilibria}. The first, somewhat simpler concept is that of \emph{dominant strategies}, where a player's best strategy is independent the other players' actions:
+    To reason about rational strategies, as done in example \ref{ex:gameTheoryIntroductoryExample}, we use arguments that are formalized by \emph{solution concepts}.
+    The most prominent one is the concept of \emph{Nash equilibria}.
+    Before we introduce Nash equilibria, we start with the simpler solution concept of \emph{dominant strategies}, where a player's best strategy is independent the other players' actions.
     
     \begin{defn}[Dominant strategy, see \cite{bib:nisanAlgorithmicGameTheoryCh1Basic}]
         A strategy $s_k \in S_k$ for player $k$ is a \emph{dominant strategy} if 
@@ -185,9 +201,9 @@
         A strategy profile $(s_1, \dots, s_n) \in S$ is a \emph{dominant strategy solution} if all its individual strategies $s_i$ are dominant strategies.
     \end{defn}
     
-    In the prisoners' dilemma \ref{ex:prisonersDilemma}, confessing is actually a dominant strategy for both prisoners:
-    For example, if player 2 confesses, then player 1 is best off by also confessing; but if player 2 does not confess, player 1 is \emph{also} best off by confessing, i.e. betraying player 2 and going into witness protection without a prison sentence.
-    But often there are no dominant strategies, and the answer what a player should do is not so clear.
+    In the prisoners' dilemma \ref{ex:prisonersDilemma}, confessing is a dominant strategy for both prisoners:
+    For example, if player 2 confesses, then player 1 is best off by confessing as well. If player 2 does not confess on the other hand, player 1 is \emph{also} best off by confessing, i.e. betraying player 2 and going into witness protection without a prison sentence.
+    Dominant strategies lead to a obvious solution of the game if they exist, but many games do not have a dominant-strategy solution.
     A more sophisticated solution concept are Nash equilibria, which encode that for a given strategy profile, no player has an incentive to deviate on their own. Nash equilibria represent a certain form of stability in a strategy profile.
     
     \begin{defn}[Nash equilibrium, see \cite{bib:fudenbergGameTheory}]
@@ -208,7 +224,8 @@
         If the game is zero-sum, these are just the indices where $a_{ij}$ is both maximal in its column, and minimal in its row.
     \end{lemma}
     \begin{proof}
-        Follows directly from the definition: player 1 has no incentive to deviate from a strategy profile $s = (s_1, s_2)$ iff the payoff under it is maximal in its column, since a deviation could only lead to another payoff in the same column (the column is determined by $s_2$ which player 1 can not change). The same argument applies for player 2.
+        The criterion follows directly from the definition: 
+        Player 1 has no incentive to deviate from a strategy profile $s = (s_1, s_2)$ iff the payoff under it is maximal in its column, since a deviation could only lead to another payoff in the same column (the column is determined by $s_2$ which player 1 can not change). The same argument applies for player 2.
     \end{proof}
 
 
@@ -218,8 +235,8 @@
         The payoff of player 1 under an equilibrium is then called the \emph{value} of the game.
     \end{lemma}
     \begin{proof}
-        \cite[p.15]{bib:matsumotoGameTheory} gives a proof for the finite case using the row-column criterion, but the proof idea works in the general setting:
-        Let $(s_1, s_2)$, $(\tilde{s}_1, \tilde{s}_2)$ be two equilibria.
+        \cite[p.15]{bib:matsumotoGameTheory} gives a proof for the case of finitely many strategies using the row-column criterion, but the argument works in the general setting:
+        Let $(s_1, s_2)$, $(\tilde{s}_1, \tilde{s}_2)$ be two Nash equilibria.
         Then
         \begin{gather*}
             u_1(s_1, s_2) \geq u_1(\tilde{s}_1, s_2) = -u_2(s_2, \tilde{s}_1) \geq -u_2(\tilde{s}_2, \tilde{s}_1) = u_1(\tilde{s}_2, \tilde{s}_1)
@@ -277,24 +294,25 @@
             \end{tabular}
         \end{figure}
     
-        It is obvious that there is no Nash equilibrium: for example, if player 1 plays rock, player 2 would be able to beat it by playing paper; but in turn player 1 had an incentive to switch to scissors, and so on. Exactly this kind of instability is supposed to be avoided by Nash equilibria, but as this example shows, not all games do have Nash equilibria.
+        It is obvious that there is no Nash equilibrium if the players only have those three strategies available: for example, if player 1 plays rock, player 2 can to beat it by playing paper; but if player 2 plays paper, player 1 has an incentive to switch to scissors, and so on. Exactly this kind of instability is supposed to be avoided by Nash equilibria, but as this example shows, not all games do have Nash equilibria.
         
-        But if played in reality, this problem does not occur: instead of picking one single action and playing it, players usually try to randomize their strategies. While a player always playing the same strategy can be easily beaten, this is not the case for a player picking each of the three strategies with equal probability. This idea is formalized by \emph{mixed-strategies}. In this context, the original strategies are called \emph{pure strategies}.
+        If played in reality, this problem does not occur: instead of picking one single action and playing it, players usually try to randomize their strategies. While a player committed to a single one of the three strategies can be easily beaten, this is not the case if the player picks each of the three strategies with equal probability. This idea is formalized by \emph{mixed strategies}. In this context, the original strategies are called \emph{pure strategies}.
         \label{ex:rockPaperScissors}
     \end{ex}
 
     \begin{defn}[Mixed Extensions (e.g. \cite{bib:matsumotoGameTheory})]
-        Let $G = (n, (S_1,\dots, S_n), (u_1, \dots, u_n))$ be a normal-form game with a finite strategy space $S$.
-        Its \emph{mixed extension} is defined by $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (\hat{u}_1, \dots, \hat{u}_n))$,
+        Let $G = (n{\tiny, }(S_1{\tiny,\dots,}S_n){\tiny, }(u_1{\tiny,\dots,}u_n))$ be a normal-form game with a finite strategy space $S$.
+        Its \emph{mixed extension} is defined as $\hat{G} = (n, (\Delta_1, \dots, \Delta_n), (\hat{u}_1, \dots, \hat{u}_n))$,
         where for each player $k = 1,\dots,n$:
         \begin{itemize}
             \item 
-            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$, where a strategy $p : S_k \to \Rp, p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$:
+            The strategy set $\Delta_k$ represents \emph{mixed strategies}, i.e. the probability distributions over $S_k$:
             \[
-                \Delta_k \coloneqq \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } 
+                \Delta_k \coloneqq \biggset{ p : S_k \to \Rp \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } \subseteq \Rp^{S_k}
             \]
-            The $p \in \Delta_k$ can be viewed as real-valued vectors summing to one, but for notational convenience we model them as functions mapping strategies to their probability. We will switch between these two views as required.
-            \footnote{The exact notation used wildly differs in the literature; our notation $\Delta_k$ for the mixed-strategy sets is used, for example, in \cite{bib:quantPropernessProtectiveness}.}
+            A strategy $p \in \Delta_k$ has the semantics that each $s_k \in S_k$ is played with probability $p(s_k)$.
+            The $p \in \Delta_k$ can be viewed as real-valued vectors summing to one, but for notational convenience we model them as functions mapping strategies to their probability. We will switch to the other view where it is more useful.
+            \footnote{The exact notation used wildly differs across the literature; our notation $\Delta_k$ for the mixed-strategy sets is used, for example, in \cite{bib:quantPropernessProtectiveness}.}
             
             \item $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ denotes the set of mixed strategy profiles.
             
@@ -309,31 +327,34 @@
                 \label{eq:mixedStrategyUtility}
             \end{gather}
         \end{itemize}
-        We write $\supp \delta_k$ for the support of a mixed strategy $\delta_k \in \Delta_k$, i.e. the set of pure strategies it mixes between with positive probability.
+        We write $\supp \delta_k \coloneqq \set{s \in S_k \mid \delta_k(s) > 0}$ for the support of a mixed strategy $\delta_k \in \Delta_k$, i.e. the set of pure strategies it mixes between with positive probability.
     \end{defn}
     
-    Note that the resulting mixed extension is still a game that fits definition \ref{defn:realValuedGames}.
-    Since payoffs can be specified by matrices, mixed extensions of two-player finite % TODO define finite games
+    When a game is specified by a table or matrix of payoffs, the usual interpretation is that the matrix represents the corresponding mixed-extension game:
+    For this reason, mixed extensions of two-player finite % TODO define finite games
     games are usually called \emph{bimatrix games}, or just \emph{matrix games} in the zero-sum case.
-    We will state results for general games where possible, and use the notations $S_k$ and $u_k$ instead of $\Delta_k$ and $\hat{u}_k$ (so by writing $S_k$ or $u_k$, we do \emph{not} automatically only refer to finite games). When talking about finite games and their mixed extensions, we will for example say that a given game has an equilibrium in \emph{mixed strategies} but none in \emph{pure strategies} to distinguish between the cases.
+    To distinguish between properties of a finite game and its mixed extension, we might say that the game has a property in pure strategies or in mixed strategies:
+    For example, we could say that rock-paper-scissors has no equilibrium in pure strategies, but it does have one in mixed strategies.
+    Keep in mind that the mixed extension game $\hat{G}$ is still a game that fits definition \ref{defn:realValuedGames}:
+    We will state results for general games, without making distinctions for pure-strategy and mixed-strategy games, where possible, and use the notations $S_k$ and $u_k$ instead of $\Delta_k$ and $\hat{u}_k$ (so by writing $S_k$ or $u_k$, we do \emph{not} automatically only refer to finite games).
     
-    Allowing mixed strategies is very important for the existence of equilibria. There are many games that do not have pure equilibria: 
+    Allowing mixed strategies is very important for the existence of equilibria, as there are many games that do not have pure equilibria. The next theorem summarizes results on the probability that a randomly chosen game has an equilibrium:
     \begin{thm}[Probability of Equilibria]~
         \begin{enumerate}
             \item
             Consider finite two-player \emph{matrix} (i.e. zero-sum) games with $n$ and $m$ pure strategies for player 1 and 2, where each of the $n*m$ payoffs is picked iid. from some continuous probability distribution.
-            The probability that such a game has an equilibrium in pure strategies is $p_{n, m} = \frac{m! n!}{(m+n-1)!}$, which approaches zero for large $n, m$ (see \cite[p.15]{bib:matsumotoGameTheory}, cited from \cite{bib:goldbergProbabilityOfEquilibria}).
-            For example, $p_{2, 2} = \frac{2}{3}, p_{3, 3}=\frac{3}{10}$.
+            The probability that such a game has an equilibrium in pure strategies is $p_{n, m} = \frac{m! n!}{(m+n-1)!}$, which approaches zero for large $n, m$ (see \cite[p.15]{bib:matsumotoGameTheory}, originally from \cite{bib:goldbergProbabilityOfEquilibria}).
+            E.g.: $p_{2, 2} = \frac{2}{3}, p_{3, 3}=\frac{3}{10}, p_{10, 10} \approx 0.01\%$.
             
             \item 
             Consider finite \emph{bimatrix} games with $n$ pure strategies for both player 1 and 2, where each of the $2n^2$ payoffs is picked iid. from some continuous probability distribution.
-            The probability that such a game has an equilibrium in pure strategies is $p'_{n} = 1 - (1-1/n)^n$, which approaches $1 - 1/e \approx 0.632$
+            The probability that such a game has an equilibrium in pure strategies is $\hat{p}_{n} = 1 - (1-1/n)^n$, which approaches $1 - 1/e \approx 0.632$
             (see \cite{bib:goldbergProbabilityOfEquilibria}, also \cite[Exercise 1.2]{bib:nisanAlgorithmicGameTheoryCh1Basic}).
-            For example, $p'_{2} = 0.75, p'_{3} \approx 0.704, p'_{10} \approx 0.651$.
+            For example, $\hat{p}_{2} = 75\%, \hat{p}_{3} \approx 70.4\%, \hat{p}_{10} \approx 65.1\%$.
         \end{enumerate}
     \end{thm}
-    So in the two-player case, increasingly large random zero-sum games have pure-strategy equilibria with a probability close to zero; Random non-zero-sum games have pure-strategy equilibria with a surprisingly high probability, but still about one third of those game do not have pure equilibria.
-    On the other hand, finite games with $k$ players always have a mixed-strategy equilibrium, as famously proved by John Nash in \cite{bib:nashOnePageProofOfEquilibria}.
+    So in the two-player case, increasingly large random zero-sum games have pure-strategy equilibria with a probability converging to zero. Random non-zero-sum games have pure-strategy equilibria with a surprisingly high probability, but in the limit, still over one third of those games do not have pure equilibria.
+    On the other hand, finite games with $k$ players always have a mixed-strategy equilibrium. This is one of the core results of non-cooperative game theory, and was famously proved by John Nash in \cite{bib:nashOnePageProofOfEquilibria}.
     % TODO check Matsumoto p. 55 / Fudenberg p. 29 for example
     
     \begin{thm}[Existence of Mixed-Strategy Equilibria]
@@ -357,22 +378,22 @@
             r_k: S \to \Pot(S_k),~ r_k(s) = \biggset{s_k \in S_k \bigmid u_k(s_k, s_{-k}) = \sup_{\tilde{s}_k \in S_k} u_k(\tilde{s}_k, s_{-k}) }
         \]
         We call a strategy $s_k \in r_k(s)$ a \emph{best response} to $s$ (or alternatively to $s_{-k}$).
-        Since $r_k(s)$ does only depend on $s_{-k}$, we can also write $r_k(s_{-k})$ where more convenient (\cite{bib:fudenbergGameTheory}).
+        Since $r_k(s)$ does only depend on $s_{-k}$, we also write $r_k(s_{-k})$ where more convenient (\cite{bib:fudenbergGameTheory}).
         \footnote{Nevertheless, $r_k$ is defined to take arguments from $S$ as this will notationally simplify the proof of Theorem \ref{thm:existenceOfMixedStrategyEquilibria}.}
     \end{defn}
-    
-    This gives a different characterization of the Nash equilibrium, as a strategy profile which for each player is a best response to itself.
-    
+%    
+    Using this definition, a Nash equilibrium can be characterized as a strategy profile which, for each player, is a best response to itself:
+%    
     \begin{thm}
         In a real-valued normal-form game $G$, a strategy profile $s \in S$ is a Nash equilibrium iff 
         \[
             \forall k = 1, \dots, n: s_k \in r_k(s)
-        \]
-        \label{thm:nashEquilibriumCharacterizationByBestResponses}
+        \]\label{thm:nashEquilibriumCharacterizationByBestResponses}
     \end{thm}
     \begin{proof}
-        If $s_k \in r_k(s)$ for all player $k$, no player has an incentive to deviate from $s$, since $s_k$ gives the maximal payoff with respect to $s_{-k}$.
-        However if for some $k$, $s_k \notin r_k(s)$, there exists some strategy $\tilde{s}_k$ giving player $k$ a better payoff with respect to $s_{-k}$.
+        If $s_k \in r_k(s)$ for all player $k$, then $\forall k, \forall \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \geq u_k(\tilde{s}_k, s_{-k})$, making $s$ a Nash equilibrium.
+%        no player has an incentive to deviate from $s$, since $s_k$ gives the maximal payoff with respect to $s_{-k}$.
+        On the other hand, if for some $k$, $s_k \notin r_k(s)$, there exists some strategy $\tilde{s}_k$ giving player $k$ a better payoff than $s_k$ with respect to $s_{-k}$, so $s$ is not a Nash equilibrium.
     \end{proof}
 
     An important fact is that best-response mixed strategies are always mixing between best-response pure strategies:
@@ -383,7 +404,8 @@
     \begin{thm}[see {\cite[Theorem 2.1]{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}}]
         \label{thm:bestResponseMixing}
         In a mixed-extension-game $G$,
-        let $s_k$ be a mixed strategy for player $k$, which is mixing between pure strategies $s_{k,1}, \dots, s_{k,m}$.
+        let $s_k \in \Delta_k$ be a mixed strategy for player $k$, which is mixing between pure strategies $s_{k,1}, \dots, s_{k,m} \in \Delta_k$, i.e.
+        $s_k$ is a convex combination $s_k = \sum_{i=1}^m \alpha_i s_{k, i}$.
         Then for any strategy profile $s \in S$:
         \[
             s_k \in r_k(s) \lra \forall j: s_{k, j} \in r_k(s)
@@ -392,14 +414,16 @@
     \begin{proof}
         The payoff function $u_k(\dummydot, s_{-k})$ is “linear in the probabilities” (\cite[p.11]{bib:fudenbergGameTheory})
         (more formally, a restriction of a linear map on the convex set of valid probability vectors).
-        Assume one $s_{k, j}$ has a worse payoff than $s_k$: then some $s_{k, i}$ must have a better payoff than $s_k$. so $s_k$ is not a best response.
-        For the converse, assume that all $ s_{k, j} $ are best responses, i.e. have equal payoff. By the linearity, $s_k$ has the same payoff.
+        So $u_k(s_k, s_{-k}) = \sum_{i=1}^n \alpha_i u_k(s_{k, i}, s_{-k})$.
+        Assume that one $s_{k, j}$ has a smaller payoff than $s_k$: then some other $s_{k, i}$ must have a greater payoff than $s_k$, as else $\sum_{i=1}^n \alpha_i u_k(s_{k, i}, s_{-k}) < u_k(s_k, s_{-k})$ because the sum is a weighted average.
+        Because there is a strategy with greater payoff, $s_k$ is not a best response, leading to a contradiction.
+        For the converse, assume that all $ s_{k, j} $ are best responses, i.e. have equal payoff. By the linearity, $s_k$ has the same payoff, making it a best response as well.
     \end{proof}
 
     \begin{cor}
         \label{cor:equilibriumStrategiesSupportHaveEqualPayoffs}
         If $s = (s_1, \dots, s_n) \in S$ is a Nash equilibrium, and the $k$'th player's strategy $s_k$
-        mixes between pure strategies $s_{k,1}, \dots, s_{k,m}$, then the payoff of all the $s_{k,j}$ with respect to $s_{-k}$ is equal;
+        mixes between pure strategies $s_{k,1}, \dots, s_{k,m} \in \Delta_k$, then the payoff of all the $s_{k,j}$ with respect to $s_{-k}$ is equal;
         Furthermore, the payoff of any strategy mixing between them is the same as well:
         \begin{gather}
             \forall j: u_k(s_{k,j}, s_{-k}) = u_k(s_k, s_{-k}) \\
@@ -411,10 +435,10 @@
         Since $s$ is a Nash equilibrium, the mixed strategy $s_k$ is a best response to $s$ by theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}.
         By theorem \ref{thm:bestResponseMixing}, all pure strategies $s_{k, j}$ are best responses as well.
         By the definition of best responses, they therefore must all have the same payoff.
-        Furthermore, a mixed strategy mixing between pure strategies with equal payoff necessarily also has the same payoff by the linearity of the expected value (cf. equation \eqref{eq:mixedStrategyUtility}).
+        By the linearity of $u_k(\dummydot, s_{-k})$, a mixed strategy mixing between pure strategies with equal payoff has the same payoff.
     \end{proof}
     
-    A possible interpretation of Theorem \ref{thm:bestResponseMixing} and Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs} is that a player, given some strategies by other players, does not mix his own strategies in order to achieve a better payoff; the purpose of mixing strategies is rather to keep up an equilibrium, since only the right mixing leads to a situation where the other players have no incentive to deviate.
+    A possible interpretation of Theorem \ref{thm:bestResponseMixing} and Corollary \ref{cor:equilibriumStrategiesSupportHaveEqualPayoffs} is that a player, given some strategies $s_{-k}$ of other players, does not mix his own strategies in order to achieve a better payoff; the purpose of mixing strategies is rather to enable an equilibrium, since only the right mixing leads to a situation where the other players have no incentive to deviate.
     We will need these results in later chapters when analyzing more general games with lexicographically-ordered outcomes, but most importantly, we will see how they can be applied to compute Nash equilibria later in this chapter.
     
     \section{Proof that Mixed-Strategy Equilibria Exist}
@@ -444,10 +468,9 @@
         Then $\phi$ has a fixed point $x$: $x \in \phi(x)$.
     \end{thm}
 
-    We're now ready to proof Theorem \ref{thm:existenceOfMixedStrategyEquilibria}.
+    We are not giving a proof for Kakutani's Theorem, but equipped with it, we are now ready to proof Theorem \ref{thm:existenceOfMixedStrategyEquilibria} that every bimatrix game as an equilibrium in mixed strategies.
     
-    \begin{proof}[Proof of \ref{thm:existenceOfMixedStrategyEquilibria}]
-        % TODO note that for the equilibrium existence proof it's necessary to talk about real vectors, while otherwise our usual notations are more convenient
+    \begin{proof}[Proof of \ref{thm:existenceOfMixedStrategyEquilibria}, cf. {\cite[p.29]{bib:fudenbergGameTheory}}]
         In the context of this proof, let each player $k$ have $m_k$ different pure strategies and set $m \coloneqq m_1 + \dots + m_n$.
         We represent mixed strategy profiles as points in $\R^m$: Let $\Delta_k \coloneqq \set{(p_1, \dots, p_{m_k}) \in \R^{m_k} \mid \sum_{i=1}^{m_k} p_i = 1}$ (the standard $(m_k - 1)$-simplex) and let $\Delta \coloneqq \bigtimes_{k=1}^n \Delta_k \subseteq \R^m$. (In other words, here we don't use our previous convention that mixed strategies are functions $p: S_k \to \Rp$, but instead interpret them as real vectors).
         
@@ -457,54 +480,56 @@
             r: \Delta \to \Pot(\Delta), (\delta_1, \dots, \delta_n) \mapsto r_1(\delta_1, \dots, \delta_n) \times \dots \times r_n(\delta_1, \dots, \delta_n)
             \label{eq:bestResponseCorresponenceDefinition}
         \end{gather}
-        By Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}, mixed-strategy Nash equilibria are exactly the fixed points of $r$, i.e. strategy profiles that are best responses to themselves: So if we can show that the conditions of Kakutani's Fixed Point Theorem are satisfied, we have proven that mixed-strategy Nash equilibria exist.
+        By Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}, mixed-strategy Nash equilibria are exactly the fixed points of $r$, i.e. strategy profiles that are best responses to themselves: So if we show that the conditions of Kakutani's Fixed Point Theorem are satisfied, we have proven that mixed-strategy Nash equilibria always exist.
         
-        \ref{item:KakFP-nonEmptyCompactConvexDomain}, conditions on $\Delta$: The $\Delta_k$ are clearly non-empty, compact and convex as simplices. Therefore $\Delta$ also is non-empty,
+        On \ref{item:KakFP-nonEmptyCompactConvexDomain} (conditions on $\Delta$): The $\Delta_k$ are clearly non-empty, compact and convex as simplices. Therefore $\Delta$ also is non-empty,
         compact as the Cartesian product of compact sets, and convex as the Cartesian product of convex sets. % TODO cite source that products of compact/convex sets are compact/convex.
         
-        \ref{item:KakFP-nonEmptyConvexClosedOutputs}, for all $s \in \Delta$, the set $r(s)$ of best-response profiles is non-empty, convex and closed: It suffices to show that these conditions hold for each $r_k(s)$, since $r(s)$ is the product of those. By Theorem \ref{thm:bestResponseMixing}, best-response mixed strategies are always convex combinations of best-response pure strategies, so the $r_k(s)$ are simplices as well, i.e. compact and convex. The $r_k(s)$ are non-empty because at least one of the finitely many pure strategies must have a maximal payoff value with respect to $s$: mixed strategies cannot have larger payoffs than the best of their support's pure strategies.
+        On \ref{item:KakFP-nonEmptyConvexClosedOutputs} (the set $r(s)$ of best-response profiles is non-empty, convex and closed for all $s \in \Delta$): It suffices to show that these conditions hold for each $r_k(s)$, since $r(s)$ is the product of those. By Theorem \ref{thm:bestResponseMixing}, best-response mixed strategies are exactly the convex combinations of best-response pure strategies. Therefore each $r_k(s)$ is the convex hull of the $k$'th player's best response pure strategies to $s_{-k}$, in fact a simplex, and therefore convex and closed. The $r_k(s)$ are non-empty because at least one of the finitely many pure strategies must have a maximal payoff value with respect to $s$: Mixed strategies cannot have larger payoffs than the best of their support's pure strategies, so one of the pure strategies must maximize $u(\dummydot, s_{-k})$.
         
-        \ref{item:KakFP-closedGraph}, $r$ has a closed graph: we need to show that if a sequence of mixed-strategy profiles converges to some limit, and has a sequence of best-response profiles also converging, then the limit of the best responses is a best response to the limit of the strategy profiles. Let $(\delta^{(i)})_{i \in \N}$ be a sequence of profiles, and $(a^{(i)})_{i \in \N}$ a sequence of best responses to it:
+        On \ref{item:KakFP-closedGraph} ($r$ has a closed graph): we need to show that if a sequence of mixed-strategy profiles converges to some limit, and a corresponding sequence of best-response profiles also converges, then the limit of the best responses is a best response to the limit of the strategy profiles. Let $(s^{(i)})_{i \in \N}$ be a sequence of profiles, and $(t^{(i)})_{i \in \N}$ a sequence of best responses to it:
         \begin{align*}
-            &\delta^{(i)} = (\delta_1^{(i)}, \dots, \delta_n^{(i)}) \toinfty{i} (\delta_1, \dots, \delta_n) =: \delta, \\
-            &a^{(i)} = (a^{(i)}, \dots, a^{(i)}) \toinfty{i} (a_1, \dots, a_n) =: a, \quad
-            \forall i: a_i \in r(\delta_i)
+            &s^{(i)} = (s_1^{(i)}, \dots, s_n^{(i)}) \toinfty{i} (s_1, \dots, s_n) =: s, \\
+            &t^{(i)} = (t^{(i)}, \dots, t^{(i)}) \toinfty{i} (t_1, \dots, t_n) =: t, \quad
+            \forall i: t^{(i)} \in r(s^{(i)})
         \end{align*}
-        If we show that $a_k \in r_k(\delta)$ for all player $k$, we directly get $a \in r(\delta)$ by \eqref{eq:bestResponseCorresponenceDefinition}.
-        Let $k \in \set{1, \dots, n}$, and let $b_k \in \Delta_k$ some arbitrary response. We show that $b_k$ is not a better response than $a_k$:
-        First, for any $i \in \N$, $a^{(i)}_k$ is a best response to $\delta^{(i)}_k$, so
+        If we show that $t_k \in r_k(s)$ for all players $k$, we directly get $t \in r(s)$ by \eqref{eq:bestResponseCorresponenceDefinition}.
+        Let 
+%        $k \in \set{1, \dots, n}$, and let 
+        $\tilde{t}_k \in \Delta_k$ be some arbitrary response. We show that $\tilde{t}_k$ is not a better response than $t_k$:
+        First, for any $i \in \N$, $t^{(i)}_k$ is a best response to $s^{(i)}_{-k}$, so
         \begin{gather*}
-            u_k(a^{(i)}_k, \delta^{(i)}_{-k}) \geq u_k(b_k, \delta^{(i)}_{-k})
+            u_k(t^{(i)}_k, s^{(i)}_{-k}) \geq u_k(\tilde{t}_k, s^{(i)}_{-k})
         \end{gather*}
-        The payoff function $u_k$ is continuous (remember that it's a linear function restricted to a convex set). Therefore in the limit as $i \to \infty$, the left side goes to $u_k(a_k, \delta_{-k})$ while the right side goes to $u_k(b_k, \delta_{-k})$.
-        Recall that the ordering $\leq$ on the reals has the property of being closed under limits (in other words, it is closed as a subset of $\R \times \R$).
-        \footnote{By the “sandwich theorem”. While this may seem obvious, we emphasize it here since this continuity property does not hold for general orderings on topological spaces:
+        The payoff function $u_k$ is continuous (remember that it is a linear function restricted to a convex set). Therefore in the limit as $i \to \infty$, the left side goes to $u_k(t_k, s_{-k})$ while the right side goes to $u_k(\tilde{t}_k, s_{-k})$.
+        Recall that the ordering $\leq$ on the reals is preserved under limits (in other words, it is closed as a subset of $\R \times \R$).
+        \footnote{A consequence of the “sandwich theorem”. We emphasize this here since this continuity property does not hold for general orderings on topological spaces:
         in particular, it will be important later that it does \emph{not hold} for the lexicographical ordering on $\R^n$.}
         % TODO find a reference for “closed as subset of \R^2”
         Therefore,
         \begin{gather*}
-            u_k(a_k, \delta_{-k}) \geq u_k(b_k, \delta_{-k})
+            u_k(t_k, s_{-k}) \geq u_k(\tilde{t}_k, s_{-k})
         \end{gather*}
-        So $a_k$ maximizes the payoff over all responses to $\delta_{-k}$, and $a_k \in r(\delta_{-k})$. This shows that $r$ has a closed graph.
+        So $t_k$ maximizes the payoff over all responses to $s_{-k}$, therefore $t_k \in r(s_{-k})$. This shows that $r$ has a closed graph.
         Thus $r$ satisfies the conditions of Kakutani's theorem and therefore has a fixed point, which is a Nash equilibrium for the game.
     \end{proof}
     
     
     \section{Computation of Nash Equilibria}
     It is important to have a way to compute Nash equilibria, especially for practical purposes, but also for theoretical justification of Nash equilibria as a prediction of rational behavior: As \cite[p.30]{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash} cites Kamal Jain, “If your laptop cannot
-find it, neither can the market.” There are various exact and numerical algorithms to compute Nash equilibria, and for the two-player case we will look at one particularly simple exact method which can be done by hand, and the \emph{Fictitious Play} algorithm which simulates several rounds of play, where the strategies get refined based on the opponent's past actions.
+find it, neither can the market.” There are various exact and numerical algorithms to compute Nash equilibria, and for the two-player case we will look at the simple exact method called \emph{support enumeration} which can be executed by hand, and also the numerical \emph{Fictitious Play} algorithm which approximates an equilibrium by simulating several rounds of play and refining the strategies over time based on the past actions.
     
     \subsection{Exact Computation}
     Mixed Nash equilibria in bimatrix games can be computed exactly by a simple method called the \emph{support enumeration algorithm}.
-    We follow the presentation from \cite{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation}.
+    Our presentation follows \cite{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation}.
     We assume the game's payoffs are specified by matrices $A, B \in \R^{n\times m}$, and the players have pure strategies $S_1 = \set{s_1,\dots,s_n}$, $S_2 = \set{t_1,\dots,t_m}$, respectively.
     Observe that \eqref{eq:mixedStrategyUtility} simplifies in the following way: if $x = (x_1,\dots,x_n) \in \Rp^n$ represents a mixed strategy of player 1 and $y = (y_1,\dots,y_m) \in \Rp^m$ one of player 2, then the players' payoffs are given by $u_1(x,y) = x\transposed A y$ and $u_2(x,y) = x\transposed B y$. 
     % TODO But u_i by definition does not take a real vector as argument...
     % TODO maybe theoremize this section on the support-enumeration algorithm?
     
-    If $(x, y)$ is a Nash equilibrium, then the player 1 strategies in $\supp(x)$ must all be best responses to $y$, i.e. they all have equal payoff, and no other pure strategy can have greater payoff under $y$. This is a consequence of Theorem \ref{thm:bestResponseMixing}, and in \cite[p.55]{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation} is stated in the following form:
+    If $(x, y)$ is a Nash equilibrium, then the pure player 1 strategies in $\supp(x)$ must all be best responses to $y$, i.e. they all have equal payoff, and no other pure strategy can have greater payoff under $y$. This is a consequence of Theorem \ref{thm:bestResponseMixing}, and in \cite[p.55]{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation} is stated in the following form:
     \begin{gather}
-        \forall i: x_i > 0 \Rightarrow (Ay)_i = \max_{j} (Ay)_j
+        \forall i: x_i > 0 \Rightarrow (Ay)_i = \max_{\tilde{i}} (Ay)_{\tilde{i}}
         \label{eq:equalMaxPureStrategyPayoffsLinearSystem}
     \end{gather}
     The same holds with the player roles reversed.
@@ -512,35 +537,34 @@ find it, neither can the market.” There are various exact and numerical algori
     Suppose we want to find an equilibrium where player one mixes between rows with indices in $I \subseteq \set{1, \dots, n}$, and player 2 mixes between columns with indices in $J \subseteq \set{1, \dots, m}$. Then player 1 must mix in a way that makes player 2 indifferent between the columns in $J$, and player 2 must mix in a way that makes player 1 indifferent between the rows in $I$.
     This is expressed in two linear systems of equations:
     \begin{gather}
-        (Ay)_{i_k} = (Ay)_{i_1} ~(\forall i_k \in I \setminus\set{i_1}), \qquad\;\, \sum_{j \in J} y_j = 1 \\
-        (xB)_{j_k} = (xB)_{j_1} ~(\forall j_k \in J \setminus\set{j_1}), \qquad \sum_{i \in I} x_i = 1
+        (Ay)_{i_k} = (Ay)_{i_1} ~~~(\forall i_k \in I \setminus\set{i_1}), \qquad\;\, \sum_{j \in J} y_j = 1 \\
+        (xB)_{j_k} = (xB)_{j_1} ~~~(\forall j_k \in J \setminus\set{j_1}), \qquad \sum_{i \in I} x_i = 1
     \end{gather}
-    If some $(x, y)$ solve these systems of equations, they are a candidate for a mixed-strategy Nash equilibrium.
-    It remains to check that all probabilities in the solution are positive. Also we have to make sure the mixed strategies do not only have equal, but also maximal payoffs: i.e. for each $\tilde{i}\in I^\complement$ check that $(Ay)_{\tilde{i}} \leq (Ay)_{i_1}$ (and analogously for $J$).
+    If some strategy profile $(x, y)$ solves this system of equations, it is a candidate for a mixed-strategy Nash equilibrium.
+    It remains to check that all probabilities in the solution are positive. Also we have to make sure the mixed strategies actually have maximal payoffs as \eqref{eq:equalMaxPureStrategyPayoffsLinearSystem} demands: i.e. for each $\tilde{i}\in I^\complement$ check that $(Ay)_{\tilde{i}} \leq (Ay)_{i_1}$ (and analogously for $J$).
     
-    The resulting algorithm is known as the \emph{support enumeration algorithm}: We iterate over all possible pairs of support $(I, J)$, and for each one go through the steps outlined above. For games which are \emph{non-degenerate}, which is defined as a mixed strategy of support size $k$ having at most $k$ best responses, it's sufficient to only consider pairs where $\abs{I} = \abs{J}$. Degenerate games can occur if there are linear dependencies in the payoff matrices.
+    The resulting algorithm is known as the \emph{support enumeration algorithm}: We iterate over all possible pairs of support indices $(I, J)$, and for each one go through the steps outlined above. For games which are \emph{non-degenerate}, which means every mixed strategy of support size $k$ has at most $k$ pure best responses, it is sufficient to only consider pairs where $\abs{I} = \abs{J}$, making the algorithm more efficient. Degenerate games can occur if there are linear dependencies in the payoff matrices, and there are ways to also deal with degenerate games more efficiently that \cite[p.65]{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation} discusses in detail.
     % TODO check if linear dependency <=> degenerate is correct! 
     % TODO not 100% sure if this works for degenerate game; did not discuss that |I|=|J| speeds up by about sqrt(n pi)
-    % TODO Example of computation for RockPaperScissors
     
     \begin{ex}[Computation of Rock-Paper-Scissors Equilibrium]
         We can compute the rock-paper-scissors equilibrium from Example \ref{ex:rockPaperScissors} using the support enumeration algorithm.
-        We will not go through the whole computation, but only look at the cases $I = J = \set{1, 2}$, $(I, J) = (\set{2, 3}, \set{1, 2})$ (which both are not an equilibrium) and $I = J = \set{1, 2, 3}$ (which is an equilibrium). Remember that the payoff matrices were given by $\pm \smallmat{0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0}$. We denote by $p_1, p_2, p_3$ the probabilities the strategy of player 1 assigns to the rows, and by $q_1, q_2, q_3$ the probabilities the strategy of player 2 assigns to the columns.
+        We will not go through the whole computation, but only look at the cases $(I, J) = (\set{1, 2}, \set{1, 2})$, $(I, J) = (\set{2, 3}, \set{1, 2})$ (which are not equilibria) and $(I, J) = (\set{1, 2, 3}, \set{1, 2, 3})$ (which is an equilibrium). Remember that the payoff matrices were given by $\pm \smallmat{0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0}$. We denote by $p_1, p_2, p_3$ the probabilities the strategy of player 1 assigns to the rows, and by $q_1, q_2, q_3$ the probabilities the strategy of player 2 assigns to the columns.
         
-        For the first case, $p_1, p_2$ should be chosen in a way that makes player 2 indifferent between the first two columns. The corresponding equations are $0p_1 - 1p_2 = 1p_1 + 0p_2$ and $p_1 + p_2 = 1$. Since there is no solution, this does not lead to an equilibrium.
+        For the first pair of indices, $p_1, p_2$ should be chosen in a way that makes player 2 indifferent between the first two columns. The corresponding equations are $0p_1 - 1p_2 = 1p_1 + 0p_2$ and $p_1 + p_2 = 1$. There is no solution, so this pair does not lead to an equilibrium.
         
-        For the second case, the corresponding equations are $-p_2 + p_3 = -p_3, p_2 + p_3 = 1$ with the solution $p_2 = \frac{2}{3}, p_3 = \frac{1}{3}$. The payoff player 2 has for each of the first two columns in this case is $-\frac{1}{3}$. However the payoff player 2 has for the third column is $\frac{2}{3}$, so the first two columns are not best responses: This combination does also not lead to an equilibrium.
+        For the second pair, the corresponding equations are $-p_2 + p_3 = -p_3, p_2 + p_3 = 1$ with the solution $p_2 = \frac{2}{3}, p_3 = \frac{1}{3}$. The payoff player 2 has for each of the first two columns in this case is $-\frac{1}{3}$. However the payoff player 2 has for the third column is $\frac{2}{3}$, so the first two columns are not best responses: This combination does also not lead to an equilibrium.
         
-        Finally for the third case, the equations are $-p_2 + p_3 = p_1 - p_3$, $-p_2 + p_3 = -p_1 + p_3$, and $p_1 + p_2 + p_3 = 1$, with the solution $p_1 = p_2 = p_3 = \frac{1}{3}$. Similarly the equations for player 2 to make player 1 indifferent between all rows are $-q_2 + q_3 = q_1 - q_3$, $-q_2 + q_3 = -q_1 + q_2$, and $q_1 + q_2 + q_3 = 1$, again with the solution $q_1 = q_2 = q_3 = \frac{1}{3}$. Since all solutions are positive, and no other rows/columns could be better responses, this shows that $\pars{(\frac{1}{3}, \frac{1}{3}, \frac{1}{3}), (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})}$ is a Nash equilibrium of the Rock-Paper-Scissors game.
+        Finally for the third pair of indices, the equations are $-p_2 + p_3 = p_1 - p_3$, $-p_2 + p_3 = -p_1 + p_3$, and $p_1 + p_2 + p_3 = 1$, with the solution $p_1 = p_2 = p_3 = \frac{1}{3}$. Similarly the equations for player 2 to make player 1 indifferent between all rows are $-q_2 + q_3 = q_1 - q_3$, $-q_2 + q_3 = -q_1 + q_2$, and $q_1 + q_2 + q_3 = 1$, again with the solution $q_1 = q_2 = q_3 = \frac{1}{3}$. Since all solutions are positive, and no other rows/columns could be better responses, this shows that $\pars{(\frac{1}{3}, \frac{1}{3}, \frac{1}{3}), (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})}$ is a Nash equilibrium of the Rock-Paper-Scissors game.
     \end{ex}
     
     \subsubsection{Complexity Considerations}
     The support enumeration algorithm is obviously quite inefficient, since it enumerates all subsets of the pure strategy sets for both players, and therefore is exponential in the number of strategies.
     \cite{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation} investigates more sophisticated methods: The \emph{vertex enumeration algorithm} finds possible supports of mixed strategies by iterating over the vertices of certain polyhedra (“best-response polytypes”) and outputs all Nash equilibria.
-    The \emph{Lemke-Howson algorithm} finds one Nash equilibrium by traversing a path in the previously-mentioned polytypes.
-    However, these improvements still have exponential worst-cases, and complexity-theoretic results suggest that finding Nash equilibria in general, even in two-player games, is an intractable problem. As discussed in detail in \cite{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}, the problem \textsc{Nash} of finding a Nash equilibrium is complete for the complexity class PPAD, which contains other problems for which an efficient algorithm is thought unlikely to exist, like finding fixed points in the context of Brouwer's fixed point theorem.
+    The \emph{Lemke-Howson algorithm} finds one Nash equilibrium by traversing a path in those polytypes.
+    However, these improvements still have exponential worst-case complexities, and complexity-theoretic results suggest that finding Nash equilibria in general, even in two-player games, is an intractable problem. As discussed in detail in \cite{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}, the problem \textsc{Nash} of finding a Nash equilibrium is complete for the complexity class PPAD, which contains other problems for which an efficient algorithm is thought unlikely to exist, like finding fixed points in the context of Brouwer's fixed point theorem.
     Finding Nash equilibria does not fit into the more common intractability notion of NP completeness, because Nash equilibria are guaranteed to exist -- the problem can therefore not be stated suitably as a decision problem. However, there are a number of closely related variations where existence is not guaranteed and which are known to be NP-complete: %TODO citation for NP-complete NASH variants (Gilboa and Zemel, 1989) - see Nisan chapter 2 p.33
-    For example, deciding whether a game has more than one equilibrium, whether an equilibrium with at least a given utility exists, and whether an equilibrium exists with a given strategy in/not in its support, are all NP-complete problems (\cite{bib:gilboaEquilibriaComplexityConsiderations}, cited in \cite{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}).
+    For example, deciding whether a game has more than one equilibrium, whether an equilibrium with at least a given utility exists, and whether an equilibrium exists with a given strategy in (or not in) its support, are all NP-complete problems (\cite{bib:gilboaEquilibriaComplexityConsiderations}, cited in \cite{bib:nisanAlgorithmicGameTheoryCh2ComplexityNash}).
     
     
     
@@ -549,24 +573,24 @@ find it, neither can the market.” There are various exact and numerical algori
     A different approach for finding equilibria is to simulate repeated play of the game by players that are learning from past outcomes.
     We follow the presentation of \cite{bib:daskalakisFictitiousPlayLectureNotes}.
     We again assume a bimatrix game with payoff matrices $A, B$.
-    In every new round, each player averages over the past strategies of their opponent. Under the assumption that the opponent will play this average mixed strategy, the players picks their own pure strategy for this round that maximizes their payoff. Formally, denote by $s_k \in S_1, t_k \in S_2$ the strategies played in the $k$'th round, and $x_k, y_k$ the corresponding average strategies, defined iteratively by:
+    In every new round, each player averages over the past strategies of their opponent. Under the assumption that the opponent will play this average mixed strategy, the players picks their own pure strategy for this round that maximizes their payoff. Formally, denote by $s^{(k)} \in S_1, t^{(k)} \in S_2$ the strategies played in the $k$'th round, and $x^{(k)}, y^{(k)}$ the corresponding average strategies, defined iteratively by:
     \begin{gather*}
-        x_k = \frac{1}{k} \sum_{i=1}^{k} s_k, \quad y_k = \frac{1}{k} \sum_{i=1}^{k} t_k \\
-        s_1 \in S_1, t_1 \in S_2 \text{ arbitrary} \\
-        s_{k+1} \in \mathop{\argmax}\limits_{\tilde{s} \in S_1} (u_1(\tilde{s}, y_k)), \quad % TODO typeset subscript below argmax
-        t_{k+1} \in \mathop{\argmax}\limits_{\tilde{t} \in S_2} (u_2(x_k, \tilde{t}))
+        x^{(k)} = \frac{1}{k} \sum_{i=1}^{k} s^{(i)}, \quad y^{(k)} = \frac{1}{k} \sum_{i=1}^{k} t^{(i)} \\
+        s^{(1)} \in S_1,\; t^{(1)} \in S_2 \text{ arbitrary} \\
+        s^{(k+1)} \in \mathop{\argmax}\limits_{\tilde{s} \in S_1} (u_1(\tilde{s}, y^{(k)})), \quad
+        t^{(k+1)} \in \mathop{\argmax}\limits_{\tilde{t} \in S_2} (u_2(x^{(k)}, \tilde{t}))
     \end{gather*}
-    Since there are possibly multiple best strategies at some points, let's just say the algorithm always prefers the one with the lowest index.
+    Where there are multiple strategies that could be pick, we arbitrarily define the algorithm to always prefer the one with the lowest index.
     
     In the special case of zero-sum games, this process was shown to converge by \cite{bib:robinsonFictitiousPlay}; we will state the result without proof.
-    In the non-zero-sum case, however, there are examples of bimatrix games where fictitious play does not converge.
+    In the non-zero-sum case, however, there are examples of bimatrix games for which fictitious play does not converge.
     % TODO find example of non-convergent fict. play
     
     \begin{thm}[Convergence of Fictitious Play, \cite{bib:robinsonFictitiousPlay}]
         \label{thm:fictitiousPlayConverges}
         If the game is a zero-sum game, i.e. $A=-B$, then 
         \begin{enumerate}
-            \item The sequence $(u_1(x_k, y_k))_{k \in \N}$ converges towards the value of the game
+            \item The sequence $(u_1(x_k, y_k))_{k \in \N}$ converges towards the value of the game (player 1's unique payoff under a Nash equilibrium).
 %             (i.e. $u_1(x, y)$ under a Nash equilibrium $(x, y)$).
             \item The sequence $((x_k, y_k))_{k \in \N}$ converges towards a Nash equilibrium $(x, y)$.
         \end{enumerate}
