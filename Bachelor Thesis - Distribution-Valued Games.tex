@@ -65,15 +65,20 @@
     If $\Omega = \R$, one needs to find a suitable sigma algebra: While $\Pot(\R)$ is a sigma algebra, it is “too large” as it contains non-well behaved sets which prevent useful measures (\emph{Vitali's Theorem}).
     One resorts to the \emph{Borel sigma algebra} $\B$, defined as the smallest sigma algebra containing all intervals $[a, b] \subseteq \R$.
     The sets $B \in \B$ are called \emph{Borel sets}, and measures on $\B$ \emph{Borel measures}.
-    The most ubiquitous Borel measure is the \emph{Lebesgue measure} $\lambda$ which assigns Borel sets their natural “volume” and is uniquely determined by mapping intervals to their length, i.e. $\lambda([b, a]) \coloneqq b-a$.
+    The most ubiquitous Borel measure is the \emph{Lebesgue measure} $\lambda$ which assigns Borel sets their natural “volume” and is uniquely determined as the Borel measure mapping closed intervals to their length, i.e. $\lambda([a, b]) \coloneqq b-a$, $a \leq b$.
     % TODO does lambda also need to map half-open/open intervals to their lengths for this to be unique?
+    The \emph{point-mass} (or \emph{Dirac}) \emph{measure} $\delta_x$ is the Borel probability measure assigning all probability mass to one point $x \in \R$, i.e. $\delta_x(B) = \1_B(x)$.
 
     A function $f: \Omega \to \R$ is \emph{Borel-measurable} if $\forall B \in \B: f\inv(B) \in \A$.
     It \emph{Lebesgue integral with respect to a Borel measure $\mu$}, denoted by $\lintegral{}{f}{\mu}$, can be defined in three cases:
-    If $f$ only takes non-negative values, it is at least \emph{quasi-integrable}. If it takes negative values, and either its positive part $f^+ = \max(0, f)$ or its negative part $f^- = \max(0, -f)$ have a finite integral, $f$ is also quasi-integrable.
-    If both parts have a finite integral, $f$ is \emph{integrable}, or equivalently $\lintegral{}{\abs{f}}{\mu} < \infty$: This means that $\lintegral{}{f}{\mu}$ is finite.
-    The integration can be restricted to some $A \in \A$, denoted $\lintegral{A}{f}{\mu}$. To specify the integration variable, one writes $\lintegral{A}{f(x)}{\mu(x)}$.
+    First, the integral can be defined if $f$ only takes non-negative values.
+%    , it is at least \emph{quasi-integrable}. 
+    Second if $f$ takes negative values, but either its positive part $f^+ = \max(0, f)$ or its negative part $f^- = \max(0, -f)$ have a finite integral, the integral can also be defined (in these first two cases, $f$ is called \emph{quasi-integrable}).
+    Third, if additionally both parts have a finite integral, $f$ is called \emph{integrable}. This is equivalent to $\lintegral{}{\abs{f}}{\mu} < \infty$, i.e. $f$ having a finite integral.
+    In contrast, if $f$ is quasi-integrable but not integrable, its integral is either $\infty$ or $-\infty$; and if both the positive and the negative part have infinite integrals, the integral can not be defined (for example, $\id: x \mapsto x$ is not quasi-integrable).
+    The integration can be restricted to some $A \in \A$, denoted $\lintegral{A}{f}{\mu} \coloneqq \lintegral{}{f*\1_A}{\mu}$. To specify the integration variable, one writes $\lintegral{A}{f(x)}{\mu(x)}$.
     If $\mu = \lambda$ and $\Omega = \R$, the integral is equivalent to the Riemann integral in most cases that occur in practice.
+%    : in particular, if both integrals exist, they are equal; 
     
 %    The \emph{Lebesgue integral with respect to a Borel measure $\mu$} is denoted by $\lintegral{A}{f}{\mu} \eqqcolon \lintegral{A}{f(x)}{\mu(x)}$-
 %    The function $f$ needs to be \emph{measurable}: $\forall B \in \B$, $f\inv(B) \in \A$.
