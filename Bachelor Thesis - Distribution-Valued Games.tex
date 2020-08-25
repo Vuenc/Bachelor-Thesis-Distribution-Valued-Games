@@ -54,9 +54,10 @@
     \chapter{Mathematical Preliminaries: Probability and Decision Theory}
     
     \section{Probability Theory}
-    \todo{Briefly introduce required basic concepts like (probability) measures, random variables, the Borel sigma algebra, Lebesgue integration, moments, etc.}
-    While calculating with probabilities when there are finitely many possible outcomes is conceptually simple, things get more involved when infinity comes into play.
-    Modern probability theory presents a coherent framework to deal with both finitely many and infinitely many outcomes using measure theory. This section quickly goes over the basic concepts and notations needed in this thesis.
+%    \todo{Briefly introduce required basic concepts like (probability) measures, random variables, the Borel sigma algebra, Lebesgue integration, moments, etc.}
+%    While calculating with probabilities when there are finitely many possible outcomes is conceptually simple, things get more involved when infinity comes into play.
+%    Modern probability theory presents a coherent framework to deal with both finitely many and infinitely many outcomes using measure theory. This section quickly goes over the basic concepts and notations needed in this thesis.
+    Probability theory presents a framework to do calculations with probabilities assigned to outcomes of probabilistic experiments. It manages to unify the different settings needed for finitely, countably infinitely and uncountable infinitely many outcomes by using measure theory. This section quickly goes over the basic concepts and notations needed in this thesis.
     
     Assume $\Omega$ is some set, usually representing probabilistic outcomes. 
     A \emph{sigma algebra} $\A \subseteq \Pot(\Omega)$ represents probabilistic events and is a non-empty system of subsets of $\Omega$ which is closed under complements and intersections.
@@ -113,7 +114,7 @@
     Define the \emph{expected value} of a random variable/Borel probability measure as $E(X) \coloneqq \lintegral{\Omega}{X}{P} = \lintegral{\R}{x}{P^X(x)} \eqqcolon E(P^X)$. It is only defined if $X$ is integrable, i.e. $E(\abs{X}) = \lintegral{\Omega}{\abs{X}}{P} < \infty$. 
     The expected value is the first of the distribution's \emph{moments}:
     If $p \in \N$, we say that $X$ is \emph{$p$-integrable}, or $X \in \mathcal{L}_p$, if $E(\abs{X}^p) < \infty$;
-    In this case, define the \emph{$p$'th moment} of $X$ as $E(X^p)$. Analogously, define the $p$'th moment of a Borel measure $P$ by $\lintegral{\R}{x^k}{P(x)}$ if $\lintegral{\R}{\abs{x}^k}{P(x)} < \infty$.
+    In this case, define the \emph{$p$'th moment} of $X$ as $E(X^p)$. Analogously, define the $p$'th moment of a Borel measure $P$ by $m_k(P) \coloneqq \lintegral{\R}{x^k}{P(x)}$ if $\lintegral{\R}{\abs{x}^k}{P(x)} < \infty$.
     
     % TODO do we need “almost surely”?
     
@@ -621,15 +622,19 @@ find it, neither can the market.” There are various exact and numerical algori
     
     % TODO part on Game Theory in Network Security: here as a) chapter, b) section, or c) not here but in the application chapter?  
     \chapter{Games with Distributional Payoffs}
-    Now that we covered the basic concepts of standard game theory, we are ready to introduce the new theory of games that have probability distributions as payoffs.
-    The model was first introduced by Stefan Rass % TODO cite
-    in the context of IT security, and in this model probabilistic outcomes are rated based on a stochastic order called the \emph{tail order} which we will introduce later.
-    In our discussion, we will first introduce a more general model of generalized payoff spaces and based on this formalize a model of distribution-valued games where the stochastic order is open to be specified. We will then focus on the special case of the stochastic tail order.
+    The previous chapter established the basic concepts of standard game theory, where payoffs were real numbers.
+    The goal of this chapter is to introduce and analyze a theory of games that instead have probability distributions as payoffs.
+    To decide which outcomes players prefer in this setting, we use stochastic orders which compare probability distributions.
+%    Now that we covered the basic concepts of standard game theory, we are ready to introduce the new theory of games that have probability distributions as payoffs.
+    The model of distribution-valued games was first introduced by Stefan Rass % TODO cite
+    in the context of IT security, and in his model probabilistic outcomes are rated based on a stochastic order called the \emph{tail order}.
+    We start with a generalization of this model and first introduce games with an arbitrary, preordered payoff space, and define distribution-valued games as a special case of these.
+    We then focus on the tail order, discussing its properties as an ordering, and analyze the existence of equilibria in distribution-valued games with tail order preferences.
+%    In our discussion, we will first introduce a more general model of generalized payoff spaces and based on this formalize a model of distribution-valued games where the stochastic order is open to be specified. We will then focus on the special case of the stochastic tail order.
     
     \section{Normal-Form Games with Preordered Payoff Spaces}
-    \label{sec:preorderedPayoffSpaceGames}
-    
-    As a general framework, let us define games where the payoffs lie in a preordered set.
+    \label{sec:preorderedPayoffSpaceGames}    
+    As a general framework, we define games where the payoffs lie in a preordered set.
     \begin{defn}[Preorder]
         % TODO think about if the name “stochastic preorder” would be more appropriate
         A \emph{preorder} $\leq$ on some set $A$ is a reflexive and transitive binary relation on $A$:
@@ -637,7 +642,7 @@ find it, neither can the market.” There are various exact and numerical algori
             &\forall a \in A: a \leq a \tag{Reflexivity} \\
             &\forall a, b, c \in A: a \leq b, b \leq c \implies a \leq c \tag{Transitivity}
         \end{align*}
-        Additional properties of orders that a preorder \emph{does not need} to satisfy are:
+        Additional properties of orders that a preorder \emph{does not need to satisfy} are:
         \begin{align*}
             &\forall a, b \in A: a \leq b, a \geq b \implies a = b \tag{Antisymmetry} \\
             &\forall a, b \in A: a \leq b \vee a \geq b \tag{Totality}
@@ -645,7 +650,7 @@ find it, neither can the market.” There are various exact and numerical algori
 %        If these are satisfied, we call them \emph{antisymmetric stochastic ordering} or \emph{total stochastic ordering}.
 %        We may also restrict the ordering to some subset $\tilde{A} \subseteq A$ and say that it's a \emph{stochastic ordering on $B$}.
     \end{defn}
-    Antisymmetric preorders are never indifferent between different elements. Total preorders make a decision between any pair of elements, so no two elements are incomparable. Since neither property is required, general preorders may exhibit indifference as well as incomparability.
+    Antisymmetric preorders are never indifferent between different elements. Total preorders make a decision between any pair of elements, so no two elements are incomparable. Since neither property is required, preorders in general may exhibit indifference as well as incomparability.
     
     % TODO explain what we mean by <, >, >= (and possibly ~) for a given preorder.
     
@@ -656,13 +661,12 @@ find it, neither can the market.” There are various exact and numerical algori
     \let\postrnonpref<    
 
     \begin{defn}[Game with Preordered Payoff Space]
-        A \emph{game with preordered payoff space $A$}, $G = (n, A, (S_1, \dots, S_n), (u_1, \dots, u_n))$ with $n$ players consists of strategy sets $S_k$ and a payoff function $u_k: S \to A$ for each player $k$.
-        
+        A \emph{game with preordered payoff space $A$}, $G = (n, A, (S_1, \dots, S_n), (u_1, \dots, u_n))$ with $n$ players consists of strategy sets $S_k$ and a payoff function $u_k: S \to A$ for each player $k$.        
         Such a game can be \emph{equipped with preorders} $(\leq_1, \dots, \leq_n)$, written $G_{(\leq_1, \dots, \leq_n)}$, where each $\leq_i$ is a preorder on $A$.
         If $\leq_i \mathbin{=} \leq$ for all $i$, we also write $G_\leq$.
         % TODO overthink G_{\dleq} notation; the notation could also be convenient for the zero sum game
     \end{defn}
-    We adopt the convention that the greater distribution w.r.t. a preorder is preferred, e.g. if $x \leq y$, then $y$ is preferred. However as in real-valued games, it will sometimes be more convenient to talk about costs instead of utility (cf. Definition \ref{defn:realValuedGames}). Since we can not simply define $c_k = -u_k$ in the general setting of a preordered set $A$, we will resort to a slight abuse of notation and define $c_k(s) \popref c_k(\tilde{s}) \colonlra u_k(s) \pononpref u_k(\tilde{s})$ whenever using cost functions instead of utility functions is more appropriate.
+    We adopt the convention that the greater distribution with respect to a preorder is preferred, i.e. if $x \leq y$, then $y$ is preferred. However as in real-valued games, it will sometimes be more convenient to talk about costs instead of utility (cf. Definition \ref{defn:realValuedGames}). Since we can not simply define $c_k = -u_k$ in the general setting of a preordered set $A$, we will resort to a slight abuse of notation and define $c_k(s) \popref c_k(\tilde{s}) \colonlra u_k(s) \pononpref u_k(\tilde{s})$ whenever using cost functions instead of utility functions is more suitable.
     
     \begin{defn}[Nash Equilibrium of Game with Preordered Payoffs]
         A \emph{Nash equilibrium} of $G_{(\leq_1, \dots, \leq_n)}$ (or a \emph{Nash equilibrium of $G$ with respect to $(\leq_1, \dots, \leq_n)$})
@@ -673,43 +677,30 @@ find it, neither can the market.” There are various exact and numerical algori
         \end{gather}
     \end{defn}
     
-    Because preorders are not total in general, this definition may be overly restrictive in some cases: there might be equilibrium-like situations where the current payoff may not be preferable to all alternatives, but yet no alternative is preferable either due to incomparability. We define a weaker equilibrium concept for this case, where the current situation needs not \emph{dominate} all alternatives to be an equilibrium, but just must not be dominated itself:
-    \todo{I think this weaker equilibrium concept is interesting  and might be useful, but we have no direct use for it at the moment. Possibly remove if not needed. Also, find a better name?}
-    \begin{defn}
-        % TODO find a better term. Non-connex? Non-dominant?
-        A \emph{Nash equilibrium up to non-comparability} of $G_{(\leq_1, \dots, \leq_n)}$
-        is a strategy profile $s = (s_1, \dots, s_n) \in S$ such that for each player $k$:
-        % TODO IMPORTANT check again in which direction preference is being defined!
-        % TODO IMPORTANT possibly swap u_k for c_k since we are using loss distributions?
-        \begin{gather}
-            \nexists \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \postrnonpref u_k(\tilde{s}_k, s_{-k})
-        \end{gather}
-    \end{defn}
-    
     Similar to the real-valued scenario, a subset of games we are especially interested in are the two-player zero-sum games.
     But we are in some trouble defining what zero-sum is supposed to mean: Obviously, in our general setting we have no notion of two payoffs $a_1, a_2 \in A$ summing to zero.
-    We can base our definition on another crucial property of zero-sum games: Zero-sum games are \emph{antagonistic} -- when one player wins, the other loses (\cite{bib:andersonAntagonisticGames} defines this concept formally). This property \emph{can} be stated in terms of our model.
+    We can base our definition on another crucial property of zero-sum games: Zero-sum games are \emph{antagonistic} -- when one player wins, the other loses (\cite{bib:andersonAntagonisticGames} defines this concept formally). This property \emph{can} be generalized to our model.
     
     \begin{defn}[Antagonistic and Zero-Sum Games]
         A two-player game with preordered payoffs $G_{(\leq_1, \leq_2)}$ is \emph{antagonistic} if
         \begin{gather*}
             \forall s, t \in S:~ u_1(s) \popref_1 u_1(t) ~\lra~ u_2(s) \pononpref_2 u_2(t)
         \end{gather*}
-        $G_{(\leq_1, \leq_2)}$ is \emph{zero-sum} if $u_1 = u_2$, and $\leq_2 {=} \geq_1$: i.e. the player always get equal payoff distributions, but prefer them just in reverse order.
+        $G_{(\leq_1, \leq_2)}$ is \emph{zero-sum} if $u_1 = u_2$, and $\leq_2 {=} \geq_1$: i.e. the player always get equal payoffs, but prefer them just in reverse order.
         \label{def:zeroSumPreorderedPayoffs}
     \end{defn}
     
-    % TODO either introduce antagonistic games here, or in the standard game theory section
-    For the sake of equilibria, it does not matter if a game is zero-sum or only antagonistic, since the only thing that matters for equilibria is how the values that actually occur as payoffs are ordered.
-    But if we want to define mixed extensions for subclasses of preordered-payoff-games (which of course requires more structure on $A$ than in the general case), our zero-sum property will ensure that the mixed extension of a finite zero-sum game will also be zero sum, while mixed extensions of antagonistic games need not be antagonistic. This is analogous to real-valued games, where mixed extensions preserve the zero-sum property, but not necessarily the antagonism property
+%    For the sake of equilibria, it does not matter if a game is zero-sum or only antagonistic, since the only thing that matters for equilibria is how the values that actually occur as payoffs are ordered.
+    The advantage of zero-sum games over antagonistic games is that the zero-sum property is preserved when taking mixed extensions (which we will define shortly), but the mixed extension of an antagonistic game needs not be antagonistic. 
+%    But if we want to define mixed extensions for subclasses of preordered-payoff-games (which of course requires more structure on $A$ than in the general case), our zero-sum property will ensure that the mixed extension of a finite zero-sum game will also be zero sum, while mixed extensions of antagonistic games need not be antagonistic. 
+    This is analogous to real-valued games, where mixed extensions also preserve the zero-sum property, but not necessarily the antagonism property (see \cite{bib:andersonAntagonisticGames}).
     \footnote{Note that not only zero-sum satisfy this property, but constant-sum games as well, so our naming convention seems a bit arbitrary.
         Yet “zero-sum” appears like the most recognizable and easily-understood term for this concept, so we'll stick to this name even though nothing actually sums to zero.}
-    (see \cite{bib:andersonAntagonisticGames}).
     
     Defining mixed extensions is possible if the payoff space $A$ has additional vector-space structure. Since mixed strategies correspond to convex combinations of pure strategies, we require $A$ be a convex subset of a vector space over the reals.
     \begin{defn}[Mixed extension]
         Let $G = (n, A, (S_1, \dots, S_n), (u_1, \dots, u_n))$ be a finite game with preordered payoff space,
-        where $A$ is a convex subset of a real vector space with operations $(+, *)$.
+        where $A$ is a convex subset of a real vector space.
         Its \emph{mixed extension} $\hat{G} = (n, A, (\Delta_1, \dots, \Delta_n), (\hat{u}_1, \dots, \hat{u}_n))$ consists of the following components for each player $k$:
         \begin{itemize} % TODO there is no canonical ordering on the S_k... problem?
             \item $\Delta_k \coloneqq \biggset{ p \in \Rp^{S_k} \biggmid \sum_{s_k \in S_k} p(s_k) = 1 } $ are the mixed strategies, $\Delta \coloneqq \bigtimes\limits_{1\leq i \leq n} \Delta_i$ the mixed strategy profiles.
@@ -729,49 +720,45 @@ find it, neither can the market.” There are various exact and numerical algori
 %            Note that this is a weighted sum of Borel probability measures, and the result is again a probability measure on $(\R, \B)$.
         \end{itemize}
     \end{defn}
-    As for real-valued games, we will sometimes specify payoffs by one or more matrices.
+    As for real-valued games, we can specify payoffs by one or more matrices.
     When talking about the \emph{bimatrix game} specified by two matrices, we mean the mixed extension of the finite game corresponding to the matrices.
     In the zero-sum case, where only one matrix is specified, we will talk about \emph{matrix games}.
     
-    \todo{Think about the name. Maybe “equilibrium-equivalent” is clearer than “isomorphic”. Also, maybe the definition is too complicated.}
-    % TODO isn't this definition too complicated? Why not just say that u_k(s1) \leq u_k(s2) \lra v_k(s1) \leq v_k(s2)?
-    As a last concept, we define the notion of \emph{isomorphic} games, which lets us switch between different payoff spaces that behave the same with respect to the right orderings.
+    As a last concept, we define the notion of \emph{isomorphic} games, which lets us switch between different payoff spaces that behave the same with respect to compatible orderings.
     \begin{defn}
-        Let $G$, $H$ be two $n$-player games with preordered payoff spaces sharing the same strategy sets $S_i$, where $G$ has payoffs in $A$ and utility functions $u_i$,
-        and $H$ has payoffs in $B$ and utility functions $v_i$.
-        Let $G$ be equipped with $(\leq_1^G, \dots, \leq_n^G)$, and $H$ is equipped with $(\leq_1^H, \dots, \leq_n^H)$.
-        Furthermore let $\bar{A} \coloneqq \bigcup_k u_k(S)$, $\bar{B} \coloneqq \bigcup_k v_k(S)$ be the sets of payoff values actually attained for some strategy profiles.
-        Then $G_{(\leq_1^G, \dots, \leq_n^G)}$, $H_(\leq_1^H, \dots, \leq_n^H)$
-        are \emph{isomorphic} if there is a bijection $\phi: \bar{A} \to \bar{B}$ such that
-        \begin{gather}
-            \forall k \in \set{1, \dots, n}, \forall s \in S: \phi(u_k(s)) = v_k(s) \\
-            \forall k \in \set{1, \dots, n}, \forall a_1, a_2 \in \bar{A}: a_1 \leq_k^G a_2 \lra \phi(a_1) \leq_k^H \phi(a_2)
-        \end{gather}
+        Let $G$, $H$ be two $n$-player games with preordered payoff spaces sharing the same strategy sets $S_k$, where $G$ has payoffs $u_k: S \to A$ and $H$ has payoffs $v_k: S \to B$.
+        Let $G$ be equipped with $(\leq_1^{\scriptscriptstyle G}, \dots, \leq_n^{\scriptscriptstyle G})$, and $H$ be equipped with $(\leq_1^{\scriptscriptstyle H}, \dots, \leq_n^{\scriptscriptstyle H})$.
+        Then $G_{(\leq_1^{\scriptscriptstyle G}, \dots, \leq_n^{\scriptscriptstyle G})}$, $H_{(\leq_1^{\scriptscriptstyle H}, \dots, \leq_n^{\scriptscriptstyle H})}$
+        are \emph{isomorphic} if there is a bijection $\phi: A \to B$ such that
+        \begin{align}
+            &\forall k  = 1, \dots, n:~ v_k = \phi \circ u_k \\
+            &\forall k  = 1, \dots, n:~ \forall a_1, a_2 \in A: a_1 \leq_k^{\scriptscriptstyle G} a_2 \lra \phi(a_1) \leq_k^{\scriptscriptstyle H} \phi(a_2)
+            \label{eq:isomorphicPayoffSpaces}
+        \end{align}
     \end{defn}
     
     \begin{lemma}
-        If two games with preordered payoff space $G_{(\leq_1^G, \dots, \leq_n^G)}$, $H_{(\leq_1^H, \dots, \leq_n^H)}$ are isomorphic,
-        they have the same Nash equilibria (and the same Nash equilibria up to incomparability).
+        If two games with preordered payoff spaces $G_{(\leq_1^{\scriptscriptstyle G}, \dots, \leq_n^{\scriptscriptstyle G})}$, $H_{(\leq_1^{\scriptscriptstyle H}, \dots, \leq_n^{\scriptscriptstyle H})}$ are isomorphic,
+        they have the same Nash equilibria.
     \end{lemma}
     \begin{proof}
         Let $s = (s_1, \dots, s_n) \in S$ be a Nash equilibrium of $G$.
-%        such that for each player $k$:
-%        \begin{gather}
-%        \forall \tilde{s}_k \in S_k: u_k(s_k, s_{-k}) \popref_k u_k(\tilde{s}_k, s_{-k})
-%        \end{gather}
         Then $s$ is a Nash equilibrium of $H$: Let $k \in \set{1, \dots, n}$, $\tilde{s}_k \in S_k$.
-        By \eqref{eq:nashEquilibriumPreorderedPayoffs}, $u_k(s_k, s_{-k}) \popref_k^G u_k(\tilde{s}_k, s_{-k}$.
-        Then $v_k(s_k, s_{-k}) = \phi(u_k(s_k, s_{-k})) \popref_k^H \phi(u_k(\tilde{s}_k, s_{-k})) = v_k(\tilde{s}_k, s_{-k})$.
-        The case of Nash equilibria up to incomparability works analogously.
+        We have $v_k(\tilde{s}_k, s_{-k}) = \phi(u_k(\tilde{s}_k, s_{-k}))$. Because $s$ is a Nash equilibrium of $G$, $u_k(\tilde{s}_k, s_{-k}) \leq_k^{\scriptscriptstyle G} u_k(s_k, s_{-k})$.
+        By \eqref{eq:isomorphicPayoffSpaces}, this implies $\phi(u_k(\tilde{s}_k, s_{-k})) \leq_k^{\scriptscriptstyle H} \phi(u_k(s_k, s_{-k})) = v_k(s_k, s_{-k})$.
     \end{proof}
     
     \section{Distribution-Valued Normal-Form Games}
     \label{sec:distributionValuedNormalFormGames}
-    \newcommand{\DP}{\D_P} % Shortcut for the set of distributions on the reals
+    \newcommand{\DP}{\D} % Shortcut for the set of distributions on the reals
+    \newcommand{\Dgeqzero}{\DP_{\geq0}}
+    \newcommand{\Dgeqone}{\DP_{\geq1}}
+    \newcommand{\Dab}{\DP_{[a, b]}}
     
     Let $\DP$ denote the set of Borel probability measures:
     \[ \DP \coloneqq \set{P: \B \to \Rp \mid P \text{ is a probability measure on } (\R, \B)} \]
     Each element of $\DP$ represents a probability distribution on the real numbers.
+    Write $\Dgeqzero$, $\Dgeqone$, or $\Dab$ for those elements of $\DP$ whose support is contained in $[0, \infty)$, $[1, \infty)$, or some interval $[a, b]$, respectively.
     
     % Defining shortcuts for the symbols used for generic stochastic orders. Can be changed easily here. “dleq” = “distributionally less-or-equal”
     \let\dleq\preccurlyeq
@@ -811,14 +798,11 @@ find it, neither can the market.” There are various exact and numerical algori
     \newcommand{\greaterdom}{>_{\text{dom}}}
     
     \begin{defn}[Stochastic Order]
-        % TODO think about if the name “stochastic preorder” would be more appropriate
         A \emph{stochastic order} $\dleq$ is a preorder on $\DP$.
-        \footnote{\cite{bib:shakedStochasticOrders} defines stochastic orders between random variables, but for our purposes it's more convenient to define them between distributions instead.}
+        \footnote{The reference on stochastic orders \cite{bib:shakedStochasticOrders} defines stochastic orders between random variables, but for our purposes it's more convenient to define them between distributions instead.}
     \end{defn}
     
     \begin{ex}~
-        % TODO make sure that the Expected Value is defined for distributions, and that L1 is defined for distributions
-        % TODO think about making \leqE defined for non-L1 variables (but what about oo-oo?)
         \begin{enumerate}
             \item 
             Let $\leqE$ be the ordering that compares distributions by expected value:
@@ -853,7 +837,8 @@ find it, neither can the market.” There are various exact and numerical algori
         A \emph{distribution-valued game} $G$ is a game with preordered payoff space, where the payoff space is $\DP$.
         \label{def:distributionValuedGame}
     \end{defn}
-    The underlying assumption of this model is that the outcomes have some uncertainty associated with them, and that when the game is being played, first an outcome distribution for each player is determined by the selected strategies, and then each player gets their actual real-valued payoff drawn from their distribution independently.
+    The underlying semantics are that a distribution-valued game models a situation where the outcomes have some probabilistic uncertainty associated with them, whose distribution is known before-hand: When the game is being played, first an outcome distribution for each player is determined by the selected strategies, and then the players gets their actual real-valued payoff drawn from their distributions independently.
+    However, the drawing from the outcome distributions at the last step is not explicitly modeled. The stochastic orders of the players reflect how each player values particular outcome distributions.
 %    The sampling done as last step is necessarily independent, since we only specify marginal distributions and therefore have no notion of the outcomes sampled from different such distributions stochastically depending on each other.
 
     The theory from Section \ref{sec:preorderedPayoffSpaceGames} already gives the definitions of Nash equilibria, zero-sum games and mixed extensions. 
@@ -861,12 +846,11 @@ find it, neither can the market.” There are various exact and numerical algori
     
     The definition of zero-sum games may need some additional discussion: the argument for the definition given in Section \ref{sec:preorderedPayoffSpaceGames} was that without knowing more about the structure of the payoff space, we could not define zero-sum games by requiring that payoffs actually sum to zero.
     On the other hand, now that we have a more concrete payoff space, possibly a more natural definition could be made.    
-    However several “natural candidates” for such a definition do not work: Let $s \in S$ be some strategy profile.
+    However several seemingly “natural candidates” for such a definition do not work: Let $s \in S$ be some strategy profile.
     Clearly, we can not require $u_1(s) + u_2(s) = 0$ (the zero-everywhere measure), since probability measures only assign non-negative values.
     If instead we let $X_1 \sim u_1(s), X_2 \sim u_2(s)$ be independent random variables modeling the random payoffs for the players, and require that $X_1 + X_2 = 0$ almost surely, this also fails: this condition will never hold except for trivial distributions, because the sum of independent random variables is distributed as the convolution of their distributions.
     % TODO reference convolution theorem/distribution of sum of independent RVs
-    Alternatively, we could require that the distributions $u_1(s), u_2(s)$ are symmetrically mirrored inverses around the origin, i.e. for all Borel sets $B$, $u_1(s)(B) = u_2(s)(-B)$. E.g. 
-    if the distributions have densities $f_1, f_2$, this would mean $\forall x: f_1(x) = f_2(-x)$.
+    Alternatively, we could require that the distributions $u_1(s), u_2(s)$ are symmetric mirror images around the origin, i.e. for all Borel sets $B$, $u_1(s)(B) = u_2(s)(-B)$. For distributions with densities $f_1, f_2$, this would mean $f_1(x) = f_2(-x)$ for almost all $x$.
     While this requirement seems to make sense, this symmetry is not necessarily reflected by the stochastic orders: There is no requirement for stochastic orders to satisfy $P_1(\dummydot) \dleq P_2(\dummydot) \lra P_1(-\dummydot) \dgeq P_2(-\dummydot)$, and indeed this does not hold for the stochastic tail order we will introduce later.
     Since no alternative definition seems meaningful, we stick to the zero-sum definition made in \ref{def:zeroSumPreorderedPayoffs}.
 
@@ -877,7 +861,7 @@ find it, neither can the market.” There are various exact and numerical algori
         \begin{gather*}
             \forall k: ~u_k^{(\DP)}(s) \coloneqq \delta_{u_k^{(\R)}(s)} 
         \end{gather*}
-        Then the real-valued mixed extension $\hat{G}^{(\R)}$ is equivalent to the distribution-valued mixed extension $\hat{G}^{(\DP)}$ wrt. $\leqE$, i.e. 
+        Then the real-valued mixed extension $\hat{G}^{(\R)}$ is isomorphic to the distribution-valued mixed extension $\hat{G}^{(\DP)}$ wrt. $\leqE$, i.e. 
         $\hat{G}^{(\R)}$ has the same equilibria as $\hat{G}^{(\DP)}_{\leqE}$.
     \end{ex}
     Games constructed like $\hat{G}^{(\DP)}$ might be interesting in their own right, with respect to other stochastic orders than $\leqE$:
@@ -888,23 +872,20 @@ find it, neither can the market.” There are various exact and numerical algori
     
     \section{The Stochastic Tail Order}
     We have laid out the foundations of distribution-valued games in the last section, but the usefulness of the model heavily depends on choosing the right stochastic orders.
-    The stochastic orders we've seen so far are not extremely satisfying: $\leqE$ basically leads us back to the theory of real-valued games by taking expected values; $\leqst$ takes more information from the distributions into account, but fails to compare many distributions since a decision is only made for distributions where one distribution function dominates the other in a strong way.
-    In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers (\cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}) defined the stochastic tail order, which we will denote by $\leqtail$ .
+    The stochastic orders we have seen so far are not extremely satisfying in many cases: The expected value ordering $\leqE$ basically leads us back to the theory of real-valued games by taking expected values. The usual stochastic order $\leqst$ takes more information from the distributions into account, but fails to compare many distributions since a decision is only made for distributions where one distribution function dominates the other in a strong way.
+    In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers (\cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}) defined the stochastic tail order, which we will denote by $\leqtail$.
     It was introduced in the context of risk assessment for critical infrastructure, where risks with higher impact are to  be avoided at all costs, even if very unlikely.
     Therefore it is usually not applied on \emph{payoff distributions}, but rather on \emph{loss} (or \emph{cost}) \emph{distributions} (a detail that mostly does not affect our presentation of the theory, however).
-    The ordering is defined based on moment sequences, but we will later show that in many cases, it can essentially be understood as a kind of lexicographical ordering.
+    The ordering is defined based on moment sequences, but we will later show that in many cases, it can essentially be understood as a kind of lexicographical ordering: The original goal for its introduction was to have an ordering that applies the criterion of $\leqtail$, but only from some point $x_0$ on, such that more distributions are actually comparable (see \cite{bib:rassTotalOrderingOnLossDistributions}). This works to some extent, however in this section we will also see that some of its claimed properties can fail in pathological cases.
 
     \subsection{Definition and Basic Properties}    
     \newcommand{\Lallmoms}{L}
-    \begin{defn}[Moments]
-        Let $P \in \DP$, $k \in \N_0$. If $\lintegral{R}{\abs{x}^k}{P} < \infty$, we say that \emph{$P$ has a moment of order $k$} and define it by
-        \begin{gather*}
-            m_k(P) \coloneqq \lintegral{\R}{x^k}{P}
-        \end{gather*}
-        Define the set of distributions which have moments of arbitrary order as
+    Recall that $m_k(P) \coloneqq \lintegral{R}{x^k}{P}$ denotes the $k$'th moment of $P \in \DP$ if $\lintegral{R}{\abs{x}^k}{P} < \infty$.
+    \begin{defn}
+        Define the set of distributions which have moments of all orders as
         \todo{The suggestive letter $L$ as in $L_p$ is a bit dubious, since we are talking about measures, not functions.}
         \begin{gather*}
-            \Lallmoms \coloneqq \bigset{P \in \DP \bigmid \forall k: \lintegral{R}{\abs{x}^k}{P} < \infty}
+            \Lallmoms \coloneqq \biggset{P \in \DP \bigmid \forall k: \lintegral{R}{\abs{x}^k}{P} < \infty}
         \end{gather*}
     \end{defn}
 
@@ -926,7 +907,7 @@ find it, neither can the market.” There are various exact and numerical algori
     
     Now that we know that $\leqtail$ is a stochastic order, we can ask if it is anti-symmetric and/or total.
     In the general context, it has neither of the properties: $\leqtail$ can not compare distributions which don't have moments of all orders, therefore it is not total on $\DP$.
-    Also there exist examples of different distributions in $\Lallmoms$ which have equal moment sequences, violating anti-symmetry (see \cite[p.49, 3.15]{bib:romanoCounterexamplesInProbability} for an example). However \cite{bib:rassGameRiskManagI} notes that for any pair of distributions which both have their moment generating functions existing in a neighborhood around 0, equal moment sequences imply equal distributions.
+    Also there exist examples of different distributions in $\Lallmoms$ which have equal moment sequences, violating anti-symmetry (see \cite[p.49, 3.15]{bib:romanoCounterexamplesInProbability} for an example). However \cite{bib:rassGameRiskManagI} notes that for any pair of distributions which both have their moment generating functions existing in a neighborhood around 0, equal moment sequences imply equal distributions: this notable includes distributions whose support is a bounded subset of $[0, \infty)$.
     % TODO wait, but moment sequences only need to be eventually equal for violated anti-symmetry?
 %    Therefore $\leqtail$ is anti-symmetric on any subset $D \subseteq \DP$ of distributions having moment generating functions.
     % TODO Introduce moment generating functions somewhere earlier
@@ -936,146 +917,232 @@ find it, neither can the market.” There are various exact and numerical algori
     
     % TODO is Characterization a valid term?
     \subsection{Characterization of Tail Order Preference}
-    \newcommand{\Fgeq}{\mathfrak{F}_{\geq 1}} % The set of distributions \geq 1
-    Before we do so, let's first get a better understanding of what the tail order means apart from moment sequences.
-    In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values $\geq 1$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Also the discussion focuses on distributions which have finite support, or are absolutely continuous with additional requirements on the densities. We will generally adopt the former assumption for our further discussion, and write $\Fgeq \coloneqq \set{P \in \DP \mid P([1, \infty)) = 1}$.
-    % TODO reformulate “will at time use slightly relaxed assumptions on AC” bit
-    However we will at times relax their assumptions on absolutely continuous distributions, and always mention the exact requirements.
+%    \newcommand{\Fgeq}{\mathfrak{F}_{\geq 1}} % The set of distributions \geq 1
+    Before we do so, let us first get a better understanding of what the tail order means apart from moment sequences.
+    In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values in $[1, \infty)$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Additionally, the support is assumed to be bounded. Also, the discussion focuses on discrete distributions with finite support, or absolutely continuous distributions with additional requirements continuity/differentiability constraints on the densities.
+    We will not need such strict assumptions everywhere, and will always mention the exact requirements.
     
-    An important insight is that the tail order behaves essentially like a lexicographical ordering in many cases.
+    An important insight for understanding the tail order is that it behaves essentially like a lexicographical ordering on the density functions in many cases.
+    We will derive sufficient conditions, and an equivalence in the case of finite support, that formalize this intuition.
+    
     \begin{thm}
-        Let $P_1, P_2 \in \Fgeq \cap L$ be absolutely continuous distributions that have density functions $f, g$ which are bounded in value.
+        Let $P_1, P_2 \in \Dgeqone \cap L$. Assume there is some $x_0 \geq 1$ such that
+        \begin{align}
+            \forall B \in \B, &~B \subseteq [x_0, \infty): P_1(B) \leq P_2(B)  \label{eq:p2DominatesP1LeftOfX0}  \\
+%            \exists B_0 \in \B: B_0 \subseteq (x_0, \infty), P_1(B_0) < P_2(B_0) 
+            &~P_1([x_0, \infty)) < P_2([x_0, \infty)) \label{eq:p2StrictlyDominatesP1OnB0}
+        \end{align}
+        Then $P_1 \lesstail P_2$.
+        \label{thm:tailOrderSufficientConditionsGeneral}
+    \end{thm}    
+    \begin{proof}
+        We need to show that $m_k(P_1) < m_k(P_2)$ for $k$ large enough. We have:
+        \begin{multline*}
+            m_k(P_2) - m_k(P_1)
+            = \lintegral{\R}{x^k}{P_2(x)} - \lintegral{\R}{x^k}{P_1(x)} \\
+            = \biggpars{\lintegral{[1, x_0)}{x^k}{P_2(x)} - \lintegral{[1, x_0)}{x^k}{P_1(x)}}
+            + \lintegral{[x_0, \infty)}{x^k}{(P_2 - P_1)(x)}
+        \end{multline*}
+        Let $\mu \coloneqq P_2{}_{\vert \B \cap [x_0, \infty)} - P_1{}_{\vert \B \cap [x_0, \infty)}$ be the difference of $P_2, P_1$ restricted on the Borel sub-$\sigma$-algebra on $[x_0, \infty)$. By \eqref{eq:p2DominatesP1LeftOfX0}, $\mu$ is a measure, and by \eqref{eq:p2StrictlyDominatesP1OnB0}, it is not the zero measure.
+%        Write the line to the right of $x_0$ as $(x_0, \infty) = \bigcup_{n \in \N} [x_0 + 1/n, \infty)$.
+%        By continuity from below of the finite measure $\mu$, we get $\mu((x_0, \infty)) = \lim\limits_{n \to \infty} \mu([x_0 + 1/n, \infty))$.
+%        This yields an $x_1 > x_0$ such that $\mu([x_1, \infty)) > 0$.
+        We can now bound
+        \begin{gather*}
+            \lintegral{[x_0, \infty)}{x^k}{\mu(x)}
+%            \geq \lintegral{[x_1, \infty)}{x^k}{\mu(x)}
+            \geq \lintegral{[x_0, \infty)}{x_0^k}{\mu(x)}
+            = x_0^k * \mu([x_0, \infty))
+        \end{gather*}
+        On the other hand, we can write the portion to the left of $x_0$ as $[1, x_0) = \bigcup_{n \in \N} [1, x_0 - \frac{1}{n}]$.
+        By continuity from below of the probability measure $P_1$, we get $\lim\limits_{n \to \infty} P_1([1, x_0 - \frac{1}{n}]) = P_1([1, x_0))$.
+        Therefore we find an $x_1 < x_0$ such that $P_1([1, x_1]) > P([1, x_0)) - \mu([x_0, \infty))$, i.e. $P_1((x_1, x_0)) < \mu([x_0, \infty))$.
+        Using this, we can get the bound
+        \begin{align*}
+            &\lintegral{[1, x_0)}{x^k}{P_2(x)} - \lintegral{[1, x_0)}{x^k}{P_1(x)}
+%            \geq - \lintegral{[1, x_0]}{x^k}{P_1(x)}
+            \geq - \lintegral{[1, x_0)}{x^k}{P_1(x)} \\
+            = - &\lintegral{[1, x_1]}{x^k}{P_1(x)} - \lintegral{(x_1, x_0)}{x^k}{P_1(x)}
+            \geq - \lintegral{[1, x_1]}{x_1^k}{P_1(x)} - \lintegral{(x_1, x_0)}{x_0^k}{P_1(x)} \\
+            =   -  & x_1^k * P_1([1, x_1]) - x_0^k * P_1((x_1, x_0))
+        \end{align*}
+        In summary, we get
+        \begin{multline*}
+            m_k(P_2) - m_k(P_1)
+            \geq x_0^k * \mu([x_0, \infty)) - x_0^k * P_1((x_1, x_0)) - x_1^k * P_1([1, x_1]) \\
+            = x_0^k \bigpars{\undersetbrace{\mu([x_0, \infty)) - P_1((x_1, x_0))}{> 0}} - x_1^k * P_1([1, x_1])
+        \end{multline*}
+        which is greater than zero for all $k$ large enough, because $x_1 < x_0$.
+    \end{proof}
+    
+    Special cases of this theorem hold for absolutely continuous and discrete measures:
+    
+    \begin{thm}
+        Let $P_1, P_2 \in \Dgeqone \cap L$ be absolutely continuous, with densities $f, g$.
         \begin{enumerate}
             \item 
-            % TODO natural formulation: if from some point on, f <= g almost everywhere and f < g on some non-null set, then P1 \leqtail P2
-            If there is some $x_0 \geq 1$ such that 
-            \begin{gather*}
-                \lambda(\set{f > g} \cap [x_0, \infty)) = 0 ~\wedge~ \lambda(\set{f < g} \cap [x_0, \infty)) > 0,
-            \end{gather*}
+            If there is some $x_0 \geq 1$ such that on the interval $[x_0, \infty)$ we have $f \leq g$ almost everywhere, yet not $f = g$ almost everywhere,
             then $P_1 \lesstail P_2$.
             \label{item:acTailOrder-NonNullDominatingSetSuffCondition}
             
             \item 
-            If there are $x_0 \geq 1, \delta > 0$ such that $f < g$ on $[x_0, x_0 + \delta]$ and $f \leq g$ on $[x_0, \infty)$, then $P_1 \lesstail P_2$.
+            If there are $x_0 \geq 1, \delta > 0$ such that $f \leq g$ on $[x_0, \infty)$ and $f < g$ on $[x_0, x_0 + \delta]$, then $P_1 \lesstail P_2$.
             \label{item:acTailOrder-DominatingIntervalSuffCondition}
         \end{enumerate}
+        % TODO Corollary!
         \label{thm:acTailOrderSuffConditions}
     \end{thm}
     \begin{proof}
+        ~        
+        \sloppypar{
         \ref{item:acTailOrder-NonNullDominatingSetSuffCondition}:
-        We need to show that $m_k(P_1) < m_K(P_2)$ for $k$ large enough. We have:
+        Our assumptions imply that $\lambda(\set{f > g} \cap [x_0, \infty)) = 0$ and ${\lambda(\set{f < g} \cap [x_0, \infty))} > 0$, where $\lambda$ is the Lebesgue measure.
+        Let $B \in \B, B \subseteq [x_0, \infty)$. Then $f \leq g$ almost everywhere on $B$.
+        So $P_1(B) = \lintegral{B}{f}{\lambda} \leq \lintegral{B}{g}{\lambda} = P_2(B)$.}
+        On the other hand, 
         \begin{multline*}
-            m_k(P_2) - m_k(P_1)
-            = \lintegral{\R}{t^k g(t)}{\lambda(t)} - \lintegral{\R}{t^k f(t)}{\lambda(t)} \\
-            = \lintegral{[1, x_0)}{t^k(g(t) - f(t))}{\lambda(t)} 
-              + \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
-%              + \lintegral{[1, x_0)\cap \set{f = g}}{t^k(g(t) - f(t))}{\lambda(t)}
+            P_1([x_0, \infty)) =  \lintegral{[x_0, \infty) \cap \set{f < g}}{f}{\lambda} +  \lintegral{[x_0, \infty) \cap \set{f = g}}{f}{\lambda} \\
+            < \lintegral{[x_0, \infty) \cap \set{f < g}}{g}{\lambda} +  \lintegral{[x_0, \infty) \cap \set{f = g}}{g}{\lambda} = P_2(B)
         \end{multline*}
-        We lower-bound the left integral:
-        Since $f, g$ are bounded, we get the lower-bound $g-f \geq - c_l$ for some $c_l > 0$.
-        Further $0 \leq t^k \leq x^k$ for $t \in [1, x_0)$. So $t^k*(g(t) - f(t)) \geq -c_l*x_0^k$.
-        We get:
-        \begin{multline*}
-            \lintegral{[1, x_0)}{t^k(g(t) - f(t))}{\lambda(t)}
-            \geq \lintegral{[1, x_0)}{-c_l*x_0^k}{\lambda(t)}
-            = -c_l (x_0 - 1)*x_0^k 
-            \eqqcolon -c_{\text{left}} * x_0^k
-        \end{multline*}
-        
-        For the right-hand integral, observe that the integrand becomes zero on $\set{f = g}$, so we can focus on $[x_0, \infty) \cap \set{f < g}$ which we required to have positive measure.
-        Pick some $x_1 > x_0$ such that $I \coloneqq ([x_1, \infty) \cap \set{f < g})$ still has positive measure (for example, $x_1 \coloneqq x_0 + \frac{1}{2} \lambda([x_0, \infty) \cap \set{f < g})$ will do).
-        Next we identify a positive-measure subset of $I$ where $(g-f)$ is bounded away from zero:
-        Define $A_n \coloneqq \set{x \in I \mid g(x) - f(x) > \frac{1}{n}}$.
-        % TODO and these sets are Borel
-        Then $I = \bigcup_n A_n$ and by continuity of measures, $\lambda(A_n) \toinfty{n} \lambda(I) > 0$. So some set in the sequence has positive measure, which we'll call $A$, and on $A$, $g-f \geq \epsilon$ holds for some $\epsilon > 0$. From this we get 
-        \begin{multline*}
-            \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
-            = \lintegral{[x_0, \infty)\cap \set{f < g}}{t^k(g(t) - f(t))}{\lambda(t)} \\
-            \geq \lintegral{A}{t^k(g(t) - f(t))}{\lambda(t)}
-            \geq \lintegral{A}{t^k*\epsilon}{\lambda(t)}
-            \geq \epsilon*\lambda(A)*x_1^k
-            \eqqcolon c_{\text{right}}*x_1^k
-        \end{multline*}
-        
-        Putting in our estimates into the original equation, we get
-        \begin{gather*}
-            m_k(P_2) - m_k(P_1)
-            \geq c_{\text{right}}*x_1^k - c_{\text{left}} * x_0^k
-        \end{gather*}
-        Since $x_1 > x_0 \geq 1$, this shows that for some $K \in \N$ and all $k \geq K$, $m_k(P_2) - m_k(P_1) > 0 \lra m_k(P_1) < m_k(P_2)$, so $P_1 \lesstail P_2$.
+        So the conditions for Theorem \ref{thm:tailOrderSufficientConditionsGeneral} are satisfied, and $P_1 \lesstail P_2$.
         
         \ref{item:acTailOrder-DominatingIntervalSuffCondition}:
         This is as a special case of the previous condition.
-        We have that $\lambda(\set{f > g} \cap [x_0, \infty)) = \lambda(\emptyset) = 0$, and $\lambda(\set{f < g} \cap [x_0, \infty)) > \lambda([x_0, x_0 + \delta)) > 0$, so the conditions of $\ref{item:acTailOrder-NonNullDominatingSetSuffCondition}$ are satisfied and $P_1 \lesstail P_2$.
+        We have that $\lambda(\set{f > g} \cap [x_0, \infty)) = \lambda(\emptyset) = 0$, and $\lambda(\set{f < g} \cap [x_0, \infty)) > \lambda([x_0, x_0 + \delta]) > 0$, so the conditions of $\ref{item:acTailOrder-NonNullDominatingSetSuffCondition}$ are satisfied and $P_1 \lesstail P_2$.
     \end{proof}
 
+%    \begin{proof}
+%        \ref{item:acTailOrder-NonNullDominatingSetSuffCondition}:
+%        Our assumptions imply that $\lambda(\set{f > g} \cap [x_0, \infty)) = 0$ and $\lambda(\set{f < g} \cap [x_0, \infty)) > 0$, where $\lambda$ is the Lebesgue measure.
+%        We need to show that $m_k(P_1) < m_k(P_2)$ for $k$ large enough. We have:
+%        \begin{multline*}
+%            m_k(P_2) - m_k(P_1)
+%            = \lintegral{\R}{t^k g(t)}{\lambda(t)} - \lintegral{\R}{t^k f(t)}{\lambda(t)} \\
+%            = \lintegral{[1, x_0)}{t^k(g(t) - f(t))}{\lambda(t)} 
+%              + \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
+%%              + \lintegral{[1, x_0)\cap \set{f = g}}{t^k(g(t) - f(t))}{\lambda(t)}
+%        \end{multline*}
+%        We lower-bound the left integral:
+%        Since $f, g$ are bounded, we get the lower-bound $g-f \geq - c_l$ for some $c_l > 0$.
+%        Further $0 \leq t^k \leq x^k$ for $t \in [1, x_0)$. So $t^k*(g(t) - f(t)) \geq -c_l*x_0^k$.
+%        We get:
+%        \begin{multline*}
+%            \lintegral{[1, x_0)}{t^k(g(t) - f(t))}{\lambda(t)}
+%            \geq \lintegral{[1, x_0)}{-c_l*x_0^k}{\lambda(t)}
+%            = -c_l (x_0 - 1)*x_0^k 
+%            \eqqcolon -c_{\text{left}} * x_0^k
+%        \end{multline*}
+%        
+%        For the right-hand integral, observe that the integrand becomes zero on $\set{f = g}$, so we can focus on $[x_0, \infty) \cap \set{f < g}$ which we required to have positive measure.
+%        Pick some $x_1 > x_0$ such that $I \coloneqq ([x_1, \infty) \cap \set{f < g})$ still has positive measure (for example, $x_1 \coloneqq x_0 + \frac{1}{2} \lambda([x_0, \infty) \cap \set{f < g})$ will do).
+%        Next we identify a positive-measure subset of $I$ where $(g-f)$ is bounded away from zero:
+%        Define $A_n \coloneqq \set{x \in I \mid g(x) - f(x) > \frac{1}{n}}$.
+%        % TODO and these sets are Borel
+%        Then $I = \bigcup_n A_n$ and by continuity of measures, $\lambda(A_n) \toinfty{n} \lambda(I) > 0$. So some set in the sequence has positive measure, which we'll call $A$, and on $A$, $g-f \geq \epsilon$ holds for some $\epsilon > 0$. From this we get 
+%        \begin{multline*}
+%            \lintegral{[x_0, \infty)\cap \set{f \leq g}}{t^k(g(t) - f(t))}{\lambda(t)}
+%            = \lintegral{[x_0, \infty)\cap \set{f < g}}{t^k(g(t) - f(t))}{\lambda(t)} \\
+%            \geq \lintegral{A}{t^k(g(t) - f(t))}{\lambda(t)}
+%            \geq \lintegral{A}{t^k*\epsilon}{\lambda(t)}
+%            \geq \epsilon*\lambda(A)*x_1^k
+%            \eqqcolon c_{\text{right}}*x_1^k
+%        \end{multline*}
+%        
+%        Putting in our estimates into the original equation, we get
+%        \begin{gather*}
+%            m_k(P_2) - m_k(P_1)
+%            \geq c_{\text{right}}*x_1^k - c_{\text{left}} * x_0^k
+%        \end{gather*}
+%        Since $x_1 > x_0 \geq 1$, this shows that for some $K \in \N$ and all $k \geq K$, $m_k(P_2) - m_k(P_1) > 0 \lra m_k(P_1) < m_k(P_2)$, so $P_1 \lesstail P_2$.
+%        
+%        \ref{item:acTailOrder-DominatingIntervalSuffCondition}:
+%        This is as a special case of the previous condition.
+%        We have that $\lambda(\set{f > g} \cap [x_0, \infty)) = \lambda(\emptyset) = 0$, and $\lambda(\set{f < g} \cap [x_0, \infty)) > \lambda([x_0, x_0 + \delta)) > 0$, so the conditions of $\ref{item:acTailOrder-NonNullDominatingSetSuffCondition}$ are satisfied and $P_1 \lesstail P_2$.
+%    \end{proof}
+
     \begin{thm}
-        Let $P_1, P_2 \in \Fgeq \cap L$ be discrete distributions with probability mass functions $f, g$.
+        Let $P_1, P_2 \in \Dgeqone \cap L$ be discrete, with probability mass functions $f, g$.
         \begin{enumerate}
             \item 
-            If there is some $x_0 \geq 1$ such that $f(x_0) < g(x_0)$, and $\forall x > x_0: f(x) \leq g(x)$, this is sufficient for $P_1 \lesstail P_2$.
+            If there is some $x_0 \geq 1$ such that $f(x_0) < g(x_0)$, and $\forall x > x_0: f(x) \leq g(x)$, then $P_1 \lesstail P_2$.
             \label{item:discreteTailOrder-DominatingPointSuffCondition}
             
             \item 
-            If $P_1, P_2$ both have finite support, then
+            If $P_1, P_2$ both have finite support, this becomes an equivalence:
             \begin{gather}
                 P_1 \lesstail P_2 \lra \exists x_0 \geq 1: f(x_0) < g(x_0) \wedge \forall x > x_0: f(x_0) \leq g(x_0)
                 \label{eq:discreteFiniteTailOrder-DominatingPointEquivalence}
-            \end{gather}
+            \end{gather}            
             \label{item:discreteFiniteTailOrder-DominatingPointEquivalence}
-        \end{enumerate}
-        \label{thm:discreteTailOrderSuffConditions}
+        \end{enumerate}        
+    \label{thm:discreteTailOrderSuffConditions}
     \end{thm}
+    \vspace{-1.2cm}
     \begin{proof}
         \ref{item:discreteTailOrder-DominatingPointSuffCondition}:
-        Similar to the proof of Theorem \ref{thm:acTailOrderSuffConditions}, we want to show that $m_k(P_2) - m_k(P_1) > 0$ for all large enough $k$.
-        Let $V \coloneqq \supp(f) \cup \supp(g)$, and let $V_l \coloneqq V \cap (-\infty, x_0), V_r \coloneqq V \cap [x_0, \infty)$.
-%        Let $v_1 < v_2 < \dots$ denote the values that get assigned positive probability mass by either $f$ or $g$, in ascending order.
-%        Let $n$ be such that $x_0 = v_n$. Then we get
-%        \begin{multline*}
-%            m_k(P_2) - m_k(P_1)
-%            = \sum_{i \geq 1} g(v_i)*v_i^k - \sum_{i \geq 1} f(v_i)*v_i^k \\
-%            = \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + \sum_{i = n}^{\infty} (g(v_i) - f(v_i))*v_i^k
-%            \geq \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + (g(v_n) - f(v_n)) * v_n^k
-%        \end{multline*}
-        Then we get:
-        \begin{multline*}
-            m_k(P_2) - m_k(P_1)
-            = \sum_{v \in V} (g(v) - f(v))*v^k \\
-            = \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + \biggpars{\sum_{v \in V_r} (g(v) - f(v))*v^k} \\
-            \geq \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
-        \end{multline*}
-        
-%        Similar to before, we find $c_{l} > 0$ such that $\forall v \in V_l: g(v) - f(v) \geq - c_{l}$, and let $- n c_l \eqqcolon c_{\text{left}}$. Also, let $c_{\text{right}} \coloneqq g(v) - f(v)$. We get
-%%        \begin{multline*}
-%%            \biggpars{ \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k} + (g(v_n) - f(v_n)) * v_n^k
-%%            % TODO problematic if n = 1, so v_0 does not exist?
-%%            \geq -n c_l v_{n-1}^k + c_{\text{right}}*v_n^k = c_{\text{right}}*v_n^k  - c_{\text{left}}*v_{n-1}^k
-%%        \end{multline*}
-%        \begin{multline*}
-%            \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
-%        \end{multline*}
-%        Since $v_{n-1} < v_n$, this difference is positive for all $k$ large enough, and $P_1 \lesstail P_2$.
-
-        Since $f, g$ are probability mass functions, we have $(g-f) \geq (-1)$. 
-        Pick some $u < x_0$ such that $P_1([u, x_0)) < \frac{1}{2}(g(x_0) - f(x_0))$.
-        Then in particular, 
-        \begin{gather*}
-            \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} > -u^k - \frac{1}{2}(g(x_0) - f(x_0))*x_0^k
-        \end{gather*}
-        From this we get:
-        \begin{multline*}
-           \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
-           > -u^k + \frac{1}{2}(g(x_0) - f(x_0))*x_0^k
-        \end{multline*}
-        Since $u < x_0$, this is positive for all $k$ large enough.
+        We can view discrete distributions as absolutely continuous with respect to the counting measure $\#$, and e.g. write $P_1(B) = \lintegral{B}{f}{\#}$.
+        Let $B \in \B, B \subseteq [x_0, \infty)$. Then analogous to the previous proof, we get
+        $P_1(B) = \lintegral{B}{f}{\#} \leq \lintegral{B}{g}{\#} = P_2(B)$.
+        Also, $P_1([x_0, \infty)) = f(x_0) + P_1((x_0, \infty)) \leq f(x_0) + P_2((x_0, \infty)) < g(x_0) + P_2((x_0, \infty)) = P_2([x_0, \infty))$.
+        This shows that the conditions of Theorem \ref{thm:tailOrderSufficientConditionsGeneral} hold, and $P_1 \lesstail P_2$.
         
         \ref{item:discreteFiniteTailOrder-DominatingPointEquivalence}:
-        By \ref{item:discreteTailOrder-DominatingPointSuffCondition}, the condition in \eqref{eq:discreteFiniteTailOrder-DominatingPointEquivalence} is sufficient; We need to show that in the finite case, it is also necessary.
+        We show that in the finite case the condition is not only sufficient, but also necessary.
         Suppose $P_1 \lesstail P_2$, let $v_1 < \dots < v_m$ denote the values in the common support.
         Let $n$ be the maximal index such that $f(v_n) \neq g(v_n)$: Such an $n$ must exist; else, $f(v_i) = g(v_i)$ for all $i$ would imply $P_1 = P_2$ in contradiction to our assumption.
         Since by the above sufficient condition, $f(v_n) > g(v_n)$ would imply $P_1 \greatertail P_2$, we must have $f(v_n) < g(v_n)$. So $x_0 \coloneqq v_n$ fulfills the desired property.
     \end{proof}
+
+%    \begin{proof}
+%        \ref{item:discreteTailOrder-DominatingPointSuffCondition}:
+%        Similar to the proof of Theorem \ref{thm:acTailOrderSuffConditions}, we want to show that $m_k(P_2) - m_k(P_1) > 0$ for all large enough $k$.
+%        Let $V \coloneqq \supp(f) \cup \supp(g)$, and let $V_l \coloneqq V \cap (-\infty, x_0), V_r \coloneqq V \cap [x_0, \infty)$.
+%%        Let $v_1 < v_2 < \dots$ denote the values that get assigned positive probability mass by either $f$ or $g$, in ascending order.
+%%        Let $n$ be such that $x_0 = v_n$. Then we get
+%%        \begin{multline*}
+%%            m_k(P_2) - m_k(P_1)
+%%            = \sum_{i \geq 1} g(v_i)*v_i^k - \sum_{i \geq 1} f(v_i)*v_i^k \\
+%%            = \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + \sum_{i = n}^{\infty} (g(v_i) - f(v_i))*v_i^k
+%%            \geq \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k + (g(v_n) - f(v_n)) * v_n^k
+%%        \end{multline*}
+%        Then we get:
+%        \begin{multline*}
+%            m_k(P_2) - m_k(P_1)
+%            = \sum_{v \in V} (g(v) - f(v))*v^k \\
+%            = \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + \biggpars{\sum_{v \in V_r} (g(v) - f(v))*v^k} \\
+%            \geq \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
+%        \end{multline*}
+%        
+%%        Similar to before, we find $c_{l} > 0$ such that $\forall v \in V_l: g(v) - f(v) \geq - c_{l}$, and let $- n c_l \eqqcolon c_{\text{left}}$. Also, let $c_{\text{right}} \coloneqq g(v) - f(v)$. We get
+%%%        \begin{multline*}
+%%%            \biggpars{ \sum_{i = 1}^{n-1} (g(v_i) - f(v_i))*v_i^k} + (g(v_n) - f(v_n)) * v_n^k
+%%%            % TODO problematic if n = 1, so v_0 does not exist?
+%%%            \geq -n c_l v_{n-1}^k + c_{\text{right}}*v_n^k = c_{\text{right}}*v_n^k  - c_{\text{left}}*v_{n-1}^k
+%%%        \end{multline*}
+%%        \begin{multline*}
+%%            \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
+%%        \end{multline*}
+%%        Since $v_{n-1} < v_n$, this difference is positive for all $k$ large enough, and $P_1 \lesstail P_2$.
+%
+%        Since $f, g$ are probability mass functions, we have $(g-f) \geq (-1)$. 
+%        Pick some $u < x_0$ such that $P_1([u, x_0)) < \frac{1}{2}(g(x_0) - f(x_0))$.
+%        Then in particular, 
+%        \begin{gather*}
+%            \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} > -u^k - \frac{1}{2}(g(x_0) - f(x_0))*x_0^k
+%        \end{gather*}
+%        From this we get:
+%        \begin{multline*}
+%           \biggpars{\sum_{v \in V_l} (g(v) - f(v))*v^k} + (g(x_0) - f(x_0))*x_0^k
+%           > -u^k + \frac{1}{2}(g(x_0) - f(x_0))*x_0^k
+%        \end{multline*}
+%        Since $u < x_0$, this is positive for all $k$ large enough.
+%        
+%        \ref{item:discreteFiniteTailOrder-DominatingPointEquivalence}:
+%        By \ref{item:discreteTailOrder-DominatingPointSuffCondition}, the condition in \eqref{eq:discreteFiniteTailOrder-DominatingPointEquivalence} is sufficient; We need to show that in the finite case, it is also necessary.
+%        Suppose $P_1 \lesstail P_2$, let $v_1 < \dots < v_m$ denote the values in the common support.
+%        Let $n$ be the maximal index such that $f(v_n) \neq g(v_n)$: Such an $n$ must exist; else, $f(v_i) = g(v_i)$ for all $i$ would imply $P_1 = P_2$ in contradiction to our assumption.
+%        Since by the above sufficient condition, $f(v_n) > g(v_n)$ would imply $P_1 \greatertail P_2$, we must have $f(v_n) < g(v_n)$. So $x_0 \coloneqq v_n$ fulfills the desired property.
+%    \end{proof}
 
     \begin{defn}
         % TODO cite from somewhere, and discuss the term
@@ -1084,34 +1151,39 @@ find it, neither can the market.” There are various exact and numerical algori
             (x_1, \dots, x_n) \leqRlex (y_1, \dots, y_n) \colonlra x = y \vee (\exists k: x_k < y_k \wedge x_i = y_i ~\forall i > k)
         \end{gather*}
     \end{defn}
-    $\leqRlex$ is very similar to the usual lexicographic order, but starts comparing from the right instead of from the left.
+    $\leqRlex$ is very similar to the usual lexicographic order, but starts comparing from the right instead of from the left. \footnote{There is no consistent name for this in the literature; \emph{reflected lexicographic order} is supported by \cite{bib:oeisRefLexOrder}}
     
     \begin{cor}
-        Let $P_1, P_2 \in \Fgeq \cap L$ be discrete distributions with probability mass functions $f, g$ and finite common support $(\supp P_1 \cup \supp P_2) = \set{v_1, \dots, v_m}$ with the support elements $v_i$ in increasing order. Then
+        Let $P_1, P_2 \in \Dgeqone \cap L$ be discrete distributions with probability mass functions $f, g$ and finite common support $(\supp P_1 \cup \supp P_2) = \set{v_1, \dots, v_m}$ with the support elements $v_i$ in increasing order. Then
         \begin{gather}            
             P_1 \leqtail P_2 \lra (f(v_1), \dots, f(v_m)) \leqRlex (g(v_1), \dots, g(v_m))
             \label{eq:discreteFiniteTailOrder-RLexEquivalence}
         \end{gather}
         \label{cor:discreteFiniteTailOrder-RLexEquivalence}
     \end{cor}
+    \vspace{-1.2cm}
     \begin{proof}
-        This follows directly from Theorem \ref{thm:discreteTailOrderSuffConditions} and its proof via the definition of $\leqRlex$.
+        This follows directly from Theorem \ref{thm:discreteTailOrderSuffConditions} (\ref{item:discreteFiniteTailOrder-DominatingPointEquivalence}) via the definition of $\leqRlex$.
     \end{proof}    
     %TODO it would be great to state theorems involving the distribution functions.
-    In the more general case of distributions in $\Fgeq \cap L$ which are either absolutely continuous or discrete, but supported on a countably infinite set, Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} only give sufficient conditions. Both can not be made into equivalences, as the following counter-examples show.
+    In the more general case of distributions in $\Dgeqone \cap L$ which are either absolutely continuous, or discrete, but supported on a countably infinite set, Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} only give sufficient conditions.
+    Both can not be made into equivalences, as the following counter-examples show. \cite{bib:rassGameRiskManagI} originally claimed an equivalence (meanwhile corrected) and assumed distributions with bounded support and continuous density functions, which is why we give counterexamples satisfying these properties.
     \begin{ex}~
         \label{ex:tailOrderSufficientConditionsCounterexamples}
-        We want to construct pairs of distributions which do not satisfy the sufficient conditions from above theorems:
-        Their probability mass/density functions should \emph{not} be such that one dominates the other from one point on, and instead switch infinitely often.
-        Furthermore, we want our counterexamples to satisfy additional properties: 
-        First, they should have bounded support. 
-        Second, not only the mass/density functions should alternate, but also the distribution functions, showing that no alternative criterion for $\lesstail$ requiring eventual distribution function dominance can be made into an equivalence.
-        Third, in the absolutely continuous case, the densities should be continuous.      
+        We construct pairs of distributions which do not satisfy the sufficient conditions from above theorems:
+        Their probability mass/density functions alternate infinitely often, and hence are \emph{not} such that one dominates the other from one point on.
+        Furthermore, our counterexamples satisfy additional properties, to show that \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} can not be made into equivalences even with stricter conditions:
+        They have bounded support, alternating distribution functions and, in the absolutely continuous case, continuous density functions.
+        The last two points are the reason why the counterexamples are quite complicated.
+%        Second, not only the mass/density functions should alternate, but also the distribution functions, showing that no alternative criterion for $\lesstail$ requiring eventual distribution function dominance can be made into an equivalence.
+%        Third, in the absolutely continuous case, the densities should be continuous.      
     
         \begin{enumerate}
             \item
+            \textbf{An infinite family of discrete distributions with pairwise alternating mass and distribution functions and bounded support.}
+            
             \label{item:geometricSeriesSufficientTailOrderConditionCounterexample}
-            Our first discrete example is based on the geometric series and has a nice visual proof of alternating distribution functions, but we have no complete proof of moment-sequence dominance.
+            This example uses the geometric series and has a nice visual proof of alternating distribution functions, but we have no complete proof of moment-sequence dominance.
             For $c > 1$, let $P_c$ be defined by $P(\set{2-\bigpars{\frac{1}{c}}^k}) = (c-1)\bigpars{\frac{1}{c}}^k$ for all $k \in \N$, and zero everywhere else.
             These are constructed to sum to $1$ by the geometric series.
             Letting $a_k \coloneqq \bigpars{\frac{1}{c}}^k$, we will use that $\sum_{j = 1}^k  a_k = \frac{1 - \pars{\frac{1}{c}}^k}{c - 1} = \frac{1 - a_k}{c - 1}$.
@@ -1156,12 +1228,12 @@ find it, neither can the market.” There are various exact and numerical algori
                 \vspace*{0.01\textwidth}
                 \begin{subfigure}[t]{0.49\textwidth}
                     \includegraphics[width=\textwidth]{Pictures/ac-densities-masses.png}
-                    \caption{Absolutely continuous construction: Densities (\ref{item:acSufficientTailOrderConditionCounterexample})/corresponding mass functions (\ref{item:discreteSufficientTailOrderConditionCounterexample}), scaled by a factor of 30}
+                    \caption{Absolutely continuous construction: Densities (\ref{item:acSufficientTailOrderConditionCounterexample})/corresponding mass functions (\ref{item:discreteSufficientTailOrderConditionCounterexample}) (scaled by a factor of 30 to be visible)}
                     \label{fig:acCounterexample-masses-densities}
                 \end{subfigure}
                 \begin{subfigure}[t]{0.49\textwidth}
                     \includegraphics[width=\textwidth]{Pictures/ac-distribution.png}
-                    \caption{Distribution function of absolutely continuous construction \ref{item:acSufficientTailOrderConditionCounterexample}}
+                    \caption{Distribution functions of absolutely continuous construction \ref{item:acSufficientTailOrderConditionCounterexample}}
                     \label{fig:acCounterexample-distribution}
                 \end{subfigure}
                 
@@ -1170,8 +1242,10 @@ find it, neither can the market.” There are various exact and numerical algori
             \end{figure}
     
             \item 
+            \textbf{A process to produce two discrete distributions with pairwise alternating mass and distribution functions and bounded support which are $\leqtail$-comparable.}
+            
             \label{item:discreteSufficientTailOrderConditionCounterexample}
-            In another, more general approach, we start with some discrete distribution $P$ with $\supp P = \set{s_1, s_2, \dots} \subseteq [a, b)$, $1 < a < b$, the $s_i$ in increasing order, and probability mass function $f$ which is strictly decreasing on the support, i.e. $\forall i < j: f(s_i) > f(s_j)$. We construct $\tilde{P}$ with mass function $g$, where each support point is shifted a bit to the right, with its probability adjusted to be only a little smaller, giving the remaining probability mass to the point $\tilde{a} \coloneqq \frac{1+a}{2}$.
+            In this more general counterexample, we start with some discrete distribution $P$ with $\supp P = \set{s_1, s_2, \dots} \subseteq [a, b)$, $1 < a < b$, the $s_i$ in increasing order, and probability mass function $f$ which is strictly decreasing on the support, i.e. $\forall i < j: f(s_i) > f(s_j)$. We construct $\tilde{P}$ with mass function $g$, where each support point is shifted a bit to the right, with its probability adjusted to be only a little smaller, giving the remaining probability mass to the point $\tilde{a} \coloneqq \frac{1+a}{2}$.
             First, set $\tilde{s}_i \coloneqq \frac{s_i+ s_{i+1}}{2}$.
             We adjust the probability of $\tilde{s}_i$ by a factor $c_i < 1$, i.e. $g(\tilde{s}_i) = c_i f(s_i)$, chosen such that $c_i \geq \frac{s_i}{\tilde{s_i}}$ (ensuring $\tilde{P}$ has greater moments than $P$), $c_i \geq 1-\frac{1}{2^i}$ (ensuring the distribution functions alternate), and $c_i \geq \frac{f(s_{i+1})}{f(s_i)}$ (ensuring that $g$ 
             also is monotonic on its support). In summary, we have:            
@@ -1207,10 +1281,13 @@ find it, neither can the market.” There are various exact and numerical algori
             Using the second property of $c_i$ and monotonicity of $f$, we get
             $\sum_{i \geq k} f(s_i) (1-c_i) \leq \sum_{i \geq k} f(s_i) \frac{1}{2^i} < \frac{1}{2^{k-1}} f(s_k) \leq f(s_k)$,
             therefore $G(s_k) < F(s_k)$.
-            So $P \lesstail \tilde{P}$, and their probability mass, as well as distribution functions are infinitely alternating, such that the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} is not satisfied for any $x_0$.
-            Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending wrt. $\lesstail$, and no two distribution in it satisfy the sufficient condition of \ref{thm:acTailOrderSuffConditions} (and for any two \emph{consecutive} elements, the distribution functions are infinitely alternating as well).
+            So in summary we have $P \lesstail \tilde{P}$, and their probability mass, as well as distribution functions are infinitely alternating.
+%            , such that the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} is not satisfied for any $x_0$.
+            Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending wrt. $\lesstail$, and no two distributions in it satisfy the sufficient condition of \ref{thm:acTailOrderSuffConditions} (and for any two \emph{consecutive} elements, the distribution functions are infinitely alternating as well).
             
             \item 
+            \textbf{A process to produce two absolutely continuous distributions with pairwise alternating density and distribution functions, continuous densities and bounded support which are $\leqtail$-comparable.}
+            
             \label{item:acSufficientTailOrderConditionCounterexample}
             For the absolutely continuous counterexample, we start with two discrete distributions $P_1, P_2$ where $P_2$ is obtained from $P_1$ by the process from \ref{item:discreteSufficientTailOrderConditionCounterexample}: In particular, we require $P_1 \lesstail P_2$, $\supp(P_1) = \set{s_1, s_2, \dots}$, $\supp(P_2) = \set{t_0, t_1, t_2, \dots}$ with $1 < t_0 < s_1 < t_1 < s_2 < t_2 < \dots$ ($t_0$ represents $\tilde{a}$ from above), and their distribution functions $F, G$ should alternate with $F(s_k) > G(s_k), F(t_k) < G(t_k) ~\forall k\geq 1$.
 %            their mass functions $f, g$ should satisfy $f(s_i)s_i < g(t_i)t_i ~ \forall i$ (and therefore 
@@ -1264,19 +1341,19 @@ find it, neither can the market.” There are various exact and numerical algori
         \end{enumerate}
     \end{ex}
     
-    \subsection{The Tail Order and Totality: Restricting the Ordered Space}
+    \subsection{Can the Tail Order Be Made a Total Order?}
     When we introduced the tail order, we already discussed its anti-symmetry and totality properties: In short, $\leqtail$ in general is neither total nor anti-symmetric; For anti-symmetry, good counterexamples of distributions with equal moment sequences exist, however anti-symmetry \emph{does} hold on the reasonably large subset of distributions with bounded support.
     For totality, the situation is less clear: the only counterexamples we saw so far were trivially not $\leqtail$-comparable because they did not even have moments of all orders.
-    A natural question thus is if there is some useful subset of $\DP$ where $\leqtail$ is total. Most generally, is $\leqtail$ total on $L$, i.e. are distributions comparable as soon as  they have moments of all orders? This first question is easy to answer: $\leqtail$ is not total on the whole of $L$, because distributions can take negative values that can make the moment sequences alternating. 
+    A natural question thus is if there is some useful subset of $\DP$ where $\leqtail$ is total. As a first observation, $\leqtail$ can not be total on all of $L$, because distributions can take negative values that can make the moment sequences alternating. 
     % TODO make this “alternating moment sequences” example even shorter [using Dirac measure notations]. Maybe  even move it further up, to the definition of tail order, discussing that \leqtail is not useful on negative values in the support
-    As the simplest example, consider the point-mass distributions on $-1$ and $0$: The moment sequence of the former is given by $(-1)^n$, alternating around the sequence of the latter which is constantly $0$, making the distributions not $\leqtail$-comparable.
-    However, a more realistic question is: is there a smaller subset of $\DP$ where $\leqtail$ is total, which is easy to characterize and big enough to contain many useful distributions?
+    As the simplest example, consider the point-mass distributions on $\delta_{-1}$ and $\delta_{0}$: The moment sequence of the former is given by $(-1)^n$, alternating around the sequence of the latter which is constantly $0$, making the distributions not $\leqtail$-comparable.
+    A more realistic question is: is there a smaller subset of $\DP$ where $\leqtail$ is total, which is easy to characterize and big enough to contain many useful distributions?
     
     In \cite{bib:rassGameRiskManagI,bib:rassTotalOrderingOnLossDistributions}, the discussion focuses on the particular subset of distributions that have \emph{bounded support which is a subset of $[1, \infty)$} and are either \emph{discrete with finite support}, or \emph{absolutely continuous with a continuous density function}.
     In \cite[Lemma 2]{bib:rassTotalOrderingOnLossDistributions} and \cite[Lemma 2.4]{bib:rassGameRiskManagI}, the claim is that such distributions are always $\leqtail$-comparable.
     A proof is given for the absolutely continuous case; however, it contains an error, as it applies an argument similar to Theorem \ref{thm:acTailOrderSuffConditions} and implicitly assumes that of two density functions, one dominates the other from some point on
     \footnote{Meanwhile, the error was fixed in \cite{bib:rassGameRiskManagI}, and a new version was uploaded to arxiv stating all requirements.}.
-    As shown in Example \ref{ex:tailOrderSufficientConditionsCounterexamples}, pairs of distributions exist where this is not the case, and which also are in $\Fgeq$, bounded, and have continuous density functions.
+    As shown in Example \ref{ex:tailOrderSufficientConditionsCounterexamples}, pairs of distributions exist where this is not the case, and which also are in $\Dgeqone$, bounded, and have continuous density functions.
     
     \subsubsection{The Moment Problem and its Variants}
     Since our question crucially depends on properties of moment sequences, it will be helpful to know about the properties of moment sequences.
@@ -1364,7 +1441,7 @@ find it, neither can the market.” There are various exact and numerical algori
     \end{ex}
 
     This shows that the space of probability measures supported on a subset of $[0, \infty)$ that have moments of all orders is still too large for $\leqtail$ to be total.
-    \todo{Give a counterexample explicitly.}
+%    \todo{Give a counterexample explicitly.}
     
     \subsubsection{Distributions with Non-Negative Bounded Support}
     Next we look at distributions with support in a bounded interval $[a, b]$, $0 \leq a < b$.
@@ -1803,7 +1880,7 @@ find it, neither can the market.” There are various exact and numerical algori
         Since this is what happens in the above sum representation, we get the equivalence.
     \end{proof}
 
-    Considering that $\leqtail$ is “essentially lexicographic” in the sense of Theorems \ref{thm:discreteTailOrderSuffConditions}, \ref{thm:acTailOrderSuffConditions}, \ref{cor:discreteFiniteTailOrder-RLexEquivalence},
+    Considering that $\leqtail$ is “essentially lexicographic” in the sense of Theorems \ref{thm:acTailOrderSuffConditions}, \ref{thm:discreteTailOrderSuffConditions}, \ref{cor:discreteFiniteTailOrder-RLexEquivalence},
     $\leqtw$ can be understood as a coarser version of the tail order, in which the ordering decision is made considering probabilities in larger regions lexicographically instead of only considering single points.
     Since $\leqRlex$ is total, $\leqtw$ is a total order on $\Fab$ (yet obviously not on $\DP$). It is not anti-symmetric, since it is indifferent between any two distributions with equal expected values in each of the partition intervals.
     
