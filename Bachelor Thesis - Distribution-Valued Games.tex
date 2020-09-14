@@ -431,6 +431,7 @@
     
     Allowing mixed strategies is crucial for the existence of Nash equilibria, as there are many games that do not have pure Nash equilibria. There are results that show that randomly chosen games have pure Nash equilibria with decreasing probability as the game size grows, which are as summarized in the following theorem:
     \begin{thm}[{\cite{bib:goldbergProbabilityOfEquilibria}, also cf. \cites[p.15]{bib:matsumotoGameTheory}[Exercise 1.2]{bib:nisanAlgorithmicGameTheoryCh1Basic}}]~
+        \label{thm:probabilityOfPureNashEquilibria}
         \begin{enumerate}
             \item
             Consider finite two-player \emph{matrix} (i.e. zero-sum) games with $n$ and $m$ pure strategies for player 1 and 2, where each of the $n*m$ payoffs is picked iid from some continuous probability distribution.
@@ -633,7 +634,7 @@ find it, neither can the market.” There are various exact and numerical algori
     Suppose we want to find a Nash equilibrium where player one mixes between rows with indices in $I \subseteq [n]$, and player 2 mixes between columns with indices in $J \subseteq [m]$. Then player 1 must mix in a way that makes player 2 indifferent between the columns in $J$, and player 2 must mix in a way that makes player 1 indifferent between the rows in $I$.
     This is expressed in two linear systems of equations, where $i_1 \coloneqq \min(I), j_1 \coloneqq \min(J)$ are the smallest indices in $I$ and $J$, respectively:
     \begin{gather}
-        (Ay)_{i_k} = (Ay)_{i_1} ~~~(\forall i_k \in I \setminus\set{i_1}), \qquad\;\, \sum_{j \in J} y_j = 1 \\
+        (Ay)_{i_k} = (Ay)_{i_1} ~~~(\forall i_k \in I \setminus\set{i_1}), \qquad\;\, \sum_{j \in J} y_j = 1 \label{eq:linearSystemNecessaryForNashEquilibrium} \\
         (xB)_{j_k} = (xB)_{j_1} ~~~(\forall j_k \in J \setminus\set{j_1}), \qquad \sum_{i \in I} x_i = 1
     \end{gather}
     If some strategy profile $(x, y)$ solves this system of equations, it is a candidate for a mixed-strategy Nash equilibrium.
@@ -896,6 +897,7 @@ find it, neither can the market.” There are various exact and numerical algori
     \newcommand{\lessRlex}{<_{\textsc{Rlex}}}
     \newcommand{\geqRlex}{\geq_{\textsc{Rlex}}}
     \newcommand{\greaterRlex}{>_{\textsc{Rlex}}}
+    \newcommand{\leqLex}{\leq_{\textsc{Lex}}}
     % Tweakable Stochastic Order
     \newcommand{\leqtw}[1][]{\dleq_{\text{\tiny tw,$\scriptscriptstyle\ifstrempty{#1}{\mathcal{I}}{#1}$}}}
     \newcommand{\geqtw}[1][]{\dgeq_{\text{\tiny tw,$\scriptscriptstyle\ifstrempty{#1}{\mathcal{I}}{#1}$}}}
@@ -1698,7 +1700,7 @@ find it, neither can the market.” There are various exact and numerical algori
      
     
     \section{Nash Equilibria in Tail-Ordered Games}
-    We will now look at Nash equilibria of distribution-valued games with respect to the stochastic tail order.
+    We will now analyze Nash equilibria of distribution-valued games with respect to the stochastic tail order.
     An important result of this section is that, unlike their real-valued counterparts, these games fail to have mixed-strategy Nash equilibria in general.
     
     We restrict our attention to games with finitely supported distributions as payoffs, and we will show that such games already fail to have mixed-strategy Nash equilibria in many cases.
@@ -1791,9 +1793,12 @@ find it, neither can the market.” There are various exact and numerical algori
     Example \ref{ex:reflectedLexicographicallyOrderedGameWithoutEquilibria} already gives an idea why different Nash equilibria in different coordinates can keep ref-lex-ordered games from having Nash equilibria. The rest of this subsection formalizes and refines the conditions seen in the example.
     While the example concerned a zero-sum game, i.e. a vector-valued game with respect to the orders ${(\leqRlex,\geqRlex)}$, we will instead focus on games with respect to ${(\leqRlex,\leqRlex)}$ for simplicity. This is not an essential difference: 
     For any vector-valued bimatrix game $G$, we can define $\hat{G}$ as the game where the payoffs of player 2 are negated -- then $G_{{(\leqRlex,\geqRlex)}}$ and $\hat{G}_{{(\leqRlex,\leqRlex)}}$ are isomorphic, and we can apply the following results to $\hat{G}_{{(\leqRlex,\leqRlex)}}$ and thereby obtain information about the Nash equilibria of $G_{{(\leqRlex,\geqRlex)}}$.
-    The same approach of course works for $G_{{(\geqRlex,\leqRlex)}}$, which captures the assumption of loss distributions instead of payoff distributions made in \cite{bib:rassGameRiskManagI}. Recall from Definition \ref{def:distributionValuedGame} that we write $G_{\leqRlex}$ as a short form of $G_{(\leqRlex, \leqRlex)}$.
+    The same approach of course works for $G_{{(\geqRlex,\leqRlex)}}$, which captures the assumption of loss distributions instead of payoff distributions made in \cite{bib:rassGameRiskManagI}. 
+    Also, that we use the \emph{reflected} lexicographic order instead of the usual lexicographic order is merely because it corresponds to the tail order more naturally; all results in this section can be rephrased for vector-valued games ordered by $\leqLex$.
+    Recall from Definition \ref{def:distributionValuedGame} that we write $G_{\leqRlex}$ as a short notation for $G_{(\leqRlex, \leqRlex)}$.
     
     \begin{lemma}
+        \label{lem:GmHasAllNashEquilibriaOfG}
         Let $G$ be a vector-valued bimatrix game with values in $\R^m$.
 %        Then the set of Nash equilibria of $G_{\leqRlex}$ is a subset of the set of Nash equilibria of the projected game $\Gproj{m}$:
         Then any Nash equilibrium $(s_1, s_2)$ of $G_{\leqRlex}$ is also a Nash equilibrium of $\Gproj{m}$.
@@ -1938,8 +1943,9 @@ find it, neither can the market.” There are various exact and numerical algori
         we have $u_1^m(\tilde{s}_1, s_2) = u_1^m(s_1, s_2)$, and  $\forall i \in [m - 1]: u_1^i(\tilde{s}_1, s_2) = \bar{u}_1^i(\tilde{t}_1, t_2) \leq \bar{u}_1^i(t_1, t_2) = u_1^i(s_1, s_2)$ because $(t_1, t_2)$ is a Nash equilibrium in every $\Gprojsub{i}$. Therefore $u_1(\tilde{s}_1, s_2) \leqRlex u_1(s_1, s_2)$.
     \end{proof}
 
-    The additional condition for equivalence holds in particular if $G_m$ is non-degenerate (see Definition \ref{def:degenerateRealValuedGame}):
+    The additional condition for equivalence holds in particular if $\Gproj{m}$ is non-degenerate (see Definition \ref{def:degenerateRealValuedGame}):
     \begin{cor}        
+        \label{cor:degenerateGamesYieldLeqRlexEquivalence}
         Let $G$ be an $m$-dimensional vector-valued bimatrix game, let $\Gproj{m}$ have the Nash equilibrium $(s_1, s_2)$ and be non-degenerate.
         Then $G_{\leqRlex}$ has the Nash equilibrium $(s_1, s_2)$ if and only if $\forall i \in [m-1]$, $\Gprojsub{i}$ has the Nash equilibrium $(t_1, t_2)$.
     \end{cor}
@@ -1948,6 +1954,20 @@ find it, neither can the market.” There are various exact and numerical algori
         Since $G_m$ is non-degenerate, $s_1$ has at most $\abs{T_1}$ pure-strategy best responses, and $s_2$ has at most $\abs{T_2}$ pure-strategy best responses.
         By Theorem \ref{thm:bestResponseMixing}, all strategies in $T_2$ are best responses to $s_1$, and all strategies in $T_1$ are best responses to $s_2$. Therefore $\abs{T_2} \leq \abs{T_1}$ and $\abs{T_1} \leq \abs{T_2}$, which implies $\abs{T_1} = \abs{T_2}$.
         Since neither $s_1$ nor $s_2$ can have more than $\abs{T_1} = \abs{T_2}$ pure best responses, the additional condition of Theorem \ref{thm:rlexGameProjectedSubgameCharacterization} is satisfied, which yields the equivalence.
+    \end{proof}
+
+    If $\Gproj{m}$ is non-degenerate, we can also characterize pure-strategy Nash equilibria of $G_{\leqRlex}$.
+    \begin{cor}
+        \label{cor:degenerateGamesYieldPureEquilibriaGmGEquivalence}
+        Let $G$ be an $m$-dimensional vector-valued bimatrix game. If $\Gproj{m}$ is non-degenerate and $s_1, s_2$ are pure strategies, the following equivalence holds:
+        \begin{gather*}
+            \text{$G_{\leqRlex}$ has the Nash equilibrium $(s_1, s_2) \lra \Gproj{m}$ has the Nash equilibrium $(s_1, s_2)$.}
+        \end{gather*}
+    \end{cor}
+    \begin{proof}
+        “$\Rightarrow$” holds by Lemma \ref{lem:GmHasAllNashEquilibriaOfG}.
+        For “$\Leftarrow$”, we use Corollary \ref{cor:degenerateGamesYieldLeqRlexEquivalence}: Since $\abs{\supp s_1} = \abs{\supp s_2} = 1$, all subgames $\Gprojsub{i}, i \in [m-1]$ are games with only one strategy for each player. They therefore trivially all have $(t_1, t_2)$ as Nash equilibrium.
+        Therefore $G_{\leqRlex}$ has the Nash equilibrium $(s_1, s_2)$.
     \end{proof}
 
     The additional condition in Theorem \ref{thm:rlexGameProjectedSubgameCharacterization} can not be left out, as the next example shows.
@@ -1984,20 +2004,103 @@ find it, neither can the market.” There are various exact and numerical algori
          \Rightarrow\quad &G_{\leqRlex} \text{ has the Nash equilibrium } (s_1, s_2) \\
          \Rightarrow\quad &\forall i \in [m-1]: \Gprojsub{i} \text{ has the Nash equilibrium } (t_1, t_2).
     \end{align*}
-    This clearly places strict requirements on ref-lex-games to have mixed-strategy Nash equilibria. There are two possibilities for each game $G_{\leqRlex}$: Either $G_m$, and therefore $G_{\leqRlex}$, has a pure Nash equilibrium -- or $G_m$ only has a mixed Nash equilibrium, in which case the same equilibrium must be supported by all projected subgames $\Gprojsub{i}$ in order for $G_{\leqRlex}$ to have a Nash equilibrium at all.
-%    But if it does not, then for the game to have a Nash equilibrium, \emph{exactly the same} Nash equilibrium as in $\Gproj{m}$ must occur in all projected subgames $\Gprojsub{i}$.
-    For further work, it might be interesting to look at the proportion of ref-lex-games that have non-pure Nash equilibria
-    \footnote{With \emph{non-pure}, we mean “properly mixed”, whereas \emph{mixed equilibria} include pure and properly mixed equilibria (i.e. $(s_1, s_2)$ is non-pure if at least one of $s_1, s_2$ is not a pure strategy)}, or the probability that a ref-lex-game picked randomly in some way has a Nash equilibrium (or has a non-pure Nash equilibrium). Given the harsh requirements for non-pure Nash equilibria to exist, it seems a plausible conjecture that the set of ref-lex games with non-pure Nash equilibria is a null set with respect to some reasonable measure, or at least the probability of having non-pure Nash equilibria becomes very small with increasing game size.
+    The second implication clearly places strict requirements on ref-lex-games to have mixed-strategy Nash equilibria. There are two possibilities for each game $G_{\leqRlex}$: Either $G_m$, and therefore $G_{\leqRlex}$, has a pure Nash equilibrium -- or $G_m$ only has a mixed Nash equilibrium, in which case the same equilibrium must be supported by all projected subgames $\Gprojsub{i}$ in order for $G_{\leqRlex}$ to have a Nash equilibrium at all.
+    
     
     \subsubsection{Nash Equilibria in Distribution-Valued Tail-Order Games}
     These results for ref-lex-ordered games have the important consequence for distribution-valued games that even those distribution-valued games whose payoff distributions have only finite support do not have Nash equilibria in general.
     A concrete example of this was already given in Example \ref{ex:reflectedLexicographicallyOrderedGameWithoutEquilibria}: The payoff vectors all sum to $1$ (i.e. represent probability distributions), so the game is isomorphic to a distribution-valued game.
-%    We did not investigate other types of distributions, but we can hardly expect things to be different there: 
+    %    We did not investigate other types of distributions, but we can hardly expect things to be different there: 
     As the existence of Nash equilibria already fails to hold in the case of such simple distributions, it also fails to hold in more general cases.
     For example, any game where the payoffs have finite common support can be converted to an isomorphic game with absolutely continuous payoffs by performing a convolution with a uniform distribution $U([-\epsilon, \epsilon])$ for some $\epsilon$ small enough. Therefore, games with absolutely continuous payoffs certainly also fail to have Nash equilibria in general.
     % TODO possibly illustrate this point
+
     
+    \subsection{Probability that Reflected-Lexicographically-Ordered Games have Nash Equilibria}
     
+    %    But if it does not, then for the game to have a Nash equilibrium, \emph{exactly the same} Nash equilibrium as in $\Gproj{m}$ must occur in all projected subgames $\Gprojsub{i}$.
+%    For further work, it might be interesting to look at the proportion of ref-lex-games that have non-pure Nash equilibria
+%    \footnote{With \emph{non-pure}, we mean “properly mixed”, whereas \emph{mixed equilibria} include pure and properly mixed equilibria (i.e. $(s_1, s_2)$ is non-pure if at least one of $s_1, s_2$ is not a pure strategy)}, or the probability that a ref-lex-game picked randomly in some way has a Nash equilibrium (or has a non-pure Nash equilibrium). Given the harsh requirements for non-pure Nash equilibria to exist, it seems a plausible conjecture that the set of ref-lex games with non-pure Nash equilibria is a null set with respect to some reasonable measure, or at least the probability of having non-pure Nash equilibria becomes very small with increasing game size.
+%    In the light of the strict requirements for ref-lex-games to have non-pure Nash equilibria and the existence of such games without any Nash equilibria, we can pose a question similar to the one answered in Theorem \ref{thm:probabilityOfPureNashEquilibria}: Given some vector-valued bimatrix game $G$ with randomly chosen payoffs, with which probability does $G_{\leqRlex}$ have a Nash equilibrium?
+%    It turns out that the probability is the same as the probability that $G_m$ has a pure Nash equilibrium. In other words, the probability that $G_{\leqRlex}$ has a \emph{non-pure} Nash equilibrium is $0$.
+    In the light of the strict requirements for ref-lex games to have non-pure Nash equilibria, one may wonder “how many” ref-lex games even have such equilibria. 
+    It even seems plausible that “almost no” ref-lex game has a non-pure Nash equilibrium.
+    This is indeed the case in a certain precise sense, and is formalized here in probabilistic way, similar to Theorem \ref{thm:probabilityOfPureNashEquilibria}:
+    We show that the probability that a randomly chosen $G_{\leqRlex}$ has a Nash equilibrium is the same as the probability that $\Gproj{m}$ has a \emph{pure} Nash equilibrium, or in other words, that $G_{\leqRlex}$ has a non-pure Nash equilibrium with probability zero.
+    
+    \begin{thm}
+        Let $G$ be an $m$-dimensional vector-valued bimatrix game, $m \geq 2$,
+        where all entries of all payoff vectors are picked iid from some absolutely continuous probability distribution.
+%        (each entry may be picked from a different distribution).
+        Let player 1 have $l$ pure strategies and player 2 have $n$ pure strategies.
+        Then 
+        \begin{gather}
+            P(\set{\textit{$G_{\leqRlex}$ has a Nash equilibrium}}) = \frac{l!n!}{(l+n-1)!}, \label{eq:probabilityThatGRlexHasAnEquilibrium}\\
+            P(\set{\textit{$G_{\leqRlex}$ has a non-pure Nash equilibrium}}) = 0. \label{eq:probabilityThatGRlexHasANonPureEquilibrium}
+        \end{gather}
+    \end{thm}
+    \begin{proof}[Proof (Sketch)]
+        If $G_{\leqRlex}$ has a Nash equilibrium, we first distinguish whether or not it has a pure equilibrium.
+        If it has a pure equilibrium, by Corollary \ref{cor:degenerateGamesYieldPureEquilibriaGmGEquivalence} this is equivalent to $\Gproj{m}$ having a pure equilibrium. Therefore we get:
+        \begin{align*}
+            &P(\set{\textit{$G_{\leqRlex}$ \small has a Nash equilibrium}})
+            =~ P(\set{\textit{\small$\Gproj{m}$ has a pure Nash equilibrium}}) \\
+            &+~  P(\set{\textit{\small$G_{\leqRlex}$ has a non-pure Nash equilibrium and no pure Nash equilibria}}).
+        \end{align*}
+        \sloppypar{
+        The first probability can be calculated with the formula from Theorem \ref{thm:probabilityOfPureNashEquilibria} as \(P(\set{\textit{\small$\Gproj{m}$ has a pure Nash equilibrium}}) = \frac{l!n!}{(l+n-1)!}\). The second probability can be bounded from above by leaving out one of the conditions:
+        }
+        \begin{multline*}
+            P(\set{\textit{\small$G_{\leqRlex}$ has a non-pure Nash equilibrium and no pure Nash equilibria}}) \\
+            \leq P(\set{\textit{\small$G_{\leqRlex}$ has a non-pure Nash equilibrium}})
+        \end{multline*}
+        To conclude the proof of both \eqref{eq:probabilityThatGRlexHasAnEquilibrium} and \eqref{eq:probabilityThatGRlexHasANonPureEquilibrium}, it remains to show that this probability vanishes.
+        We claim and use without proof that \(P(\set{\textit{\small$\Gproj{m}$ is degenerate}}) = 0\) (this is hinted at in \cite[p.54]{bib:nisanAlgorithmicGameTheoryCh3EquilibriumComputation}, which states that “almost all” games with real-valued payoffs are non-degenerate. Since we have no rigorous argument here, this proof is marked as sketch.).
+        Since $\Gproj{m}$ is non-degenerate almost surely, we can assume that $\Gproj{m}$ is non-degenerate in our calculations without changing the probabilities.
+%        Let $N$ denote the set of Nash equilibria of $\Gproj{m}$.
+
+        Assume $G_{\leqRlex}$ has a non-pure Nash equilibrium.
+        By Corollary \ref{cor:degenerateGamesYieldLeqRlexEquivalence}, since we assume $G_m$ is non-degenerate, this is equivalent to the statement that $\Gproj{m}$ has a non-pure Nash equilibrium $(s_1, s_2)$ such that $\forall i \in [m-1]: \Gprojsub{i} \text{ has the Nash equilibrium } (t_1, t_2)$.
+        Denote by $N_{\Gproj{m}}$ the set of Nash equilibria of $\Gproj{m}$. We can now further calculate the probabilities:
+%        Since $\Gproj{m}$ is non-degenerate with probability $1$, we get:
+        \begin{flalign}
+               &~P(\set{\textit{\small $G$ has a non-pure Nash equilibrium}}) \nonumber \\
+               &=~P(\set{\textit{\small$\exists s \in N_{\Gproj{m}}$ non-pure such that $\forall i \in [m-1]: \Gprojsub{i}$ has the Nash equilibrium $t$}}) \nonumber \\
+               &\leq~P(\set{\textit{\small$\exists s \in N_{\Gproj{m}}$ non-pure such that $\Gprojsub{m-1}$ has the Nash equilibrium $t$}}). \label{eq:probabilityGmAndGm-1HaveSameNonPureEquilibrium}
+        \end{flalign}
+        Next we show that for any specific non-pure strategy profile $s = (s_1, s_2) \in N_{\Gproj{m}}$, $\Gprojsub{m-1}$ has the Nash equilibrium $t = (t_1, t_2)$ with probability zero.
+        Since $s$ is non-pure and $\Gproj{m}$ can be assumed to be non-degenerate, we have that $r \coloneqq \abs{\supp s_1} = \abs{\supp s_2} \geq 2$.
+        We decompose the restricted strategy $t_2$ of player 2 into the probabilities it assigns to the pure strategies: $t_2 \eqqcolon (q_1, \dots, q_r)$.
+        Assume that $\Gprojsub{m-1}$ has payoff matrices $(X_{ij})_{i,j \in [r]}$ for player 1 and $(Y_{ij})_{i, j \in [r]}$ for player 2, where the $X_{ij}$, $Y_{ij}$ are iid absolutely continuous random variables.
+        By the equation \eqref{eq:linearSystemNecessaryForNashEquilibrium}, if $\Gprojsub{m-1}$ has the equilibrium $(t_1, t_2)$, it is necessary that $t_2$ makes player 1 indifferent between the first two rows (A bit informally, we write $x_{ij}$ for the realization of $X_{ij}$):
+        \begin{gather*}
+            \sum_{j=1}^{r} x_{1j} q_j = \sum_{j=1}^{r} x_{2j} q_j.
+        \end{gather*}
+        Therefore,
+        \begin{gather*}
+            P(\set{\textit{\small$\Gprojsub{m-1}$ has the Nash equilibrium $t$}})
+            \leq P\biggpars{\biggset{X_{1j} = \frac{1}{q_j} \biggpars{\sum_{j=1}^{r} X_{2j} q_j - \sum_{j=2}^{r} X_{1j} q_j}}}.
+        \end{gather*}
+%        Let $f: \R^{2r-1} \to \R, (x_{12}, \dots, x_{1r}, x_{21}, \dots, x_{2r}) \mapsto 
+%        The last probability is can be re-written as the probability that $\tilde{X} \coloneqq (X_{12}, \dots, X_{1r}, X_{21}, \dots, X_{2r}, X_{11})$ lies in the graph of a linear function $f: \R^{2r-1} \to \R$.
+        The last probability can further be represented as the probability that $\tilde{X} \coloneqq (X_{11}, \dots, X_{1r}, X_{21}, \dots, X_{2r})$ lies on a specific line in $\R^{2r}$. The Lebesgue measure of such a line is zero. The random vector $\tilde{X}$ is absolutely continuous as a tuple of independent, absolutely continuous random variables. This implies that the probability that $\tilde{X}$ lies in a Lebesgue null set is zero.
+        We can therefore conclude that $P(\set{\textit{\small$\Gprojsub{m-1}$ has the Nash equilibrium $t$}}) = 0$.
+        
+        We use this to show that the probability in \eqref{eq:probabilityGmAndGm-1HaveSameNonPureEquilibrium} is zero.
+        Recall from the algorithm in Subsection \ref{subsec:exactComputationNashEquilibriaSupportEnumerationAlgorithm} that in a non-degenerate game, there can be at most one Nash equilibrium for each pair of index sets $(I, J)$ indexing the pure strategy sets $S_1, S_2$ with $\abs{I} = \abs{J}$.
+        Write $\mathcal{I}$ for the set of all such $(I, J)$ with $\abs{I} = \abs{J} \geq 2$.
+        For some $(I, J) \in \mathcal{I}$, write $s_{I,J}$ for the Nash equilibrium of $\Gproj{m}$ supported in $I, J$ if it exists, and $s_{I,J} \coloneqq \bot$ (“undefined”) otherwise. Write $t_{I,J}$ for the respective restricted strategy profile.
+%         (each $N_{\Gproj{m}}(I, J)$ is either a singleton set or the empty set).
+        With this notation, we can calculate:
+        \begin{align*}
+                 &\;P(\set{\textit{\small$\exists s \in N_{\Gproj{m}}$ non-pure such that $\Gprojsub{m-1}$ has the Nash equilibrium $t$}}) \\
+                 &= P\biggpars{\bigcup_{(I, J) \in \mathcal{I}}\set{\textit{\small $\Gproj{m}$ non-degenerate, $s_{I, J} \neq \bot, \Gprojsub{m-1}$ has the Nash equilibrium $t_{I, J}$}}} \\
+            &\leq \sum_{(I, J) \in \mathcal{I}} 
+                P(\set{\textit{\small $\Gproj{m}$ non-degenerate, $s_{I, J} \neq \bot, \Gprojsub{m-1}$ has the Nash equilibrium $t_{I, J}$}}) \\
+                &=\sum_{(I, J) \in \mathcal{I}} 0 = 0.
+        \end{align*}
+        These calculations show that $P(\set{\textit{\small $G$ has a non-pure Nash equilibrium}}) = 0$.
+    \end{proof}
     
     
     \subsection{Kakutani's Theorem and Lexicographically-Ordered Games}
