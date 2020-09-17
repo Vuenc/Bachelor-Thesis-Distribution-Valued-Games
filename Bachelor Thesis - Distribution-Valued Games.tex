@@ -106,7 +106,7 @@
     
     \chapter{Mathematical Preliminaries: Probability and Decision Theory}
     
-    \todo{Introduce Notations $[n]$, $\Rp$}
+    \todo{Introduce Notations $[n]$, $\Rp$, alternating sequences and functions}
     
     \section{Probability Theory}
 %    \todo{Briefly introduce required basic concepts like (probability) measures, random variables, the Borel sigma algebra, Lebesgue integration, moments, etc.}
@@ -873,9 +873,10 @@ find it, neither can the market.” There are various exact and numerical algori
     \newcommand{\Dgeqone}{\DP_{\geq1}}
     \newcommand{\Dab}{\DP_{[a, b]}}
     
-    In this section we build on the framework from the previous section to introduce distribution-valued games.
+    \sloppypar{
+    In this section we use the framework from the previous section to introduce distribution-valued games.
     This comes down to picking the right payoff set and choosing a preorder on it.
-    For the payoff set, let $\DP$ denote the set of Borel probability measures on $\R$:
+    For the payoff set, let $\DP$ denote the set of Borel probability measures on $\R$:}
     \begin{gather*}
         \DP \coloneqq \set{P: \B \to \Rp \mid P \text{ is a probability measure on } (\R, \B)}.
     \end{gather*}
@@ -1006,6 +1007,7 @@ find it, neither can the market.” There are various exact and numerical algori
     The tail order is defined based on moment sequences, but we will later show that in many cases, it be understood as a kind of lexicographic ordering: The original goal for its introduction was to have an ordering that applies the criterion of $\leqst$, but only from some point $x_0$ on, such that more distributions are actually comparable (see \cite{bib:rassTotalOrderingOnLossDistributions}). This works to some extent, however in this section we will also see that some of its properties claimed in \cite{bib:rassTotalOrderingOnLossDistributions} can fail in pathological cases.
 
     \subsection{Definition and Basic Properties}
+    \label{subsec:tailOrderDefinitionAndBasicProperties}
     Recall that $m_k(P) \coloneqq \lintegral{R}{x^k}{P}$ denotes the $k$-th moment of $P \in \DP$ if $\lintegral{R}{\abs{x}^k}{P} < \infty$, and $M$ denotes the set of probability measures from $\DP$ that have moments of all orders.
     \begin{defn}[{Stochastic Tail Order, cf. \cite[Definition 2]{bib:rassTotalOrderingOnLossDistributions}}]
         % TODO does the tail order definition make sense for distributions taking values < 1, or < 0?
@@ -1030,7 +1032,7 @@ find it, neither can the market.” There are various exact and numerical algori
     
     The next question is whether $\leqtail$ is antisymmetric and/or total.
     In the general context, it has neither of the properties: The order is trivially not total on $\DP$ as it can only compare distributions from $M$, and it also not total on all of $M$ because distributions can take negative values that can make the moment sequences alternating. In particular, consider the Dirac distributions $\delta_{-1}$ and $\delta_{0}$: The moment sequence of the former is given by $(-1)^n$, alternating around the sequence of the latter which is constantly $0$, making the distributions not $\leqtail$-comparable.
-    Antisymmetry can also not hold on all of $M$: there exist examples of different distributions in $\M$ which have equal moment sequences (an example is given in \cite[Example 3.15]{bib:romanoCounterexamplesInProbability}).
+    Antisymmetry does not hold on all of $M$ neither: there exist examples of different distributions in $\M$ which have equal moment sequences (an example is given in \cite[Example 3.15]{bib:romanoCounterexamplesInProbability}).
     On the other hand, if a probability measure $P_1 \in \DP$ has bounded support, then no other probability measure from $\DP$ has the same moment sequence (cf. \cite[Corollary 4.2]{bib:schmuedgenTheMomentProblem}).
     This even holds for the weaker condition that the moment-generating function of the probability measure exists in a neighborhood of 0 (cf. \cites[Lemma 2.3]{bib:rassGameRiskManagI}[p.414]{bib:billingsleyProbabilityAndMeasure})
      \footnote{The moment-generating function of a probability measure $P \in \DP$ is given by $M(s) \coloneqq \lintegral{\R}{e^{sx}}{P(x)}$ for $s \in \R$ if the integral is finite, cf. \cite[(21.21)]{bib:billingsleyProbabilityAndMeasure}}.
@@ -1080,7 +1082,7 @@ find it, neither can the market.” There are various exact and numerical algori
             = \biggpars{\lintegral{[1, x_0)}{x^k}{P_2(x)} - \lintegral{[1, x_0)}{x^k}{P_1(x)}}
             + \lintegral{[x_0, \infty)}{x^k}{\undersetbrace{(P_2 - P_1)}{\eqqcolon \mu}(x)}.
         \end{multline*}
-        We define $\mu \coloneqq (P_2 - P_1)\vert_{\B \cap [x_0, \infty)}$ as the difference ($P_2 - P_1)$ restricted to the Borel sub-$\sigma$-algebra on $[x_0, \infty)$. By \eqref{eq:p2DominatesP1LeftOfX0}, $\mu$ is non-negative and therefore a measure, and by \eqref{eq:p2StrictlyDominatesP1OnB0}, it is not the zero measure.
+        We define $\mu \coloneqq \restr{(P_2 - P_1)}{\B \cap [x_0, \infty)}$ as the difference ($P_2 - P_1)$ restricted to the Borel sub-$\sigma$-algebra on $[x_0, \infty)$. By \eqref{eq:p2DominatesP1LeftOfX0}, $\mu$ is non-negative and therefore a measure, and by \eqref{eq:p2StrictlyDominatesP1OnB0}, it is not the zero measure.
         We can now estimate
         \begin{gather*}
             \lintegral{[x_0, \infty)}{x^k}{\mu(x)}
@@ -1235,7 +1237,7 @@ find it, neither can the market.” There are various exact and numerical algori
             (x_1, \dots, x_m) \leqRlex (y_1, \dots, y_m) \colonlra x = y \vee (\exists k \in [m]: x_k < y_k \wedge x_i = y_i ~\forall i > k).
         \end{gather*}
     \end{defn}
-    $\leqRlex$ is similar to the usual lexicographic order, but starts comparing from the right instead of from the left \footnote{There seems to be no consistent name for this ordering in the literature; The term \emph{reflected lexicographic order} is supported by \cite{bib:oeisRefLexOrder}.}. Just as the lexicographic order, it is antisymmetric and total. 
+    $\leqRlex$ is similar to the usual lexicographic order, but starts comparing from the right instead of from the left \footnote{There seems to be no consistent name for this ordering in the literature; The term \emph{reflected lexicographic order} is used by \cite{bib:oeisRefLexOrder}.}. Just as the lexicographic order, it is antisymmetric and total. 
     
     \begin{cor}
         Let $P_1, P_2 \in \Dgeqone$ be discrete distributions with probability mass functions $f, g$ and finite common support $(\supp P_1 \cup \supp P_2) = \set{v_1, \dots, v_m}$, $v_1 < \dots < v_m$. Then
@@ -1253,201 +1255,280 @@ find it, neither can the market.” There are various exact and numerical algori
     \end{proof}    
 
     In particular, this characterization shows that $\leqtail$ is antisymmetric and total on the set of distributions with finite support.
-    While finite support allows us to turn the sufficient condition for the tail order into an equivalent condition, this does not work in the more general case of distributions in $\Dgeqone \cap \M$ which are either absolutely continuous, or discrete with countably infinite support.
-%    , Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} only give sufficient conditions.
-    To show that none of sufficient conditions from \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} \ref{item:discreteTailOrder-DominatingPointSuffCondition} can be turned into equivalences, we construct several counterexamples.
-%    can not be made into equivalences, as the following counter-examples show. \cite{bib:rassGameRiskManagI} originally claimed an equivalence (meanwhile corrected) and assumed distributions with bounded support and continuous density functions, which is why we give counterexamples satisfying these properties.
-    \begin{ex}~
-        \label{ex:tailOrderSufficientConditionsCounterexamples}
-        We construct pairs of distributions which do not satisfy the sufficient conditions from above theorems:
-        Their probability mass/density functions alternate infinitely often, and hence are \emph{not} such that one dominates the other from one point on.
-        Furthermore, our counterexamples satisfy additional properties, to show that \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions} can not be made into equivalences even with stricter conditions:
-        They have bounded support, alternating distribution functions and, in the absolutely continuous case, continuous density functions.
-        The last two points are the reason why the counterexamples are quite complicated.
-%        Second, not only the mass/density functions should alternate, but also the distribution functions, showing that no alternative criterion for $\lesstail$ requiring eventual distribution function dominance can be made into an equivalence.
-%        Third, in the absolutely continuous case, the densities should be continuous.      
     
+    \subsubsection{Counterexamples to Equivalences in the Sufficient Conditions for the Tail Order}
+    \newcommand{\DRass}{\tilde{\DP}}
+    While finite support allows us to turn the sufficient condition for the tail order into an equivalent condition, this does not work in the general case of distributions in $\Dgeqone \cap \M$.
+    To show that none of the sufficient conditions from Theorems \ref{thm:acTailOrderSuffConditions} and \ref{thm:discreteTailOrderSuffConditions}\, \ref{item:discreteTailOrder-DominatingPointSuffCondition} can be turned into equivalences, we construct several counterexamples.
+    The original motivation of these counterexamples was to disprove a statement made in \cite{bib:rassGameRiskManagI} (and reproduced in \cite{bib:rassTotalOrderingOnLossDistributions}): 
+    An old version of \cite{bib:rassGameRiskManagI} contained a condition similar to Theorem \ref{thm:acTailOrderSuffConditions}, and claimed that it was equivalent, not only sufficient, for a $\leqtail$-relationship between two distributions. The proof wrongly assumed that of two density functions, one always dominates the other from some point on until the end of the support.
+    An updated version was meanwhile uploaded to arXiv that clarifies this issue. Since the paper only concerns discrete and absolutely continuous distributions with bounded support, and in the absolutely continuous case with continuous density functions, we construct counterexamples with these properties: Define 
+    \begin{gather*}
+        \DRass \coloneqq \set{P \in \DP: \text{$\exists b: P \in \DP_{[1, b]}$, $P$ discrete or AC with continuous density function}}.
+    \end{gather*}
+    
+    When we introduced the tail order, we motivated it as a replacement for the usual stochastic order $\leqst$ that works on a wider range of distributions.
+    However, the reader might have noticed that the definition of $\leqst$ used distribution function dominance (see Example \ref{ex:stochasticOrdersLeqELeqst}), yet all our sufficient conditions use dominance of the mass or density functions.
+    It is not clear whether a sufficient condition in the form of 
+    \begin{gather*}
+        F_1(x) \geq F_2(x) \forall x \geq x_0, \lambda({F_1 > F_2} \cap [x_0, \infty)) \implies P_1 \lesstail P_2
+    \end{gather*}
+    holds, either on all of $\Dgeqone \cap M$ or on the subset of distributions with bounded support.
+    We will not further investigate this issue, but it might be an interesting question for follow-up work.
+    However, we will also show with our counterexamples that even such a condition was sufficient, it could not be turned into an equivalence.
+    
+    % TODO introduce “alternating” for both functions and sequences. Here or earlier?
+    
+    The specific statements we disprove in our counterexamples are as follows, where we assume that $P_1, P_2 \in \DRass$, $P_1 \neq P_2$ and $P_1, P_2$ have probability mass functions or probability density functions $f, g$, and distribution functions $F, G$, respectively.
+    % This code is necessary for items with custom labels to be  referenced.
+    \makeatletter
+    \newcounter{labelleditemcount}
+    \newcommand{\labelleditem}[1][]{%
+        \refstepcounter{labelleditemcount}%
+        \item[#1]\protected@edef\@currentlabel{#1}%
+    }
+    \makeatother
+    \begin{enumerate}
+        \labelleditem[(1a)]
+        “\textit{If $P_1, P_2$ are discrete, then $\exists x_0$ such that either $\forall x \geq x_0: f(x) \geq g(x)$, or $\forall x \geq x_0: f(x) \leq g(x)$.}”
+        \label{item:counterExampleClaim1-fg}
+        
+        \labelleditem[(1b)]
+        “\textit{If $P_1, P_2$ are discrete, then $\exists x_0$ such that either $\forall x \geq x_0: F(x) \leq G(x)$, or $\forall x \geq x_0: F(x) \geq G(x)$.}”
+        \label{item:counterExampleClaim1-FG}
+        
+        \labelleditem[(2a)]
+        “\textit{If $P_1, P_2$ are discrete and $P_1 \lesstail P_2$, then $\exists x_0: \forall x \geq x_0: f(x) \leq g(x)$.}”
+        \label{item:counterExampleClaim2-fg}
+        
+        \labelleditem[(2b)]
+        “\textit{If $P_1, P_2$ are discrete and $P_1 \lesstail P_2$, then $\exists x_0: \forall x \geq x_0: F(x) \geq G(x)$.}”
+        \label{item:counterExampleClaim2-FG}
+        
+        \labelleditem[(3a)]
+        “\textit{If $P_1, P_2$ are AC and $P_1 \lesstail P_2$, then there $\exists x_0: \forall x \geq x_0: f(x) \leq g(x)$}.”
+        \label{item:counterExampleClaim3-fg}
+        
+        \labelleditem[(3b)]
+        “\textit{If $P_1, P_2$ are AC and $P_1 \lesstail P_2$, then there $\exists x_0: \forall x \geq x_0: F(x) \geq G(x)$}.”
+        \label{item:counterExampleClaim3-FG}
+    \end{enumerate}
+
+    The first counterexample disproves the statements \ref{item:counterExampleClaim1-fg} and \ref{item:counterExampleClaim1-FG}, the second one disproves the statements \ref{item:counterExampleClaim2-fg} and \ref{item:counterExampleClaim2-FG}, and the third one disproves the statements \ref{item:counterExampleClaim3-fg} and \ref{item:counterExampleClaim3-FG}.
+    
+    \begin{ex}
+        \textbf{\textsl{An infinite family of discrete distributions with pairwise alternating mass and distribution functions and bounded support}.}
+        
+        \label{ex:geometricSeriesSufficientTailOrderConditionCounterexample}
+        This first example disproves claims \ref{item:counterExampleClaim1-fg} and \ref{item:counterExampleClaim1-FG}. It is not strictly necessary since the next counter example is more general and even disproves the weaker claims \ref{item:counterExampleClaim2-fg} and \ref{item:counterExampleClaim2-FG}.
+        In this example, on the other hand, the mass and density functions of two distributions are shown to alternate, but it could not be shown that one moment sequence dominates the other.
+        The example is included nonetheless because it involves an interesting graphical proof of the fact that the distribution functions alternate, and the distributions involved are less artificial than in the other examples.
+        \footnote{In particular, $P_c$ from the example can be obtained as follows: If $X\sim \text{Geom}(p)$ is a random variable that is geometrically distributed on $\N$, then $2 - (1-p)^X \sim P_{1/(1-p)}$.}
+        
+%        This example uses the geometric series and has a nice visual proof of alternating distribution functions, but we have no complete proof of moment-sequence dominance.
+        For $c > 1$, let $P_c$ be defined by $P_c(\set{2-\bigpars{\frac{1}{c}}^k}) = (c-1)\bigpars{\frac{1}{c}}^k$ for all $k \in \N$, and zero everywhere else.
+        These probability masses are constructed to sum to $1$ by the geometric series.
+        We let $a_k \coloneqq \bigpars{\frac{1}{c}}^k$, and will later use that $\sum_{j = 1}^k  a_j = \frac{1 - \pars{\frac{1}{c}}^k}{c - 1} = \frac{1 - a_k}{c - 1}$.
+        The distribution function  $F_c$ of $P_c$ can be written as a sum of indicator functions as
+        \begin{multline*}
+            F_c 
+            = \sum_{k \geq 1} (c-1) a_k * \1_{[2-a_k, \infty)}
+            = \biggpars{\sum_{k \geq 1} (c-1) \biggpars{\sum_{j = 1}^k  a_j} * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)} \\
+            %                = \biggpars{\sum_{k \geq 1} (c-1) \frac{1-a_k}{c-1} * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}
+            = \biggpars{\sum_{k \geq 1} (1-a_k) * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}.
+        \end{multline*}
+        In particular, on the interval (1, 2), $F_c$ is bounded from above by the line $x \mapsto x-1$, touching it exactly at its discontinuity points, i.e. $F_c(2-a_k) = 1-a_k$. 
+        This lets us prove graphically that distribution functions of such distributions can alternate:
+        If we choose $c, d$ such that the sets $\set{2 - \frac{1}{c^k} \mid k \in \N}, \set{2 - \frac{1}{d^k} \mid k \in \N}$ are disjoint,
+        then $F_c, F_d$ alternate as seen in \autoref{fig:distributionsGeometricSeriesCounterexample-2-3}.
+        This is because at every discontinuity, one distribution function overtakes the other since it jumps to the diagonal while the other function is strictly smaller.
+        In particular, $\set{P_p \mid p \text{ prime}}$ is an infinite family of distributions with pairwise alternating distribution functions.
+        It is clear that the corresponding mass functions $f, g$ alternate as well, because every discontinuity of $F$ or $G$ corresponds to a non-zero probability mass in one distribution, while the other distribution assigns zero mass to that point.
+        
+        The $n$-th moment of $P_c$ can be expressed sum with finitely many terms:
+        \begin{multline*}
+            m_n(P_c) 
+            = \sum_{k \geq 1} (c-1) \frac{1}{c^k} (2-\frac{1}{c^k})^n
+            = \sum_{k \geq 1} (c-1) \frac{(2c^k-1)^n}{c^{kn+k}} \\
+            = (c-1)\sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \biggpars{\sum_{k \geq 1}\frac{c^{-jk}}{c^k}}
+            = (c-1)\sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \frac{1}{c^{j+1}-1}.
+        \end{multline*}
+        To also disprove the claims \ref{item:counterExampleClaim2-fg} and \ref{item:counterExampleClaim2-FG} with this example, we would like to show $P_c \lesstail P_d$ for all $1 < c < d$.
+        While computer calculations suggest that $m_n(P_c)$ increases monotonically with $c$, it seems hard to show this rigorously.
+        We therefore leave the question open whether the construction from this example can also be used to disprove the statements \ref{item:counterExampleClaim2-fg} and \ref{item:counterExampleClaim2-FG}.
+        \qed
+    \end{ex}
+    
+    \begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/geometric-series-distribution-2-3-half.png}
+            \caption{Geometric series construction \ref{ex:geometricSeriesSufficientTailOrderConditionCounterexample}: Distribution functions $F_c$, $c=2, 3$.}
+            \label{fig:distributionsGeometricSeriesCounterexample-2-3}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/little-shifts-distribution.png}
+            \caption{General discrete construction \ref{ex:discreteSufficientTailOrderConditionCounterexample}: Distribution functions ($s_k = 1-\frac{1}{k+1}, f(s_k) = \frac{1}{2^k}$)}
+            \label{fig:littleShiftsCounterexample-distribution}
+        \end{subfigure}
+        
+        \vspace*{0.01\textwidth}
+        \begin{subfigure}[t]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/ac-densities-masses.png}
+            \caption{Absolutely continuous construction: Densities (\ref{ex:acSufficientTailOrderConditionCounterexample})/corresponding mass functions (\ref{ex:discreteSufficientTailOrderConditionCounterexample}, scaled by a factor of 30 to be visible)}
+            \label{fig:acCounterexample-masses-densities}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.49\textwidth}
+            \includegraphics[width=\textwidth]{Pictures/ac-distribution.png}
+            \caption{Distribution functions of absolutely continuous construction \ref{ex:acSufficientTailOrderConditionCounterexample}}
+            \label{fig:acCounterexample-distribution}
+        \end{subfigure}
+        
+        \label{fig:sufficientTailOrderConditionsCounterexamples}
+        \caption{Plots for the counterexamples \ref{ex:geometricSeriesSufficientTailOrderConditionCounterexample} - \ref{ex:acSufficientTailOrderConditionCounterexample}}
+    \end{figure}
+
+    \begin{ex}
+        \textbf{
+%            \textsl{A process to produce two discrete distributions with alternating mass and distribution functions and bounded support which are $\leqtail$-comparable}.
+        \textsl{A $\leqtail$-ascending sequence of discrete distributions with alternating mass and distribution functions for consecutive elements and bounded support.}
+        }
+        
+        \label{ex:discreteSufficientTailOrderConditionCounterexample}
+        In this more general counterexample, we start with a discrete distribution $P$ whose support can be written as $\supp P = \set{s_i \mid i \in \N} \subseteq [a, b)$, $1 < a < b$, with the $s_i$ in increasing order, and whose probability mass function $f$ is strictly decreasing on the support, i.e. $\forall i < j: f(s_i) > f(s_j)$. We construct $\tilde{P}$ with mass function $g$, where each support point is shifted a bit to the right, with its probability adjusted to be only a little smaller, giving the remaining probability mass to the point $t_0 \coloneqq \frac{1+a}{2}$.
+        First, set $t_i \coloneqq \frac{s_i+ s_{i+1}}{2}, i \in \N$.
+        We adjust the probability of $t_i$ by a factor $c_i < 1$, i.e. $g(t_i) = c_i f(s_i)$, chosen such that the following properties are satisfied:
         \begin{enumerate}
-            \item
-            \textbf{An infinite family of discrete distributions with pairwise alternating mass and distribution functions and bounded support.}
-            
-            \label{item:geometricSeriesSufficientTailOrderConditionCounterexample}
-            This example uses the geometric series and has a nice visual proof of alternating distribution functions, but we have no complete proof of moment-sequence dominance.
-            For $c > 1$, let $P_c$ be defined by $P(\set{2-\bigpars{\frac{1}{c}}^k}) = (c-1)\bigpars{\frac{1}{c}}^k$ for all $k \in \N$, and zero everywhere else.
-            These are constructed to sum to $1$ by the geometric series.
-            Letting $a_k \coloneqq \bigpars{\frac{1}{c}}^k$, we will use that $\sum_{j = 1}^k  a_k = \frac{1 - \pars{\frac{1}{c}}^k}{c - 1} = \frac{1 - a_k}{c - 1}$.
-            The corresponding distribution function $F_c$ comes out to be 
-            \begin{multline*}
-                F_c 
-                = \sum_{k \geq 1} (c-1) a_k * \1_{[2-a_k, \infty)}
-                = \biggpars{\sum_{k \geq 1} (c-1) \biggpars{\sum_{j = 1}^k  a_j} * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)} \\
-%                = \biggpars{\sum_{k \geq 1} (c-1) \frac{1-a_k}{c-1} * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}
-                = \biggpars{\sum_{k \geq 1} (1-a_k) * \1_{[2-a_k, 2-a_{k+1})}} + \1_{[2, \infty)}.
-            \end{multline*}
-            In particular, on the interval [1, 2], $F_c$ is bounded from above by the line $x \mapsto x-1$, touching it exactly at its discontinuity points, i.e. $F_c(2-a_k) = 1-a_k$. This gives rise to a graphical proof.
-            If we choose $c, d$ such that the sets $\set{2 - \frac{1}{c^k} \mid k \in \N}, \set{2 - \frac{1}{d^k} \mid k \in \N}$ are disjoint,
-            then $F_c, F_d$ infinitely alternate as seen in \autoref{fig:distributionsGeometricSeriesCounterexample-2-3}:
-            At every jump, one distribution function overtakes the other since it jumps to the diagonal while the other function is strictly smaller.
-            In particular, $\set{P_p \mid p \text{ prime}}$ is an infinite family of distributions with infinitely alternating distribution functions.
-            
-            We can express the $n$-th moment of $P_c$ as
-            \begin{multline*}
-                m_n(P_c) 
-                = \sum_{k \geq 1} (c-1) \frac{1}{c^k} (2-\frac{1}{c^k})^n
-                = \sum_{k \geq 1} (c-1) \frac{(2c^k-1)^n}{c^{kn+k}} \\
-                = (c-1)\sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \biggpars{\sum_{k \geq 1}\frac{c^{-jk}}{c^k}}
-                = (c-1)\sum_{j=0}^n \binom{n}{j}2^{n-j}(-1)^j \frac{1}{c^{j+1}-1}.
-            \end{multline*}
-            We would like to prove $P_c \lesstail P_d ~ \forall\, 1 < c < d$, but it's hard to show that above formula is increasing with $c$.
-            Computer calculations suggest that the moment sequence of $P_c$ increases pointwise as $c$ increases, however we have no rigorous argument yet.
-          
-            \begin{figure}
-                \centering
-                \begin{subfigure}[b]{0.49\textwidth}
-                    \includegraphics[width=\textwidth]{Pictures/geometric-series-distribution-2-3-half.png}
-                    \caption{Geometric series construction \ref{item:geometricSeriesSufficientTailOrderConditionCounterexample}: Distribution functions $F_c$, $c=2, 3$.}
-                    \label{fig:distributionsGeometricSeriesCounterexample-2-3}
-                \end{subfigure}
-                \begin{subfigure}[b]{0.49\textwidth}
-                    \includegraphics[width=\textwidth]{Pictures/little-shifts-distribution.png}
-                    \caption{General discrete construction \ref{item:discreteSufficientTailOrderConditionCounterexample}: Distribution functions ($s_k = 1-\frac{1}{k+1}, f(s_k) = \frac{1}{2^k}$)}
-                    \label{fig:littleShiftsCounterexample-distribution}
-                \end{subfigure}
-                
-                \vspace*{0.01\textwidth}
-                \begin{subfigure}[t]{0.49\textwidth}
-                    \includegraphics[width=\textwidth]{Pictures/ac-densities-masses.png}
-                    \caption{Absolutely continuous construction: Densities (\ref{item:acSufficientTailOrderConditionCounterexample})/corresponding mass functions (\ref{item:discreteSufficientTailOrderConditionCounterexample}) (scaled by a factor of 30 to be visible)}
-                    \label{fig:acCounterexample-masses-densities}
-                \end{subfigure}
-                \begin{subfigure}[t]{0.49\textwidth}
-                    \includegraphics[width=\textwidth]{Pictures/ac-distribution.png}
-                    \caption{Distribution functions of absolutely continuous construction \ref{item:acSufficientTailOrderConditionCounterexample}}
-                    \label{fig:acCounterexample-distribution}
-                \end{subfigure}
-                
-                \label{fig:sufficientTailOrderConditionsCounterexamples}
-                \caption{Plots for the counterexamples from Example \ref{ex:tailOrderSufficientConditionsCounterexamples}}
-            \end{figure}
-    
-            \item 
-            \textbf{A process to produce two discrete distributions with pairwise alternating mass and distribution functions and bounded support which are $\leqtail$-comparable.}
-            
-            \label{item:discreteSufficientTailOrderConditionCounterexample}
-            In this more general counterexample, we start with some discrete distribution $P$ with $\supp P = \set{s_1, s_2, \dots} \subseteq [a, b)$, $1 < a < b$, the $s_i$ in increasing order, and probability mass function $f$ which is strictly decreasing on the support, i.e. $\forall i < j: f(s_i) > f(s_j)$. We construct $\tilde{P}$ with mass function $g$, where each support point is shifted a bit to the right, with its probability adjusted to be only a little smaller, giving the remaining probability mass to the point $\tilde{a} \coloneqq \frac{1+a}{2}$.
-            First, set $\tilde{s}_i \coloneqq \frac{s_i+ s_{i+1}}{2}$.
-            We adjust the probability of $\tilde{s}_i$ by a factor $c_i < 1$, i.e. $g(\tilde{s}_i) = c_i f(s_i)$, chosen such that $c_i \geq \frac{s_i}{\tilde{s_i}}$ (ensuring $\tilde{P}$ has greater moments than $P$), $c_i \geq 1-\frac{1}{2^i}$ (ensuring the distribution functions alternate), and $c_i \geq \frac{f(s_{i+1})}{f(s_i)}$ (ensuring that $g$ 
-            also is monotonic on its support). In summary, we have:            
-            \begin{gather*}
-                g(\tilde{s}_i) = c_i f(s_i), \quad
-                c_i \coloneqq \max\biggset{\frac{s_i}{\tilde{s_i}}, 1-\frac{1}{2^i}, \frac{f(s_{i+1})}{f(s_i)}} < 1, \quad
-                g(\tilde{a}) = \sum_{i \geq 1} (1-c_i) f(s_i).
-            \end{gather*}
-            By the first property of $c_i$, $g(\tilde{s}_i)\tilde{s}_i \geq f(s_i)s_i ~\forall i$, so for the moments we have:
-            \begin{multline*}
-                m_n(\tilde{P}) - m_n(P)
-                = g(\tilde{a})*\tilde{a}^n + \sum_{k \geq 1} g(\tilde{s}_i) \tilde{s}_i^n - f(s_i) s_i^n \\
-                \geq g(\tilde{a}) + \sum_{k \geq 1} f(s_i) s_i^n * (\tilde{s}_i^{(n-1)} - 1)
-                \geq g(\tilde{a}) > 0.
-%                \label{eq:momentPushingExample}
-            \end{multline*}
-            
-            Secondly, the distribution functions alternate, see \autoref{fig:littleShiftsCounterexample-distribution}: on the one hand, 
-            \begin{multline*}
-                G(\tilde{s_k}) 
-                = g(\tilde{a}) + \sum_{i=1}^k f(s_i)c_i 
-                = g(\tilde{a}) - \bigpars{\sum_{i=1}^k (1-c_i) f(s_i)} + F(s_k) \\
-                = \bigpars{\sum_{i \geq k+1} (1-c) f(s_i)} + F(s_k) > F(s_k) = F(\tilde{s_k}).
-            \end{multline*}
-            On the other hand, 
-            \begin{multline*}
-                G(s_k)
-                = g(\tilde{a}) + \sum_{i=1}^{k-1} f(s_i)c_i 
-                = g(\tilde{a}) + \sum_{i=1}^{k-1} f(s_i) - \sum_{i=1}^{k-1} f(s_i) (1-c_i) \\
-                = F(s_k) - f(s_k) + g(\tilde{a}) - \sum_{i=1}^{k-1} f(s_i) (1-c_i) 
-                = F(s_k) - f(s_k) + \sum_{i \geq k} f(s_i) (1-c_i).
-            \end{multline*}
-            Using the second property of $c_i$ and monotonicity of $f$, we get
-            $\sum_{i \geq k} f(s_i) (1-c_i) \leq \sum_{i \geq k} f(s_i) \frac{1}{2^i} < \frac{1}{2^{k-1}} f(s_k) \leq f(s_k)$,
-            therefore $G(s_k) < F(s_k)$.
-            So in summary we have $P \lesstail \tilde{P}$, and their probability mass, as well as distribution functions are infinitely alternating.
-%            , such that the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} is not satisfied for any $x_0$.
-            Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending wrt. $\lesstail$, and no two distributions in it satisfy the sufficient condition of \ref{thm:acTailOrderSuffConditions} (and for any two \emph{consecutive} elements, the distribution functions are infinitely alternating as well).
-            
-            \item 
-            \textbf{A process to produce two absolutely continuous distributions with pairwise alternating density and distribution functions, continuous densities and bounded support which are $\leqtail$-comparable.}
-            
-            \label{item:acSufficientTailOrderConditionCounterexample}
-            For the absolutely continuous counterexample, we start with two discrete distributions $P_1, P_2$ where $P_2$ is obtained from $P_1$ by the process from \ref{item:discreteSufficientTailOrderConditionCounterexample}: In particular, we require $P_1 \lesstail P_2$, $\supp(P_1) = \set{s_1, s_2, \dots}$, $\supp(P_2) = \set{t_0, t_1, t_2, \dots}$ with $1 < t_0 < s_1 < t_1 < s_2 < t_2 < \dots$ ($t_0$ represents $\tilde{a}$ from above), and their distribution functions $F, G$ should alternate with $F(s_k) > G(s_k), F(t_k) < G(t_k) ~\forall k\geq 1$.
-%            their mass functions $f, g$ should satisfy $f(s_i)s_i < g(t_i)t_i ~ \forall i$ (and therefore 
-            
-            We then shift the probability mass $P_1$ gives to each point $s_k$ to an interval to the left of $s_k$, and the probability mass $P_2$ gives to each point $t_k$ to an interval to the right of $t_k$, which preserves the order of the moments (illustrated in \autoref{fig:acCounterexample-masses-densities}). We do it in such a way that the distribution functions are again alternating, and the new density functions are continuous (\autoref{fig:acCounterexample-distribution}). We will call the new absolutely continuous distributions $\tilde{P}_1, \tilde{P}_2$, their new density functions $\tilde{f}, \tilde{g}$, and their distribution functions $\tilde{F}, \tilde{G}$.
-            
-            To formalize this, let $h: \R \to \R, x \mapsto (6x - 6x^2)\1_{[0, 1]}(x)$. $h$ is a simple probability density function ($\lintegral{\R}{h}{\lambda} = 1$), which is continuous since $h(0) = h(1) = 0$.
-            Denote by $h_{[a, b]}: x \mapsto \frac{1}{b-a}h\bigpars{\frac{x-a}{b-a}}$ the version of $h$ scaled to the interval $[a, b]$, still integrating to 1.
-%            Define $h_{a, b, s}: x \mapsto s*h(\frac{x-b}{b-a})*s$.
-%            Another way to view it is that the integral of $h$ continuously interpolates between the values 0 and 1 on the interval $[0, 1]$.
-            Also, let $m_{k} = \frac{t_{k-1} + s_k}{2}$.
-            Using this notation, we define $\tilde{f}, \tilde{g}$ by:
-            \begin{gather}
-                \tilde{f} = \sum_{k \geq 1}  f(s_k) h_{[m_k, s_k]}, \quad
-                \tilde{g} = \sum_{k \geq 0}  g(t_k) h_{[t_k, m_{k+1}]}.
-                \label{eq:acSufficientTailOrderConditionCounterexample-densitiesDefinition}
-            \end{gather}
-            By construction, it's clear that $\lintegral{\R}{\tilde{f}}{\lambda} = \lintegral{\R}{\tilde{g}}{\lambda} = 1$, since $(f(s_k))_{k \geq 1}, g(t_k))_{k \geq 0}$ sum to $1$. The distribution functions are alternating:
-            For $k \geq 1$,
-            \begin{gather*}
-                \tilde{F}(s_k) 
-                = \lintegral{[1, s_k]}{\tilde{f}}{\lambda} 
-                = \sum_{i=1}^{k} f(s_k) 
-                = F(s_k)
-                > G(s_k)
-                = \sum_{i=1}^{k-1} g(t_k) 
-                = \tilde{G}(s_k)
-                ,\\                
-                \tilde{G}(m_{k+1})                
-                = \lintegral{[1, m_{k+1}]}{\tilde{g}}{\lambda} 
-                = \sum_{i=1}^{k} g(t_k)
-                = G(t_k)
-                > F(t_k)
-                = \sum_{i=1}^{k} f(s_k) 
-                = \tilde{F}(m_{k+1}).
-            \end{gather*}
-            The ordering of the moments is preserved:
-            \begin{multline*}
-                m_n(\tilde{P_1})
-                = \sum_{k \geq 1} \lintegral{[m_k, s_k]}{x^n h_{[m_k, s_k]}(x)}{\lambda(x)}
-                < \sum_{k \geq 1} f(s_k)*s_k^n \\
-                = m_n(P_1)
-                < m_n(P_2) \\
-                = \sum_{k \geq 0} g(t_k)*t_k^n
-                < \sum_{k \geq 0} \lintegral{[t_k, m_{k+1}]}{x^n h_{[t_k, m_{k+1}]}(x)}{\lambda(x)}
-                = m_n(\tilde{P_2}).
-            \end{multline*}
-            If the series in \eqref{eq:acSufficientTailOrderConditionCounterexample-densitiesDefinition} converges uniformly, continuity is preserved.
-            For this we additionally need to have $\norm{f(s_k) h_{[m_k, s_k]}}_\infty = \frac{f(s_k)}{s_k - m_k} \toinfty{k} 0$, and similarly for $g$, which is the case if the probability masses $f(s_k)$ approach zero asymptotically faster than the consecutive differences of the $s_k$. For example, we can set $s_k = 2-\frac{1}{k+1}, f(s_k) = \frac{1}{2^k}$, and use $g, (t_k)_k$ constructed from it as in \ref{item:discreteSufficientTailOrderConditionCounterexample}.
-            % TODO properly reference “uniform convergence preserves continuity”
+            \item $c_i \geq \frac{s_i}{t_i}$,
+            \item $c_i \geq 1-\frac{1}{2^i}$,
+            \item $c_i \geq \frac{f(s_{i+1})}{f(s_i)}$.
         \end{enumerate}
+        As we will show shortly, the first property ensures that $\tilde{P}$ has greater moments than $P$, the second property ensures that the distribution functions alternate, and the third property ensures that $g$ is monotonic on its support as well (so the process can again be applied to $\tilde{P}$).
+        In summary, we define $g$ as follows:
+        
+        \begin{gather*}
+            g(t_i) = c_i f(s_i), \quad
+            c_i \coloneqq \max\biggset{\frac{s_i}{t_i}, 1-\frac{1}{2^i}, \frac{f(s_{i+1})}{f(s_i)}} < 1, \quad
+            g(t_0) = \sum_{i \geq 1} (1-c_i) f(s_i).
+        \end{gather*}
+        Obviously the mass functions $f, g$ alternate, as $f(s_i) > 0, g(s_i) = 0$ and $g(t_i) > 0, f(t_i) = 0$ for all $i \in \N$. We now show that the moments of $\tilde{P}$ dominate the moments of $P$, and the distribution functions alternate.
+        The first property of the $c_i$ implies that $\forall i \in \N: g(t_i)t_i  \geq  f(s_i)s_i$, so for the moments we have:
+        \begin{multline*}
+            m_n(\tilde{P}) - m_n(P)
+            = g(t_0)t_0^n + \sum_{i \geq 1} g(t_i) t_i^n - f(s_i) s_i^n
+            \geq g(t_0)t_0^n + \sum_{i \geq 1} g(t_i) t_i s_i^{n-1} - f(s_i) s_i^n  \\
+            = g(t_0)t_0^n + \sum_{i \geq 1} s_i^{n-1} \undersetbrace{(g(t_i)t_i - f(s_i)s_i)}{\geq 0}
+            \geq g(t_0)t_0^n > 0.
+            %                \label{eq:momentPushingExample}
+        \end{multline*}
+        
+        Secondly, the distribution functions alternate, see \autoref{fig:littleShiftsCounterexample-distribution}: on the one hand for $k \in \N$, 
+        \begin{multline*}
+            G(t_k) 
+            = g(t_0) + \sum_{i=1}^k c_i f(s_i) 
+            = g(t_0) - \biggpars{\sum_{i=1}^k (1-c_i)f(s_i)} + F(s_k) \\
+            = \biggpars{\sum_{i \geq k+1} (1-c_i)f(s_i)} + F(s_k) > F(s_k) = F(t_k).
+        \end{multline*}
+        On the other hand, 
+        \begin{multline*}
+            G(s_k)
+            = g(t_0) + \sum_{i=1}^{k-1} c_i f(s_i) 
+            = g(t_0) + \sum_{i=1}^{k-1} f(s_i) - \sum_{i=1}^{k-1} (1-c_i) f(s_i) \\
+            = F(s_k) - f(s_k) + g(t_0) - \sum_{i=1}^{k-1} (1-c_i) f(s_i)  
+            = F(s_k) - f(s_k) + \sum_{i \geq k} (1-c_i) f(s_i).
+        \end{multline*}
+        Using the second property of $c_i$, the strict monotonicity of $f$ on its support, and the geometric sum identity $\sum_{i \geq k} \frac{1}{2^i} = 
+%        \sum_{i \geq 1} \frac{1}{2^i} - \sum_{i \in [k-1]} \frac{1}{2^i} = 1 - \frac{1}{2}\frac{1 - 1/2^{k-1}}{1 - 1/2} = 
+        \frac{1}{2^{k-1}}$, we further get:
+        \begin{gather*}
+            \sum_{i \geq k} (1-c_i)f(s_i) \leq \sum_{i \geq k} \frac{1}{2^i} f(s_i) < \sum_{i \geq k} \frac{1}{2^i} f(s_k) = \frac{1}{2^{k-1}} f(s_k) \leq f(s_k).
+        \end{gather*}
+        
+        This shows that $G(s_k) < F(s_k)$. 
+        So in summary we have $P \lesstail \tilde{P}$, and their probability mass, as well as distribution functions alternate.
+        %            , such that the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} is not satisfied for any $x_0$.
+        Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: by repeating the process, we get a whole sequence of distributions which is ascending with respect to $\lesstail$ and no two distributions in it satisfy the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} (and for any two \emph{consecutive} elements, the distribution functions alternate as well).
+        \qed
+    \end{ex}
+
+    \begin{ex}
+        \textbf{
+            \textsl{Two $\leqtail$-comparable absolutely continuous distributions with alternating density and distribution functions, continuous densities and bounded support.}
+        }
+        
+        \label{ex:acSufficientTailOrderConditionCounterexample}
+        For the absolutely continuous counterexample, we start with two discrete distributions $P_1, P_2$ where $P_2$ is obtained from $P_1$ by the process from Example \ref{ex:discreteSufficientTailOrderConditionCounterexample}: In particular, we require that $P_1 \lesstail P_2$, $\supp(P_1) = \set{s_1, s_2, \dots}$, $\supp(P_2) = \set{t_0, t_1, t_2, \dots}$ with $1 < t_0 < s_1 < t_1 < s_2 < t_2 < \dots$, and that their distribution functions $F, G$ alternate with $\forall k \geq 1: F(s_k) > G(s_k), F(t_k) < G(t_k)$.
+        %            their mass functions $f, g$ should satisfy $f(s_i)s_i < g(t_i)t_i ~ \forall i$ (and therefore 
+        
+        We then shift the probability mass $P_1$ gives to each point $s_k$ to an interval to the left of $s_k$, and the probability mass $P_2$ gives to each point $t_k$ to an interval to the right of $t_k$, which preserves the order of the moments (illustrated in \autoref{fig:acCounterexample-masses-densities}). We do it in such a way that the distribution functions are again alternating, and the new density functions are continuous (\autoref{fig:acCounterexample-distribution}). We will call the new absolutely continuous distributions $\tilde{P}_1, \tilde{P}_2$, their density functions $\tilde{f}, \tilde{g}$, and their distribution functions $\tilde{F}, \tilde{G}$.
+        
+        To formalize this, let $h: \R \to \R, x \mapsto (6x - 6x^2)\1_{[0, 1]}(x)$. The function $h$ is a probability density function ($\lintegral{\R}{h}{\lambda} = 1$) supported on $[0, 1]$, which is continuous since $h(0) = h(1) = 0$.
+        Denote by $h_{[a, b]}: x \mapsto \frac{1}{b-a}h\bigpars{\frac{x-a}{b-a}}$ the version of $h$ scaled to the interval $[a, b]$ in a way such that it still integrates to 1.
+        %            Define $h_{a, b, s}: x \mapsto s*h(\frac{x-b}{b-a})*s$.
+        %            Another way to view it is that the integral of $h$ continuously interpolates between the values 0 and 1 on the interval $[0, 1]$.
+        Also, let $m_{k} = \frac{t_{k-1} + s_k}{2}$.
+        Using this notation, we define $\tilde{f}, \tilde{g}$ by:
+        \begin{gather}
+            \tilde{f} = \sum_{k \geq 1}  f(s_k) h_{[m_k, s_k]}, \quad
+            \tilde{g} = \sum_{k \geq 0}  g(t_k) h_{[t_k, m_{k+1}]}.
+            \label{eq:acSufficientTailOrderConditionCounterexample-densitiesDefinition}
+        \end{gather}
+        By construction, it is clear that $\lintegral{\R}{\tilde{f}}{\lambda} = \lintegral{\R}{\tilde{g}}{\lambda} = 1$, since both of the sequences $(f(s_k))_{k \geq 1}, g(t_k))_{k \geq 0}$ sum to $1$. The distribution functions alternate:
+        For $k \geq 1$,
+        \begin{gather*}
+            \tilde{F}(s_k) 
+            = \lintegral{[1, s_k]}{\tilde{f}}{\lambda} 
+            = \sum_{i=1}^{k} f(s_k) 
+            = F(s_k)
+            > G(s_k)
+            = \sum_{i=1}^{k-1} g(t_k) 
+            = \tilde{G}(s_k)
+            ,\\                
+            \tilde{G}(m_{k+1})                
+            = \lintegral{[1, m_{k+1}]}{\tilde{g}}{\lambda} 
+            = \sum_{i=1}^{k} g(t_k)
+            = G(t_k)
+            > F(t_k)
+            = \sum_{i=1}^{k} f(s_k) 
+            = \tilde{F}(m_{k+1}).
+        \end{gather*}
+        The ordering of the moments is preserved:
+        \begin{multline*}
+            m_n(\tilde{P_1})
+            = \sum_{k \geq 1} \lintegral{[m_k, s_k]}{x^n h_{[m_k, s_k]}(x)}{\lambda(x)}
+            < \sum_{k \geq 1} f(s_k)*s_k^n \\
+            = m_n(P_1)
+            < m_n(P_2) \\
+            = \sum_{k \geq 0} g(t_k)*t_k^n
+            < \sum_{k \geq 0} \lintegral{[t_k, m_{k+1}]}{x^n h_{[t_k, m_{k+1}]}(x)}{\lambda(x)}
+            = m_n(\tilde{P_2}).
+        \end{multline*}
+        If the series in \eqref{eq:acSufficientTailOrderConditionCounterexample-densitiesDefinition} converge uniformly, continuity is preserved.
+        For this we additionally require $\norm{f(s_k) h_{[m_k, s_k]}}_\infty = \frac{f(s_k)}{s_k - m_k} \toinfty{k} 0$, and similarly for $g$, which is the case if the probability masses $f(s_k)$ approach zero asymptotically faster than the consecutive differences of the $s_k$. For example, we can set $s_k = 2-\frac{1}{k+1}, f(s_k) = \frac{1}{2^k}$, and use $g, (t_k)_k$ constructed from it as in Example \ref{ex:discreteSufficientTailOrderConditionCounterexample}.
+        \qed
+        % TODO properly reference “uniform convergence preserves continuity”
     \end{ex}
     
     \subsection{Can the Tail Order Be Made a Total Order?}
     \label{subsec:tailOrderTotality}
-    When we introduced the tail order, we already discussed its antisymmetry and totality properties: In short, $\leqtail$ in general is neither total nor antisymmetric; For antisymmetry, counterexamples of different distributions with equal moment sequences exist (as referenced before), while equal moment sequences of different distributions can not occur if the distributions have bounded supports. Yet this does not prove antisymmetry for distributions with bounded support, because $\leqtail$ could be indifferent between distributions with different moment sequences as long as the sequences disagree only finitely often.
+    When we introduced the tail order in Subsection \ref{subsec:tailOrderDefinitionAndBasicProperties}, we shortly discussed its antisymmetry and totality properties: In short, $\leqtail$ is neither total nor antisymmetric on $M$. For antisymmetry, counterexamples of different distributions with equal moment sequences exist. Different distributions with equal moment sequences necessarily have unbounded support, and we do not know whether $\leqtail$ is antisymmetric on the subset of distributions with bounded support because it is not clear if the moment sequences of two different such distributions can disagree only finitely often.
 %    however anti-symmetry \emph{does} hold on the reasonably large subset of distributions with bounded support.
-    Similar questions can be posed concerning the totality of $\leqtail$. The only counterexamples we saw so far were trivially not $\leqtail$-comparable because they did not even have moments of all orders.
-    A natural question thus is if there is some useful subset of $\DP$ where $\leqtail$ is total. As a first observation, $\leqtail$ can not be total on all of $\M$, because distributions can take negative values that can make the moment sequences alternating. 
-    % TODO make this “alternating moment sequences” example even shorter [using Dirac measure notations]. Maybe  even move it further up, to the definition of tail order, discussing that \leqtail is not useful on negative values in the support
-    As the simplest example, consider the point-mass distributions on $\delta_{-1}$ and $\delta_{0}$: The moment sequence of the former is given by $(-1)^n$, alternating around the sequence of the latter which is constantly $0$, making the distributions not $\leqtail$-comparable.
-    A more subtle question, however, is if there is a smaller subset of $\DP$ where $\leqtail$ is total, which is easy to characterize and big enough to contain many useful distributions. We will discuss this question on the following pages.
+    We can ask a similar question about the totality of $\leqtail$: While $\leqtail$ is not total on all of $M$,
+    a natural question is if there is some useful subset of $\DP$ where $\leqtail$ is total, and we will discuss this question on the following pages.
+    Corollary \ref{cor:discreteFiniteTailOrder-RLexEquivalence} shows that $\leqtail$ is total if only distributions with finite support are considered, yet limiting ourselves to finitely-supported distributions is quite restrictive.
+    Since our only example of incomparable distributions so far relied on negative values in the support, one might hope that $\leqtail$ is total on $\DP_{\geq 0} \cap M$. However, we will show shortly that this is not the case.
     
-    In \cite{bib:rassGameRiskManagI,bib:rassTotalOrderingOnLossDistributions}, the discussion focuses on the particular subset of distributions that have \emph{bounded support which is a subset of $[1, \infty)$} and are either \emph{discrete with finite support}, or \emph{absolutely continuous with a continuous density function}.
-    In \cite[Lemma 2]{bib:rassTotalOrderingOnLossDistributions} and \cite[Lemma 2.4]{bib:rassGameRiskManagI}, the claim is that such distributions are always $\leqtail$-comparable.
-    A proof is given for the absolutely continuous case; however, it contains an error, as it applies an argument similar to Theorem \ref{thm:acTailOrderSuffConditions} and implicitly assumes that of two density functions, one dominates the other from some point on
-    \footnote{Meanwhile, the error was fixed in \cite{bib:rassGameRiskManagI}, and a new version was uploaded to arXiv stating all requirements (which means that the paper does not prove the totality of $\leqtail$).}.
-    As shown in Example \ref{ex:tailOrderSufficientConditionsCounterexamples}, pairs of distributions exist where this is not the case, and which also are in $\Dgeqone$, bounded, and have continuous density functions.
+    In \cite{bib:rassGameRiskManagI,bib:rassTotalOrderingOnLossDistributions}, the discussion focuses on the particular subset of distributions that have \emph{bounded support in $[1, \infty)$} and are either \emph{discrete with finite support}, or \emph{absolutely continuous with a continuous density function}.
+    The lemmas \cite[Lemma 2]{bib:rassTotalOrderingOnLossDistributions} and \cite[Lemma 2.4]{bib:rassGameRiskManagI} wrongly claim that such distributions are always $\leqtail$-comparable: A proof is given for the absolutely continuous case, but it contains an error, as it implicitly assumes that of two density functions, one always dominates the other from some point on (recall that disproving this statement was the motivation behind the counterexamples \ref{ex:geometricSeriesSufficientTailOrderConditionCounterexample} - \ref{ex:acSufficientTailOrderConditionCounterexample}).
+    Since the proof is erroneous, it is an interesting question whether the totality of $\leqtail$ on the set of distributions with bounded support in $[1, \infty)$ can be shown in another way, since it would be desirable for the application of $\leqtail$ to distribution-valued games if such a theorem could be proven.
+    Unfortunately, it turns out that $\leqtail$ is not total on that set, and it is also not total if only absolutely continuous distributions with continuous densities are considered.
+    It was conjectured during much the writing process of this thesis that this totality statement does hold, and the steps taken towards the desired proof are included on the following pages. However towards the end of the writing process, a counterexample was constructed by Jeremias Epperlein, and we will use this example at the end of this subsection to show that $\leqtail$ is not total on the set of distributions with bounded support in $[1, \infty)$.
+%    A proof is given for the absolutely continuous case; however, it contains an error, as it applies an argument similar to Theorem \ref{thm:acTailOrderSuffConditions} and 
+%    \footnote{Meanwhile, the error was fixed in \cite{bib:rassGameRiskManagI}, and a new version was uploaded to arXiv stating all requirements (which means that the paper does not prove the totality of $\leqtail$).}.
+%    As shown in Example \ref{ex:acSufficientTailOrderConditionCounterexample}, pairs of distributions exist where this is not the case, and which also are in $\Dgeqone$, bounded, and have continuous density functions.
     
     \subsubsection{The Moment Problem and its Variants}
-    Since our question by the definition $\leqtail$ depends on moment sequences, it will be helpful to know about the properties of such sequences.
+    Since our questions depend on moment sequences by the definition $\leqtail$, it will be helpful to know about the properties of such sequences.
     The question to find out whether a given sequence $(m_n)_{n \in \N_0}$ is a moment sequence for some Borel measure $\mu$ on $\R$ is known as the \emph{moment problem}, and there are several variants studied in the literature:
 %    to characterize moment sequences is known as the \emph{moment problem}, and there are several variants:
     The \emph{Hamburger moment problem} concerns measures supported on a subset of $\R$, the \emph{Stieltjes moment problem} is about measures supported on a subset of $[0, \infty)$,
@@ -1494,15 +1575,15 @@ find it, neither can the market.” There are various exact and numerical algori
     The Hamburger moment problem is too general for our case, since negative values in the support can lead to alternating moment sequences, making the tail order non-total.
     However, we can make use of a result relating Stieltjes and Hamburger moment sequences:
     A moment sequence is called \emph{Hamburger-}/\emph{Stieltjes-determinate} if there is a \emph{unique} measure of the respective type generating the sequence \cite[p.68]{bib:schmuedgenTheMomentProblem}
-    \footnote{More specifically, a unique \emph{Radon measure}, see \cite[A.1]{bib:schmuedgenTheMomentProblem}. This makes no difference in our case, since every finite Borel measure on $\R$, and therefore every measure in $\DP$, is a Radon measure, and also a moment sequence belongs to a probability measure if and only if $m_0 = 1$.}.
+    \footnote{More specifically, a unique \emph{Radon measure}, see \cite[A.1]{bib:schmuedgenTheMomentProblem} for a definition. This makes no difference in our case: Every (locally) finite Borel measure on $\R$, and therefore every probability measure in $\DP$, is a Radon measure (eg. \cite[Proposition II.3.1]{bib:malliavinIntegrationAndProbability}). Also, a moment sequence belongs to a probability measure if and only if $m_0 = 1$.}.
     The result we will use is that Stieltjes-determinateness in general does not imply Hamburger-determinateness:
     
-    \begin{thm}[See \cite{bib:linMomentProblemRecentDevelopments}, citing {\cite[p.240]{bib:akhiezerClassicalMomentProblem}} and \cite{bib:chiharaIndeterminateHamburgerMomentProblems}]
-        There exists a moment sequence $(m_n)_{n \in \N_0}$ that is Stieltjes-determinate, but not Hamburger-determinate.
+    \begin{thm}[See {\cite[Fact A]{bib:linMomentProblemRecentDevelopments}}, citing {\cite[p.240]{bib:akhiezerClassicalMomentProblem}} and \cite{bib:chiharaIndeterminateHamburgerMomentProblems}]
+        There exists a moment sequence that is Stieltjes-determinate, but not Hamburger-determinate.
     \end{thm}
 
     \begin{cor}
-        There exist probability measures $P_1, P_2 \in \DP$ that have equal moment sequences and satisfy $P_1 \in \Dgeqzero, P_2 \notin \Dgeqzero$.
+        There exist probability measures $P_1, P_2 \in (\DP \cap M)$ that have equal moment sequences and satisfy $P_1 \in \Dgeqzero, P_2 \notin \Dgeqzero$.
 %        $\supp (P_1) \subseteq [0, \infty)$ and $\supp (P_2) \subsetneq [0, \infty)$.
         \label{cor:equalMomentSequencesStieltjesHamburger}
     \end{cor}
@@ -1518,25 +1599,25 @@ find it, neither can the market.” There are various exact and numerical algori
     }
     \end{proof}
     
-    This result allows us to show that two Stieltjes moment sequences can infinitely alternate: 
+    This result allows us to show that two Stieltjes moment sequences can alternate: 
     \begin{ex}
 %        We construct a pair of probability measures supported on a subset of $[0, \infty)$, which have infinitely alternating moment sequences:
-        Let $P_1, P_2$ be the measures from Corollary \ref{cor:equalMomentSequencesStieltjesHamburger}, with moment sequence $(m_n)_{n \geq 0}$.
-        Define a measure $\tilde{P}_2: A \mapsto P_2(A \cap [0, \infty)) + \1_A(0) P_2((\infty, 0))$, which shifts the whole probability mass $P_2$ puts on the negative half-axis to the point $0$, and has support in $[0, \infty)$.
+        Let $P_1, P_2 \in (\DP \cap M)$ be measures that satisfy $P_1 \in \Dgeqzero, P_2 \notin \Dgeqzero$ and have the same moment sequence $(m_n)_{n \geq 0}$, as constructed in Corollary \ref{cor:equalMomentSequencesStieltjesHamburger}.
+        Define a measure $\tilde{P}_2: A \mapsto P_2\bigpars{A \cap [0, \infty)} + \1_A(0) P_2\bigpars{(\infty, 0)}$, which shifts the probability mass $P_2$ puts on the negative semi-axis to the point $0$, and has support in $[0, \infty)$.
         Then its moment sequence $(\tilde{m}_n)_{n \geq 0}$ is given by $\tilde{m}_0 = 1$, and for $n > 0$:
         \begin{gather*}
             \tilde{m}_n 
             = \lintegral{[0, \infty)}{x^n}{\tilde{P}_2}
             = \lintegral{[0, \infty)}{x^n}{P_2}
             = \lintegral{\R}{x^n}{P_2} - \lintegral{(-\infty, 0)}{x^n}{P_2}
-            = m_n - \undersetbrace{\lintegral{(-\infty, 0)}{x^n}{P_2}}{\text{alternating}}.
+            = m_n - \lintegral{(-\infty, 0)}{x^n}{P_2}.
         \end{gather*}
         By construction of $P_2$, the term $\lintegral{(-\infty, 0)}{x^n}{P_2}$ is strictly positive for $n$ even, and strictly negative for $n$ odd.
-        Therefore $(\tilde{m}_n)_{n \geq 0}$ alternates infinitely around $(m_n)_{n \geq 0}$,
+        Therefore $(\tilde{m}_n)_{n \geq 0}$ alternates around $(m_n)_{n \geq 0}$,
         and both sequences are moment sequences of probability measures supported on a subset of $[0, \infty)$.
     \end{ex}
 
-    This shows that the space $(\Dgeqzero \cap \M)$ of probability measures supported on a subset of $[0, \infty)$ that have moments of all orders is still too large for $\leqtail$ to be total.
+    This shows that the set $(\Dgeqzero \cap \M)$ of probability measures supported on a subset of $[0, \infty)$ that have moments of all orders is still too large for $\leqtail$ to be total.
 %    \todo{Give a counterexample explicitly.}
     
     \subsubsection{Distributions with Non-Negative Bounded Support}
@@ -1564,12 +1645,16 @@ find it, neither can the market.” There are various exact and numerical algori
     \begin{proof}[Proof (necessity)]
         We only show here that condition \eqref{eq:completelyMonotonicSequence} is necessary, which is the easier part of the proof.
         Let $\mu$ be the measure with support in $[0, 1]$ which has $m$ as its moment sequence.
-        We first proof by induction over $k$ that $(\Delta^k m)_n = \lintegral{[0, 1]}{x^n (x-1)^k}{\mu(x)}$:
+        We first prove by induction over $k$ that $(\Delta^k m)_n = \lintegral{[0, 1]}{x^n (x-1)^k}{\mu(x)}$:
+        The statement holds for $k=0$, since
         \begin{gather*}
             (\Delta m)_n 
             = m_{n+1} - m_{n} 
             = \lintegral{[0, 1]}{x^{n+1}}{\mu(x)} - \lintegral{[0, 1]}{x^n}{\mu(x)} 
-            = \lintegral{[0, 1]}{x^n(x-1)}{\mu(x)}, \\
+            = \lintegral{[0, 1]}{x^n(x-1)}{\mu(x)}.
+        \end{gather*}
+        For the induction step, assume the statement holds for $k \in \N$. Then for $k+1$:
+        \begin{gather*}
             (\Delta^{k+1} m)_n
 %            = (\Delta^k m)_{n+1} - (\Delta^k m)_n \\
             = \lintegral{[0, 1]}{x^{n+1} (x-1)^k}{\mu(x)} - \lintegral{[0, 1]}{x^n (x-1)^k}{\mu(x)}
@@ -1580,29 +1665,31 @@ find it, neither can the market.” There are various exact and numerical algori
         Therefore, $(-1)^k (\Delta^k m)_n \geq 0$.
     \end{proof}
 
-    While Hausdorff's characterization works for distributions with support in $[0, 1]$, we are actually interested in distributions supported in $[1, b]$ for some $b > 1$.
+    While Hausdorff's characterization works for distributions with support in $[0, 1]$, we are also interested in distributions supported in $[1, b]$ for some $b > 1$.
     Moment sequences behave somewhat differently in that case: For example, while they are monotonically decreasing in the former case, they are monotonically increasing in the latter, even growing without bound if there is some mass to the right of $1$.
     We can obtain a first necessary criterion, which looks similar to \eqref{eq:completelyMonotonicSequence}, for a sequence to be the moment sequence of such a distribution:
     \begin{cor}
         \label{cor:hausdorff-1-b-necessaryCondition}
-        For any moment sequence $m$ of a measure $\mu \in \DP_{[1, b]}$, all successive differences are non-negative:
+        For any moment sequence $m$ of a measure $\mu$ with support in [1, b], all successive differences are non-negative:
         \begin{gather}
             \forall n, k \in \N: (\Delta^k m)_n \geq 0.
+            \label{eq:hausdorff-1-b-necessaryCondition}
         \end{gather}
     \end{cor}
     \begin{proof}
         As in the last proof, we have that $(\Delta^k m)_n = \lintegral{[1, b]}{x^n (x-1)^k}{\mu(x)}$.
-        Since in this case, $x-1 > 0 \,\forall x \in [1, b]$, the integrand is non-negative, and $(\Delta^k m)_n \geq 0$.
+        Since in this case, $x-1 > 0$ for all $x \in [1, b]$, the integrand is non-negative, and $(\Delta^k m)_n \geq 0$.
     \end{proof}
 
-    Another similar necessary condition can be stated for moment sequences of distributions on $[0, b]$, using a somewhat modified difference operator:
+    Another necessary condition similar to \label{ref:completelyMonotonicSequence} can be stated for moment sequences of distributions on $[0, b]$, using a modified difference operator:
     \newcommand{\DeltaB}[1]{\Delta\hspace{-.225cm}{\mathrel{\raisebox{0.045cm}{\scalebox{.9}{$\scriptscriptstyle#1$}}}\hspace{.22cm}}\hspace{-0.09cm}}
     \begin{lemma}
         \label{lemma:hausdorff-0-b-necessaryCondition}
         Let $b \geq 0$, $\DeltaB{b}: \R^{\N_0} \to \R^{\N_0}$, $(\DeltaB{b} m)_n \coloneqq m_{n+1} - b * m_n$.
-        Then for any moment sequence $m$ of a measure $\mu \in \DP_{[0, b]}$:
+        Then for any moment sequence $m$ of a measure $\mu$ with support in $[0, b]$:
         \begin{gather}            
             \forall n, k \in \N: (-1)^k (\DeltaB{b}^k m)_n \geq 0.
+            \label{eq:hausdorff-0-b-necessaryCondition}
         \end{gather}
     \end{lemma}
     \begin{proof}
@@ -1612,56 +1699,122 @@ find it, neither can the market.” There are various exact and numerical algori
     \end{proof}
 
     % TODO basically, we woould need a sufficient condition to construct a counterexample; if we can proof that no alternating counterexample exists, a necessary condition will be enough.
-    While \ref{cor:hausdorff-1-b-necessaryCondition} and \ref{lemma:hausdorff-0-b-necessaryCondition} give necessary conditions, it would be very useful to have a condition that is also sufficient. However, using \ref{lemma:hausdorff-0-b-necessaryCondition} we can show that \ref{cor:hausdorff-1-b-necessaryCondition} is not sufficient:
+    While Corollary \ref{cor:hausdorff-1-b-necessaryCondition} and Lemma \ref{lemma:hausdorff-0-b-necessaryCondition} give necessary conditions, it would be very useful to have a condition that is also sufficient. However, we can use Lemma \ref{lemma:hausdorff-0-b-necessaryCondition} to show that Corollary \ref{cor:hausdorff-1-b-necessaryCondition} is not sufficient:
     
     \begin{ex}
-        We construct a sequence that satisfies the condition of \ref{cor:hausdorff-1-b-necessaryCondition} and is infinitely alternating around a moment sequence:
-        Let sequences $s, q$ be given by $s_n = 4^n$ for $n \in \N_0$, $q_n = (-1)^n\frac{1}{2^n}$ for $n \in \N$ and $q_0 = 0$. $s$ is the moment sequence of $\delta_4$. We show that $(s + q)$ satisfies the conditions of \ref{cor:hausdorff-1-b-necessaryCondition}:
+        We construct a sequence that satisfies the condition of Corollary \ref{cor:hausdorff-1-b-necessaryCondition} and alternates around a moment sequence:
+        Let sequences $s, q$ be given by $s_n = 4^n$ for $n \in \N_0$, $q_n = (-1)^n\frac{1}{2^n}$ for $n \in \N$ and $q_0 = 0$. $s$ is the moment sequence of $\delta_4$. We show that $(s + q)$ satisfies the conditions of Corollary \ref{cor:hausdorff-1-b-necessaryCondition}:
         Let $k \in \N$.
         By induction, one can show that $(\Delta^k s)_n = 3^k 4^n$ for all $n \in \N_0$, as well as $(\Delta^k q)_n = 3^k\frac{(-1)^{n+k}}{2^{n+k}}$ for $n \in \N$, and $(\Delta^k q)_0 = 3^k \frac{(-1)^k}{2^k} - (-1)^k$.
-        Since $\Delta$ is a linear operator, we have $(\Delta^k (s+q))_n = (\Delta^k s)_n + (\Delta^k q)_n$ for all $n, k \in \N_0$. This sum is non-negative:
+        Since $\Delta$ is a linear operator, we have ${(\Delta^k (s+q))_n} = {(\Delta^k s)_n + (\Delta^k q)_n}$ for all $n, k \in \N_0$. This sum is non-negative:
         If $n \geq 1$, we get $(\Delta^k (s+q))_n = 3^k\bigpars{4^n + \frac{(-1)^{n+k}}{2^{n+k}}} \geq 0$, since $4^n \geq 1, \frac{(-1)^{n+k}}{2^{n+k}} > -1$.
-        If $n = 0$, we have $(\Delta^k (s+q))_n = 3^k\bigpars{1 + \frac{(-1)^{k}}{2^{k}}} - (-1)^k$, which is non-negative as well:
-        For $k = 0$, this becomes $1*(1 + 1) - 1 = 1$.
+        If $n = 0$, we have ${(\Delta^k (s+q))_n} = {3^k\bigpars{1 + \frac{(-1)^{k}}{2^{k}}} - (-1)^k}$, which is non-negative as well:
+        For $k = 0$, this becomes ${1*(1 + 1) - 1 = 1}$.
         For $k \geq 1$, we have $1 + \frac{(-1)^{k}}{2^{k}} \geq \frac{1}{2}$ and therefore $3^k\bigpars{1 + \frac{(-1)^{k}}{2^{k}}} - (-1)^k \geq \frac{3}{2} - (-1)^k > 0$.
         
 %        for $k = 1$, $3*(1 - \frac{1}{2}) + 1 = \frac{7}{2}$
         
 %          \geq 0$ for all $n, k$.
         So $(s+q)$ satisfies the condition of Corollary \ref{cor:hausdorff-1-b-necessaryCondition}. 
-        By construction, it infinitely alternates around the moment sequence $s$, because $q$ alternates infinitely around 0.
+        By construction, it alternates around the moment sequence $s$, because $q$ alternates around 0.
         As the sequence also satisfies $s_0 + q_0 = s_0 = 1$ (necessary to be the moment sequence of a probability measure), these properties make it a candidate for a counterexample to the tail order being total for probability measures with non-negative, bounded support. 
         
-        However, $(s+q)$ does not satisfy \ref{lemma:hausdorff-0-b-necessaryCondition} for any reasonable choice of $b$:
+        However, $(s+q)$ does not satisfy \eqref{eq:hausdorff-0-b-necessaryCondition} for any reasonable choice of $b$:
         If $(s+q)$ was the moment sequence of some measure $\mu$ with support in $[0, b]$, then $\forall n \geq 0: s_n + q_n < b^n$.
         We can take the bound $s_n + q_n \leq 5^n$, which is satisfied since $s_n \leq 4^n, q_n < 1$. So the support of $\mu$ must be a subset of $[0, 5]$.
         However, calculations show that $(-1)^2 (\DeltaB{5}^2 (s+q))_1$ is negative:
         We have $(s+q)_1 = 4 - \frac{1}{2} = \frac{7}{2}$, $(s+q)_2 = 16 + \frac{1}{4} = \frac{65}{4}$ and $(s+q)_3 = 64 - \frac{1}{8} = \frac{511}{8}$.
         From this we get $(\DeltaB{5} (s+q))_1 = \frac{65}{4} - 5 * \frac{7}{2} = - \frac{5}{4}$ and $(\DeltaB{5} (s+q))_2 = \frac{511}{8} - 5 * \frac{65}{4} = - \frac{139}{8}$, and finally $(\DeltaB{5}^2 (s+q))_1 = - \frac{139}{8} + 5*\frac{5}{4} = - \frac{89}{8}$.
         Therefore, $(-1)^2 (\DeltaB{5}^2 (s+q))_1  = - \frac{89}{8} < 0$, violating the necessary condition of Lemma \ref{lemma:hausdorff-0-b-necessaryCondition}.        
-        So $(s+q)$ is not a moment sequence of a measure in $\DP_{[0, b]}$, and the condition in Corollary \ref{cor:hausdorff-1-b-necessaryCondition} can not be sufficient.
+        So $(s+q)$ is not a moment sequence of a measure in $\DP_{[0, b]}$ even though the condition of Corollary \ref{cor:hausdorff-1-b-necessaryCondition} is satisfied, therefore this condition is not sufficient.
+        \qed
     \end{ex}
 
-    \subsubsection{Possible Further Progress}
+    While the condition \eqref{eq:hausdorff-1-b-necessaryCondition} is not sufficient, the condition \eqref{eq:hausdorff-0-b-necessaryCondition} could well be:
+    Possibly, a proof of \cite[Theorem 3.14]{bib:schmuedgenTheMomentProblem} for showing the sufficiency of the complete monotonicity condition \eqref{eq:completelyMonotonicSequence} could be altered to show the sufficiency of \eqref{eq:hausdorff-0-b-necessaryCondition}.
+    It is also important to note that other characterizations for moment sequences of measures supported on an arbitrary compact interval $[a, b]$ exist, and two conditions are given in \cite[Theorem 3.13]{bib:schmuedgenTheMomentProblem}. We will not further go into these conditions, however:
+%    Two conditions equivalent to a real sequence $m$ being an $[a, b]$-moment sequence are given in \cite[Theorem 3.13]{bib:schmuedgenTheMomentProblem}:
+%    The first condition requires that both $m$ and $((a+b)E(m) - E(E(m)) - ab*m)$ are positive semidefinite sequences, where $E: (s_n)_{n \in \N_0} \mapsto (s_{n+1})_{n \in \N_0}$ denotes the shift operator.
+%    The second condition requires that $L_m(p^2) \geq 0$ and $L_m((b-x)(x-a)q^2) \geq 0$ for all real polynomials $p, q \in \R[x]$. Here $L_m$ is the \emph{moment functional}, the linear functional $L_m: \R[x] \to \R$ uniquely defined by $L_m(x^n) \coloneqq m_n$ for all $n \in \N_0$.
+%    These characterizations could be a different way to prove the totality of $\leqtail$ on $\DP_{[0, b]}$.
+    The reason we studied conditions like \eqref{eq:hausdorff-1-b-necessaryCondition} and \eqref{eq:hausdorff-0-b-necessaryCondition} was that we hoped to show that two moment sequences satisfying these conditions could not alternate around each other, and therefore show that $\leqtail$ was a total order between distributions in $\Dgeqzero$ with bounded support.
+    However in the meanwhile, a counterexample was constructed by Jeremias Epperlein, which will be presented in the following:
+    It constructs two discrete distributions with infinite support in $[a, b]$, $0 \leq a < b$, that have alternating moment sequences.
+    We first present a lemma needed for the construction, and then proceed with the actual example.
+    
+    \begin{lemma}[{\cite{bib:epperleinTailOrderTotalCounterexample}}]
+        \label{lem:tailOrderTotalCounterexample-lemmaCondition}
+        Let $0 \leq a < b$. Let $n \in \N$ and $(c_l)_{l \in [n]}$, $(d_l)_{l \in [n]}$ be initial parts of sequences in $[a, b)$.
+        Then there is an arbitrarily large $k \in \N$ and a $c_{n+1} \in (c_n, b)$ such that
+        \begin{gather}
+            \sum_{l=1}^{n} \frac{1}{2^l} d_l^k + \frac{1}{2^{n+1}} d_n^k + \sum_{l = n+2}^{\infty} \frac{1}{2^l} b^k
+            < \sum_{l=1}^{n} \frac{1}{2^l} c_l^k + \sum_{l = n+1}^{\infty} \frac{1}{2^l} c_{n+1}^k.
+            \label{eq:tailOrderTotalCounterexample-lemmaCondition}
+        \end{gather}
+    \end{lemma}
+    \begin{proof}
+        If we let $c_{n+1} = b$, we can cancel out the equal infinite sums on both sides, and then the inequality is equivalent to
+        \begin{gather}
+            \sum_{l=1}^{n} \frac{1}{2^l} d_l^k + \frac{1}{2^{n+1}} d_n^k
+            < \sum_{l=1}^{n} \frac{1}{2^l} c_l^k + \frac{1}{2^{n+1}} b^k.
+            \label{eq:tailOrderTotalCounterexample-lemmaCondition-cn+1=b}
+        \end{gather}
+        As $b > d_n > \dots > d_1 > 0$ and all $c_i$ are non-negative, the exponential growth of $b^k$ makes the right-hand side dominate the left-hand side for sufficiently large $k$.
+        Therefore there exists a $\tilde{k} \in \N$ such that with $k = \tilde{k}$, \eqref{eq:tailOrderTotalCounterexample-lemmaCondition-cn+1=b} holds, and therefore \eqref{eq:tailOrderTotalCounterexample-lemmaCondition} holds for $c_{n+1} \coloneqq b$.
+        With $k = \tilde{k}$ fixed, the right side of \eqref{eq:tailOrderTotalCounterexample-lemmaCondition} is constant and the left side depends continuously on $c_{n+1}$. We can therefore pick $c_{n+1} \in (c_n, b)$ such that the inequality still holds.
+    \end{proof}
+    
+    \begin{ex}[{\cite{bib:epperleinTailOrderTotalCounterexample}}]
+        \textbf{\textsl{Two discrete probability measures with support in a bounded interval $\mathbf{\boldsymbol{[a, b] \subseteq [0, \infty)}}$ that are not $\leqtail$-comparable}.}
+        
+        Let $0 \leq a < b$.
+        We will construct two sequences $x = (x_l)_{l \in \N}$, $y = (y_l)_{l \in \N}$ in $[a, b]$ and define probability measures $P_x, P_y$ as:
+        \begin{gather*}
+            P_x \coloneqq \sum_{l=1}^{\infty} \frac{1}{2^l} \delta_{x_l}, \quad
+            P_y \coloneqq \sum_{l=1}^{\infty} \frac{1}{2^l} \delta_{y_l}.
+        \end{gather*}
+        The sequences are constructed recursively as follows: $x_1, y_1 \in [a, b)$ are chosen arbitrarily.
+        For $n \in \N$, if $(n+1)$ is even, set $y_{n+1} \coloneqq y_n$, and apply Lemma \ref{lem:tailOrderTotalCounterexample-lemmaCondition} to $(x_l)_{l \in [n]}, (y_l)_{l \in [n]}$ to obtain two numbers $k_{n+1} > k_n$, $x_{n+1} \in (x_n, b)$ that satisfy \eqref{eq:tailOrderTotalCounterexample-lemmaCondition}.
+        If $(n+1)$ is odd, set $x_{n+1} \coloneqq x_n$, and apply Lemma \ref{lem:tailOrderTotalCounterexample-lemmaCondition} to $(y_l)_{l \in [n]}, (x_l)_{l \in [n]}$ to obtain $k_{n+1} > k_n$, ${y_{n+1} \in (y_n, b)}$ that satisfy \eqref{eq:tailOrderTotalCounterexample-lemmaCondition}.
+        In summary, the sequences look like this:
+        \begin{gather*}
+            x = (x_1, x_2, x_2, x_4, x_4, x_6, \dots),~ y = (y_1, y_1, y_3, y_3, y_5, y_5, \dots).
+        \end{gather*}
+        Condition \eqref{eq:tailOrderTotalCounterexample-lemmaCondition} ensures that the moment sequences of $P_x, P_y$ alternate: For $n \geq 1$, if $(n + 1)$ is even,
+        \begin{multline*}
+            m_{k_{n+1}}(P_x) 
+            = \sum_{l=1}^{\infty} \frac{1}{2^l} (x_l)^{k_{n+1}}
+            \geq  \sum_{l=1}^{n} \frac{1}{2^l} (x_l)^{k_{n+1}} + \sum_{l = n+1}^{\infty} \frac{1}{2^l} (x_{n+1})^{k_{n+1}} \\
+            \underset{\eqref{eq:tailOrderTotalCounterexample-lemmaCondition}}
+            {>}\, \sum_{l=1}^{n} \frac{1}{2^l} (y_l)^{k_{n+1}} + \frac{1}{2^{n+1}} (y_n)^{k_{n+1}} + \sum_{l = n+2}^{\infty} \frac{1}{2^l} b^{k_{n+1}}
+            \geq \sum_{l=1}^{\infty} \frac{1}{2^l} (y_l)^{k_{n+1}}
+            = m_{k_{n+1}}(P_y).
+        \end{multline*}
+        By a symmetric argument, if $(n+1)$ is odd, $m_{k_{n+1}}(P_y) > m_{k_{n+1}}(P_x)$.
+        \qed
+    \end{ex}
+    
 
-    As far as this thesis is concerned, the question whether two moment sequences of distributions on either an interval $[0, b]$ or an interval $[1, b]$ can infinitely alternate could not be settled. It therefore remains open for the moment if $\leqtail$ is a total order on such distributions.
-    However, the condition of complete monotonicity \eqref{eq:completelyMonotonicSequence} seems quite strict, and during experimentation I could not even find a pair of completely monotonic sequences alternating more than twice; some possible further progress could be to prove that two Hausdorff moment sequences (i.e. for the $[0, 1]$-case) can not infinitely alternate. Possibly, such a result could then be generalized to the $[0, b]$-case using the condition of \ref{lemma:hausdorff-0-b-necessaryCondition}, which would directly yield totality for the $[1, b]$-case as well.
-    
-    While the necessary condition of \ref{lemma:hausdorff-0-b-necessaryCondition} could be sufficient to transfer a positive result from $[0, 1]$ to $[0, b]$, it surely does not suffice if a counterexample is found: Even if we found two alternating sequences satisfying the conditions of \ref{lemma:hausdorff-0-b-necessaryCondition}, this would still not ensure that corresponding Borel measures exist, since we only proved the condition to be necessary, not sufficient.
-    Another point is that if counterexamples exist, it would be desirable to find a counterexample with absolutely continuous distributions, because only such an example could show that $\leqtail$ is also non-total if we restrict ourselves to those distributions in $\DP_{[0, b]}$ which are absolutely continuous or finitely supported (recall that $\leqtail$ \emph{is} total in the case of finite supports, by virtue of Corollary \ref{cor:discreteFiniteTailOrder-RLexEquivalence}).
-%    Yet another issue is that we are especially interested in distributions that 
-%%    either have finite support, or 
-%    are absolutely continuous (or with finite support, but there no counterexamples exist by \ref{thm:discreteTailOrderSuffConditions}); so even if we found a counterexample and proved that the two sequences belonged to measures on $[0, b]$, this would still not ensure the measures are absolutely continuous.
-    
-    It is important to note that characterizations for moment sequences of measures supported on an arbitrary compact interval $[a, b]$ do exist.
-    Two conditions equivalent to a real sequence $m$ being an $[a, b]$-moment sequence are given in \cite[Theorem 3.13]{bib:schmuedgenTheMomentProblem}:
-    The first condition requires that both $m$ and $((a+b)E(m) - E(E(m)) - ab*m)$ are positive semidefinite sequences, where $E: (s_n)_{n \in \N_0} \mapsto (s_{n+1})_{n \in \N_0}$ denotes the shift operator.
-    The second condition requires that $L_m(p^2) \geq 0$ and $L_m((b-x)(x-a)q^2) \geq 0$ for all real polynomials $p, q \in \R[x]$. Here $L_m$ is the \emph{moment functional}, the linear functional $L_m: \R[x] \to \R$ uniquely defined by $L_m(x^n) \coloneqq m_n$ for all $n \in \N_0$.
-    These characterizations could be a different way to prove the totality of $\leqtail$ on $\DP_{[0, b]}$.
-%     one requiring the positive semidefiniteness of the sequence itself as well as a second sequence derived from it, and the other one requiring that two expressions involving the so-called \emph{moment functional} of the sequence be non-negative for all real polynomials.
-    
-%    An interesting note is that in some references it is suggested that Hausdorff's characterization can easily be generalized to any interval $[a, b]$ (for example, the review \cite{bib:bultheelBookReviewMomentProblem} on Schmüdgen's book \cite{bib:schmuedgenTheMomentProblem}).
-%    However, I could not yet find a formalization of this as a necessary and sufficient criterion. If something in this direction could be found, this would definitely be a helpful step, either for transferring a proof from $[0, 1]$ to $[1, b]$, or for proving counterexample sequences to have corresponding measures.
+%    \subsubsection{Possible Further Progress}
+%
+%    As far as this thesis is concerned, the question whether two moment sequences of distributions on either an interval $[0, b]$ or an interval $[1, b]$ can infinitely alternate could not be settled. It therefore remains open for the moment if $\leqtail$ is a total order on such distributions.
+%    However, the condition of complete monotonicity \eqref{eq:completelyMonotonicSequence} seems quite strict, and during experimentation I could not even find a pair of completely monotonic sequences alternating more than twice; some possible further progress could be to prove that two Hausdorff moment sequences (i.e. for the $[0, 1]$-case) can not infinitely alternate. Possibly, such a result could then be generalized to the $[0, b]$-case using the condition of \ref{lemma:hausdorff-0-b-necessaryCondition}, which would directly yield totality for the $[1, b]$-case as well.
+%    
+%    While the necessary condition of \ref{lemma:hausdorff-0-b-necessaryCondition} could be sufficient to transfer a positive result from $[0, 1]$ to $[0, b]$, it surely does not suffice if a counterexample is found: Even if we found two alternating sequences satisfying the conditions of \ref{lemma:hausdorff-0-b-necessaryCondition}, this would still not ensure that corresponding Borel measures exist, since we only proved the condition to be necessary, not sufficient.
+%    Another point is that if counterexamples exist, it would be desirable to find a counterexample with absolutely continuous distributions, because only such an example could show that $\leqtail$ is also non-total if we restrict ourselves to those distributions in $\DP_{[0, b]}$ which are absolutely continuous or finitely supported (recall that $\leqtail$ \emph{is} total in the case of finite supports, by virtue of Corollary \ref{cor:discreteFiniteTailOrder-RLexEquivalence}).
+%%    Yet another issue is that we are especially interested in distributions that 
+%%%    either have finite support, or 
+%%    are absolutely continuous (or with finite support, but there no counterexamples exist by \ref{thm:discreteTailOrderSuffConditions}); so even if we found a counterexample and proved that the two sequences belonged to measures on $[0, b]$, this would still not ensure the measures are absolutely continuous.
+%    
+%    It is important to note that characterizations for moment sequences of measures supported on an arbitrary compact interval $[a, b]$ do exist.
+%    Two conditions equivalent to a real sequence $m$ being an $[a, b]$-moment sequence are given in \cite[Theorem 3.13]{bib:schmuedgenTheMomentProblem}:
+%    The first condition requires that both $m$ and $((a+b)E(m) - E(E(m)) - ab*m)$ are positive semidefinite sequences, where $E: (s_n)_{n \in \N_0} \mapsto (s_{n+1})_{n \in \N_0}$ denotes the shift operator.
+%    The second condition requires that $L_m(p^2) \geq 0$ and $L_m((b-x)(x-a)q^2) \geq 0$ for all real polynomials $p, q \in \R[x]$. Here $L_m$ is the \emph{moment functional}, the linear functional $L_m: \R[x] \to \R$ uniquely defined by $L_m(x^n) \coloneqq m_n$ for all $n \in \N_0$.
+%    These characterizations could be a different way to prove the totality of $\leqtail$ on $\DP_{[0, b]}$.
+%%     one requiring the positive semidefiniteness of the sequence itself as well as a second sequence derived from it, and the other one requiring that two expressions involving the so-called \emph{moment functional} of the sequence be non-negative for all real polynomials.
+%    
+%%    An interesting note is that in some references it is suggested that Hausdorff's characterization can easily be generalized to any interval $[a, b]$ (for example, the review \cite{bib:bultheelBookReviewMomentProblem} on Schmüdgen's book \cite{bib:schmuedgenTheMomentProblem}).
+%%    However, I could not yet find a formalization of this as a necessary and sufficient criterion. If something in this direction could be found, this would definitely be a helpful step, either for transferring a proof from $[0, 1]$ to $[1, b]$, or for proving counterexample sequences to have corresponding measures.
      
     
     \section{Nash Equilibria in Tail-Ordered Games}
@@ -2287,7 +2440,7 @@ find it, neither can the market.” There are various exact and numerical algori
     
     % TODO cite something about HyRiM?
     The \texttt{R} package \emph{HyRiM}  by Stefan Rass, Sandra König and Ali Alshawish was developed along with the papers \cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassGameRiskManagIII} and implements algorithms and data structures for distribution-valued games.
-    In particular, it can represent loss distributions either of finitely-supported discrete or of absolutely continuous nature, where absolutely continuous distributions are approximated by a kernel density estimation method. Besides loss distributions, it also has a class that represents distribution-valued games, and implements the computation of Nash equilibria for real-valued games.
+    In particular, it provides a class that represents finitely-supported discrete and absolutely continuous loss distributions, where absolutely continuous distributions are approximated by a kernel density estimation method. It also provides a class that represents distribution-valued games, and implements the computation of Nash equilibria for real-valued games.
     
     We implement the multi-objective segmentation-based games in the context of the HyRiM package, and as a possible extension to it. As the package focuses on zero-sum games, we also restrict ourselves to zero-sum segmented games.
     Multi-objective segmented games are represented by the \texttt{moseg} class. Such a game can be created from a single-objective distribution-valued game, represented in HyRiM by the \texttt{mosg} class, and a vector of partition points.
@@ -2303,7 +2456,7 @@ find it, neither can the market.” There are various exact and numerical algori
     
     \lstset{showspaces=false,
         keywordstyle=\ttfamily\bfseries\color{purple},
-        basicstyle=\ttfamily,
+        basicstyle=\footnotesize\ttfamily,
         numbers=left,
         numberstyle=\tiny,
         commentstyle=\color{gray},
@@ -2312,15 +2465,15 @@ find it, neither can the market.” There are various exact and numerical algori
         showstringspaces=false,
         stringstyle=\color{brickred},
     }
-    \lstinputlisting[language=R, firstline=13, lastline=31]{../Experiments/leqtw-multiobjective/multiobjectiveSegmentGame.R}
+    \lstinputlisting[language=R, firstline=13, lastline=31]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
     
     \paragraph{Computing Expectation Vectors}
     The code for converting a \texttt{lossDistribution} in a segment expectation vector:
-    \lstinputlisting[language=R, firstline=67, lastline=96]{../Experiments/leqtw-multiobjective/multiobjectiveSegmentGame.R}
+    \lstinputlisting[language=R, firstline=67]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
     
     \paragraph{Computing Pareto-Nash Equilibria}
     The code for computing Pareto-Nash equilibrium of a \texttt{moseg} based on weights:
-    \lstinputlisting[language=R, firstline=42, lastline=55]{../Experiments/leqtw-multiobjective/multiobjectiveSegmentGame.R}
+    \lstinputlisting[language=R, firstline=42, lastline=55]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
     
     
 %    \chapter{Distribution-Valued Game Theory in Security of Critical Infrastructures}
