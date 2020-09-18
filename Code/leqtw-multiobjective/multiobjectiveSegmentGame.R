@@ -79,7 +79,7 @@ segmentedLossDistribution <- function(lossDistribution, partitionPoints) {
         }
     }
 
-    # Compute expected values in the discrete (and finitely-supported) case 
+    # Compute expected values in the discrete, finitely-supported case 
     if (lossDistribution$is.discrete) {
         supp <- lossDistribution$supp
         pdf <- lossDistribution$dpdf

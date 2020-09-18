@@ -63,7 +63,7 @@ exampleAC <- function() {
         lossDistribution(discrete = FALSE, dat=c(2.821, 2.943, 3.314, 3.069, 2.862, 2.225, 4.253, 11.967, 11.786, 8.033, 3.427, 13.422)),
         # Samples representing uniform distribution on [4, 5],
         lossDistribution(discrete = FALSE, dat=c(4.00, 4.05, 4.10, 4.15, 4.20, 4.25, 4.30, 4.35, 4.40, 4.45, 4.50, 4.55, 4.60, 4.65, 4.70, 4.75, 4.80, 4.85, 4.90, 4.95, 5.00)),
-        # Samples representing distribution centered around 2, with outlier at 15
+        # Samples representing distribution centered around 2, with an outlier at 15
         lossDistribution(discrete = FALSE, dat=c(1.8, 1.84, 1.88, 1.92, 1.96, 2.0, 2.04, 2.08, 2.12, 2.16, 2.20, 15))))
     
     partitionPoints <- c(1, 4, 5, 10, 25)

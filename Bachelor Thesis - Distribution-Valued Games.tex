@@ -1827,6 +1827,7 @@ find it, neither can the market.” There are various exact and numerical algori
     \begin{defn}
         A \emph{vector-valued game} of dimension $m \in \N$ is a game $G$ with generalized payoffs in $\R^m$.
         If it is equipped with the preorder $\leqRlex$, we call it a \emph{reflected-lexicographically ordered} (also \emph{ref-lex-ordered}) game.
+        \label{def:vectorValuedGame}
     \end{defn}
 
     \begin{notation}
@@ -2237,29 +2238,28 @@ find it, neither can the market.” There are various exact and numerical algori
     However in the limit, the $\Gproj{3}$-payoffs of both rows become equal, and the second coordinate makes the first row preferable for $\leqRlex$ (as already calculated in \ref{ex:reflectedLexicographicallyOrderedGameWithoutEquilibria} before). Therefore $(1, 0)$ is the unique best response to $s_2$. This shows that $r$ does not have a closed graph.
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
-    \newcommand{\Fab}{\mathfrak{F}_{[a, b]}} % The set of distributions with support in [a, b]
     
     \section{The Tweakable Stochastic Order}
-    A modification of the ideas on distribution-valued games and the stochastic order was proposed in \cite{bib:tweakableStochasticOrders}.
-    The paper starts with the insight that the tail order is inherently pessimistic: As its name says, the decision is based entirely on the \emph{tail} of the distribution. Since it is applied to loss functions, an arbitrarily small probability off a high loss can overshadow everything on the left, or in other words: the ordering only considers the worst case.
+    A modification of the ideas on distribution-valued games and the stochastic order was proposed by Ali Alshawish in \cite{bib:tweakableStochasticOrders}.
+    The motivation for the proposed idea is the insight that the tail order can only capture a pessimistic viewpoint: As its name says, the decision is based entirely on the \emph{tail} of the distribution. Since it is applied to loss functions, an arbitrarily small probability of a high loss can overshadow everything further to the left. In other words, the ordering only takes the worst-case scenario into account.
         
     The \emph{tweakable stochastic order} defined in \cite{bib:tweakableStochasticOrders}, on the other hand,
     is designed such that it can be tweaked to a decision maker's risk attitude, represented by a utility function.
-    For finitely-supported distributions, it includes as special cases the maximally risk-averse $\leqtail$, and the expected-value-ordering $\leqE$ which is considered risk-neutral.
+    For finitely-supported distributions, it can represent as special cases the maximally risk-averse $\leqtail$, and the expected-value-ordering $\leqE$ (see Example \ref{ex:stochasticOrdersLeqELeqst}) which is considered risk-neutral.
     
     % TODO name of \leqtw? Coarsened Tail Order? Segmented Tail Order?
     % TODO do we need 1 < a?
     We define the tweakable stochastic order $\leqtw$, slightly adjusted to match the framework presented so far.
     Let $[a, b]$ be an interval where $a < b$. Let $\mathcal{I}$ be an partition of that interval, i.e. a finite subset of $[a, b]$ with elements $a = x_1 < x_2 < \dots < x_{n+1} = b$.
-    Let $\Fab \coloneqq \set{P \in \DP \mid \supp(P) \subseteq [a, b]}$.
-    For some Borel probability measure $P$ and some set $A \in \B$ denote by $E_A(P) \coloneqq \lintegral{A}{x}{P(x)}$ its expected value if restricted to $A$. 
+%    Let $\Fab \coloneqq \set{P \in \DP \mid \supp(P) \subseteq [a, b]}$.
+    For some $P \in \DP$ and some Borel set $A \in \B$ denote by $E_A(P) \coloneqq \lintegral{A}{x}{P(x)}$ its expected value if restricted to $A$. 
 %    For a Borel probability measure $P$ and for $1 \leq i \leq n$, denote by $P_i$ its restriction to the 
 %%    half-open 
 %    interval $[x_i, b]$, in the sense that $P_i(A) \coloneqq P(A \cap [a, x_i])$ for $A \in \B$.
     % TODO really half-open interval? Then b is not covered!
     \begin{defn}
         \label{def:tweakableStochasticOrder}
-        Let $P_1, P_2 \in \Fab$ be probability measures.
+        Let $P_1, P_2 \in \DP_{[a, b]}$ be probability measures.
         Then the \emph{tweakable stochastic order} $\leqtw$ given the partition $\mathcal{I}$ is defined by
 %        \footnote{While $E$ is usually defined only for probability measures, and possibly $P_i([a, b]) < 1$, the definition of $E(P_i)$ as the first moment of $P_i$ still works.}
 %        \begin{gather*}
@@ -2269,16 +2269,16 @@ find it, neither can the market.” There are various exact and numerical algori
             P_1 \leqtw P_2 \colonlra \bigpars{E_{[x_1, b]}(P_{1}), \dots, E_{[x_n, b]}(P_1)} \leqRlex \bigpars{E_{[x_1, b]}(P_2), \dots, E_{[x_n, b]}(P_2)}.
         \end{gather*}
 %        The comparison is not defined for distributions whose support is not a subset of $[a, b]$.
-        Distributions not in $\Fab$ are incomparable by $\leqtw$.
+        Distributions not in $\DP_{[a, b]}$ are incomparable by $\leqtw$.
     \end{defn}
 
 %    Definition \ref{def:tweakableStochasticOrder} partitions the interval $[a, b]$ into intervals $[x_1, x_2), [x_2, x_3), \dots, [x_n, b]$. 
 %    In each of these intervals, the expected value is taken; the resulting vectors are compared by the reflected lexicographic order.
 %    The original definition in \cite{bib:tweakableStochasticOrders} does not use intervals $[x_1, x_2), [x_2, x_3), \dots, [x_n, b]$, but rather intervals $[x_1, b], [x_2, b], \dots, [x_n, b]$. The two definitions are equivalent, since a lexicographic comparison is used:    
-    The definition uses overlapping intervals $[x_1, b], [x_2, b], \dots, [x_n, b]$. In each of these intervals, the expected value is taken; the resulting vectors are compared by the reflected lexicographic order. We could instead partition $[a, b]$  into intervals $[x_1, x_2), [x_2, x_3), \dots, [x_n, b]$, which is equivalent since a lexicographic comparison is used:
+    The definition uses overlapping intervals $[x_1, b], [x_2, b], \dots, [x_n, b]$. In each of these intervals, it takes the expected value; the resulting vectors are compared by the reflected lexicographic order. Alternatively, we can partition $[a, b]$ into intervals $[x_1, x_2), [x_2, x_3), \dots, [x_n, b]$, which is equivalent since a lexicographic comparison is used:
 
     \begin{lemma}
-        Let $P_1, P_2 \in \Fab$.
+        Let $P_1, P_2 \in \DP_{[a, b]}$.
         Then
         \begin{alignat*}{3}
                                      &\bigpars{E_{[x_1, x_2)}(P_{1}), \dots, E_{[x_n, b]}(P_1)}\; &\leqRlex \bigpars{E_{[x_1, x_2)}(P_2), \dots, E_{[x_n, b]}(P_2)} \\
@@ -2289,93 +2289,93 @@ find it, neither can the market.” There are various exact and numerical algori
 %        Suppose the first equation holds strictly. Then for some $k \in \set{1, \dots, n}$, we have $E_{[x_k, x_{k+1})}(P_{1}) < E_{[x_k, x_{k+1})}(P_{2})$,
 %        and for all $i>k$, $E_{[x_i, x_{i+1})}(P_{1}) = E_{[x_i, x_{i+1})}(P_{2})$.
 %        Therefore for all $i > k$, $E_{[x_i, b)}(P_{1}) = \sum_{j \geq i} E_{[x_j, x_{j+1})}(P_{1}) = \sum_{j \geq i} E_{[x_j, x_{j+1})}(P_{2}) = E_{[x_i, b)}(P_{2})$, and by the same argument, $E_{[x_k, b)}(P_{1}) < E_{[x_k, b)}(P_{2})$.
-        Observe that for any $P_l$, $E_{[x_k, b]}(P_l) = \bigpars{\sum_{i=k}^{n-1} E_{[x_i, b)}(P_l)} + E_{[x_k, b]}(P_l)$.
-        The reflected lexicographic ordering considers the $k$-th coordinate iff all higher coordinates are equal in both vectors:
-        This means that for the ordering, it does not matter if values of higher coordinates are added to lower coordinates consistently on both sides.
-        Since this is what happens in the above sum representation, we get the equivalence.
+        Observe that for any $P_l$ ($l = 1, 2$), $E_{[x_k, b]}(P_l) = \bigpars{\sum_{i=k}^{n-1} E_{[x_i, b)}(P_l)} + E_{[x_n, b]}(P_l)$ for all $k \in [n]$.
+        The reflected lexicographic ordering considers the $k$-th coordinate if and only if all higher coordinates are equal in both vectors:
+        In this case, above sum representation implies that $E_{[x_k, b]}(P_1) < E_{[x_k, b]}(P_2) \lra E_{[x_k, x_{k+1})}(P_1) < E_{[x_k, x_{k+1})}(P_2)$, and analogously $E_{[x_k, b]}(P_1) = E_{[x_k, b]}(P_2) \lra E_{[x_k, x_{k+1})}(P_1) = E_{[x_k, x_{k+1})}(P_2)$.
+        In other words, it does not matter for the ordering if values of higher coordinates are added/subtracted to lower coordinates consistently on both sides.
     \end{proof}
 
     Considering that $\leqtail$ is “essentially lexicographic” in the sense of Theorems \ref{thm:acTailOrderSuffConditions}, \ref{thm:discreteTailOrderSuffConditions}, \ref{cor:discreteFiniteTailOrder-RLexEquivalence},
     $\leqtw$ can be understood as a coarser version of the tail order, in which the ordering decision is made considering probabilities in larger regions lexicographically instead of only considering single points.
-    Since $\leqRlex$ is total, $\leqtw$ is a total order on $\Fab$ (yet obviously not on $\DP$). It is not antisymmetric, since it is indifferent between any two distributions with equal expected values in each of the partition intervals.
+    Since $\leqRlex$ is total, $\leqtw$ is a total order on $\DP_{[a, b]}$ (yet obviously not on $\DP$). It is not antisymmetric, since it is indifferent between any two distributions with equal expected values in each of the partition intervals.
     
-    The order can be “tweaked” to a decision maker's risk attitude by choosing suitable partitioning points $\mathcal{I}$. \cite{bib:tweakableStochasticOrders} presents a method based on the decision-theoretic tool of utility functions: For example, a convex (i.e. superlinearly growing) utility function like $x \mapsto x^2$ is usually associated with risk-averse behavior, putting disproportionately higher weight on high losses; a concave (i.e. sublinearly growing) utility function like $x \mapsto \sqrt{x}$ is associated with risk-seeking behavior, putting disproportionately higher weight on low losses. A linear utility function represents a neutral attitude to risk, as the utility for a loss is proportionate to the loss actually received.
+    The order can be “tweaked” to a decision maker's risk attitude by choosing suitable partitioning points $\mathcal{I}$. \cite{bib:tweakableStochasticOrders} presents a method based on the decision-theoretic tool of utility functions: For example, a convex utility function like $x \mapsto x^2$ is usually associated with risk-averse behavior, putting disproportionately higher weight on high losses; a concave utility function like $x \mapsto \sqrt{x}$ is associated with risk-seeking behavior, putting disproportionately higher weight on low losses. A linear utility function represents a neutral attitude to risk, as the utility for a loss is proportionate to the loss actually received.
+    % TODO cite. Not sure if convex, concave explained correctly.
     
-    The utility function $u: [a, b] \to \R$ is assumed to be continuous, monotonically increasing, and w.l.o.g $u([a, b]) = [0, 1]$.
-    The proposed method equidistantly partitions the image of $u$ with partition points $\set{\frac{1}{n}, \dots, \frac{n-1}{n}}$, and constructs $\mathcal{I} = \set{a, x_2, x_3, \dots, x_n, b}$ such that $u(x_i) = \frac{i-1}{n}$ for $i = 2, \dots, n$.
-    In other words, the points in $\mathcal{I}$ are defined as the $\frac{i-1}{n}$-quantiles of $u$, analogously to quantiles of probability distribution functions.
+    The utility function $u: [a, b] \to \R$ is assumed to be continuous, monotonically increasing, and without loss of generality $u([a, b]) = [0, 1]$.
+    The proposed method partitions the range $[0, 1]$ of $u$ into $n$ equally-sized intervals, with partition points $\set{\frac{1}{n}, \dots, \frac{n-1}{n}}$, and constructs $\mathcal{I} = \set{a, x_2, x_3, \dots, x_n, b}$ such that $u(x_i) = \frac{i-1}{n}$ for $i = 2, \dots, n$.
+    In other words, the points $x_i$ in $\mathcal{I}$ are defined as the $\frac{i-1}{n}$-quantiles of $u$, analogously to quantiles of probability distribution functions. Then $\leqtw$ is the tweakable stochastic order tweaked to the utility function $u$.
     % TODO give an example?
     % TODO write about how the extreme cases are \leqtail and \leqE
     
     \section{Games with Multiple Distribution Segments as Objectives}
-    The stochastic order $\leqtw$ can of course be used to define games in the sense of Definition \ref{def:distributionValuedGame}, which was done in \cite{bib:tweakableStochasticOrders}.
-    In a new approach, we will use the segmentation idea in a different way and define multi-objective games: each of the segments' expected values will be viewed as a distinct objective which is to be minimized.
+    The stochastic order $\leqtw$ can of course be used to order distribution-valued games in the sense of Definition \ref{def:distributionValuedGame}, which was the approach chosen in \cite{bib:tweakableStochasticOrders}.
+    In a new approach, we will use the segmentation idea in a different way and define multi-objective games: each of the segments' expected values will be viewed as a distinct objective to be minimized.
     
     \subsection{Multi-Objective Games and Pareto-Nash Equilibria}
     Of course in such a multi-objective setting, one can not hope to be able to minimize all objectives at once. Quite possibly, one objective can only take on its minimal value if another objective is not minimal. A common way to deal with this is to consider \emph{Pareto-optimal} solutions:
-    A vector is Pareto-optimal if no improvement in any coordinate is possible without making another coordinate worse. Phrased in a different way, a vector is Pareto-optimal if no other vector \emph{dominates} it in all coordinates.
+    A vector is Pareto-optimal if no improvement in any coordinate is possible without making another coordinate worse. Phrased in a different way, a vector is Pareto-optimal if no other of the vectors in consideration \emph{dominates} it in all coordinates.
     For example, if one considers the set $\set{v_1 = (4, 2, 4), v_2 = (2, 2, 2), v_3 = (0, 0, 4)}$, the Pareto-optimal vectors with respect to minimization are $v_2$ and $v_3$, while $v_1$ is dominated (since e.g. $v_2$ has smaller or equal values in all coordinates).
     
-    % TODO are really both \leqpareto and \leqdom needed?
     \begin{defn}
-        Define preorders $\leqpareto$, $\leqdom$ on $\R^m$ by
+        Define the preorder
         \begin{align*}
-        	x \leqpareto y ~ & \colonlra~ \exists i: x_i < y_i \vee x = y, \\
-        	x \leqdom y ~    & \colonlra~ \forall i: x_i \leq y_i.
+        	x \leqpareto y ~ & \colonlra~ \exists i: x_i < y_i \vee x = y.
         \end{align*}
     \end{defn}
-    Both orders are related to the notion of Pareto optimality, and $\leqdom$ can be understood as a strengthened version of $\leqpareto$:
-    $\leqpareto$ is total, but not antisymmetric; $\leqdom$ is antisymmetric, but not total.
-    The relationship between the orders is that $x \leqdom y$ implies $x \leqpareto y$,
-%    and $x, y$ are incomparable by $\leqdom$ if and only if $x \indiffpareto y$ (i.e.$\leqpareto$ is indifferent).
-    and $\leqpareto$ is indifferent between $x$ and $y$ if and only if $x, y$ are incomparable by $\leqdom$, i.e. $\leqpareto$ replaces incomparability by indifference.
-%    Minimal elements with respect to $\leqdom$ are Pareto-minimal; so are elements $x$ where for all $y$, $y \leqpareto x$ implies $x \leqpareto y$.
-    The Pareto-minimal elements in a set $S \subseteq \R^m$ are
+    We have $x \leqpareto y$ if $x$ is dominated by $y$ in at least one coordinate.
+    Note that $\leqpareto$ is not antisymmetric: E.g. if $x_1 < y_1$ and $y_2 < x_2$, then $x \leqpareto y$ and $y \leqpareto x$.
+    We have $x \lesspareto y$ iff $x \leqpareto y$ and not $y \geqpareto x$, i.e. if $x$ is dominated by $y$ in all coordinates, and strictly dominated in at least one.
+    The set of Pareto-minimal elements in a set $S \subseteq \R^m$ is given by:
     \begin{gather*}
-        \set{x \in S \mid \forall y \in S: x \leqpareto y} = \set{x \in S \mid \nexists y \in S: y \lessdom x}.
+        \set{x \in S \mid \forall y \in S: x \leqpareto y}.
     \end{gather*}    
     
-    % TODO pioneered by Shapley? According to (Yang, Essential Components of the Set of Weakly Pareto-Nash Equilibrium Points), Blackwell pioneered it (1956, An analog of the minimax theorem for vector payoffs)
-    The notion of multi-objective games and equilibria in the Pareto-optimal sense was pioneered by Shapley in \cite{bib:shapleyMultiobjectiveEquilibriumPoints},
-    while later sources brought the terminology of Pareto-optimality to this context. %TODO cite
-    We can use our framework of games with generalized payoffs to formalize the equilibrium concept.
+    The notion of multi-objective games was pioneered by David Blackwell in \cite{bib:blackwellVectorPayoffs}, and Lloyd Shapley defined the concept of multi-objective equilibria in the Pareto-optimal sense in \cite{bib:shapleyMultiobjectiveEquilibriumPoints} (yet the terminology of Pareto optimality was only later associated with it).
+%    while later sources brought the terminology of Pareto optimality to this context. %TODO cite
+    We can use our framework of games with generalized payoffs together with the order $\leqpareto$ to formalize this equilibrium concept.
     
     \begin{defn}
-        We define a \emph{multi-objective game} $G$ as a game with generalized payoffs in $\R^m$.
+        Let $G$ be a vector-valued game as in Definition \ref{def:vectorValuedGame}, i.e. a game with generalized payoffs in $\R^m$.
         We call the Nash equilibria of $G$ with respect to $\leqpareto$ \emph{Pareto-Nash equilibria} (cf. \cite{bib:paretoNashEquilibria}).
+        In this context, we also call $G$ as \emph{multi-objective game}.
         % TODO all players have same-dimensional payoffs in this model. Problem?
     \end{defn}
 
-    Importantly, Pareto-Nash equilibria can be found by transforming the multi-objective game into a real-valued game via a weighted sum of the different objectives. In particular, the Pareto-Nash equilibria are exactly the equilibria of such weighted games for different weight vectors.
+    \begin{rem}
+        A Pareto-Nash equilibrium can be interpreted as a strategy profile where no player can deviate to a different strategy and get a strictly better payoff in one coordinate without getting a strictly poorer payoff in another. The model seems not to allow different players to have a different number of objectives $m_1, \dots, m_n$: We do not explicitly model this case to avoid cumbersome additional notation. However such payoffs can be represented by letting $m \coloneqq \max_{i \in [n]} m_i$, and padding all lower-dimensional payoff vectors with zeroes so they lie in $\R^m$.
+    \end{rem}
+
+    An important result from Shapley's paper \cite{bib:shapleyMultiobjectiveEquilibriumPoints} is that Pareto-Nash equilibria can be found by transforming the multi-objective game into a real-valued game via a weighted sum of the different objectives. In particular, the Pareto-Nash equilibria are exactly the equilibria of such weighted games for different weight vectors.
     
     \begin{thm}[Characterization of Pareto-Nash equilibria, cf. \cite{bib:shapleyMultiobjectiveEquilibriumPoints,bib:paretoNashEquilibria}]~\\
         Let $G$ be a mixed-extension multi-objective game with $n$ players and payoffs in $\R^m$. 
         For some $0 \neq w_1, \dots, w_n \in \Rp^m$, denote by $\tilde{G}^{w_1, \dots, w_n}$ the real-valued game with payoff functions
         $\tilde{u}_k: s \mapsto \innerprod{u_k(s)}{w_k}$ (taking the weighted sum of objectives in $u_k(s)$ by weights in $w_k$).
         Then some strategy profile $s \in S$ is a Pareto-Nash equilibrium of $G$ if and only if it is a Nash equilibrium of $\tilde{G}^{w_1, \dots, w_n}$ for some weights $w_1, \dots, w_n$.
-        \footnote{The theorem can be generalized further, see \cite{bib:shapleyMultiobjectiveEquilibriumPoints,bib:paretoNashEquilibria}: Instead of mixed-extension games, we could allow arbitrary. games with continuous payoff functions defined on some convex strategy set.  Instead of $m$ objectives each, we could allow a different number of objectives for every player.
+        \footnote{The theorem can be generalized further, see \cite{bib:shapleyMultiobjectiveEquilibriumPoints,bib:paretoNashEquilibria}: Instead of mixed-extension games, we could allow arbitrary games with continuous payoff functions defined on some convex strategy set.
+%        Instead of $m$ objectives each, we could allow a different number of objectives for every player.
         Also we can restrict ourselves to weight vectors whose entries sum to 1, as scaling the payoffs of a real-valued game by a positive scalar preserves equilibria.
         }
         \label{thm:paretoNashEquilibriaWeightingCharacterization}
     \end{thm}
 
-    The characterization gives rise to a simple algorithm which finds a Pareto-Nash equilibrium, as we can simply pick some arbitrary weights and apply one of the usual algorithms to find Nash equilibria in real-valued games.
-    However, it also shows that the equilibrium heavily depends on how the players weigh their objectives. Since there are infinitely many weight vectors, one should expect that there can be infinitely many Pareto-Nash equilibria. 
+    The characterization gives rise to a simple algorithm which finds one Pareto-Nash equilibrium, as we can simply pick arbitrary weights $w_1, \dots, w_m$ and apply one of the usual algorithms to find Nash equilibria in real-valued games.
+    However, it also shows that the equilibrium heavily depends on how the players weigh their objectives. Since there are infinitely many weight vectors, we can not rule out that there can be infinitely many Pareto-Nash equilibria. 
     
-    % TODO possibly other formulation: it's visually appealing...
     It is not in the scope of this work to examine the set of Pareto-Nash equilibria in detail, but it is interesting to at least have some idea of its possible structure, 
     the number of different equilibria and their relationships.
 %    how many different equilibria there can be and how they relate to each other.
-    To get some intuition of which Pareto-Nash equilibria a game can have, one can experiment with different weights and visualize the resulting equilibria profiles in a plot where the strategies in the profile are represented as dots.
-    \autoref{fig:paretoNashEquilibriaShowcase} % TODO figure showing Pareto-Nash equilibria
-    shows examples of such plots for randomly generated 2-player games with 3 pure strategies for each player, and a varying number $m$ of objectives: For each equilibrium profile, the strategies of player 1/2 are represented by a red/green dot, projected from the two-dimensional mixed-strategy-simplex in three-dimensional space to the plane 
+    To get some intuition of which Pareto-Nash equilibria a game can have, we experiment with different weights and visualize the resulting equilibria profiles in a plot where the strategies in the profile are represented as dots.
+    \autoref{fig:paretoNashEquilibriaShowcase}
+    shows examples of such plots for randomly generated 2-player games with 3 pure strategies for each player, and a varying number $m$ of objectives: For each equilibrium profile, the strategies of player 1/2 are represented by a red/green dot, respectively, projected from the two-dimensional mixed-strategy-simplex in three-dimensional space to the plane 
     (the corners represent pure strategies).
     The examples showcase the possible complexity of the set of Pareto-Nash equilibria:
-    In some games, all equilibria just mix between two of the three strategies; in others, equilibria seem to follow certain patterns which can be recognized in the visual representation.
+    In one of the games, all equilibria mix between at most two of the three strategies; in others, equilibria seem to follow certain patterns which can be recognized in the visual representation.
     One could hope that while Pareto-Nash equilibria are not unique, they at least concentrate on a small number of points -- however the examples show that this is not the case in general, as there are many different equilibrium points in all examples.
 %    (while in principle, as opposed to just a few that get generated by 
 %    , where for example many equilibrium points concentrate on curves.
-    Another observation is that in all cases, there are equilibrium profiles far apart from another, so Pareto-Nash equilibria of the same game obtained by different weightings need not be “similar”, but can be completely different.
+    Another observation is that in all cases, there are equilibrium profiles far apart from another, so Pareto-Nash equilibria of the same game obtained by different weightings need not be “close”, but can be completely different.
     In particular, this motivates that for an algorithm which calculates a specific Pareto-Nash equilibrium, it is reasonable to take a weighting vector as input instead of choosing one on its own.
     \begin{figure}[h] % TODO the random_probability_vector function used was incorrect. Weightings are skewed towards having higher probabilities in the first coordinates
         \centering
@@ -2426,30 +2426,32 @@ find it, neither can the market.” There are various exact and numerical algori
     \subsection{Multi-Objective Segmented-Distribution Games}
     Putting the pieces together, we construct the multi-objective game based on loss distribution segments as follows:
     % TODO watch out, here we use indices 1...m, above we used 1...n
-    Let $G$ be a mixed-extension distribution-valued game with outcomes from $\Fab$, $a < b$, and let $\mathcal{I} = \set{a, x_2, x_3, \dots, x_m, b}$ be a partition of the interval $[a, b]$.
+    Let $G$ be a distribution-valued bimatrix game with payoffs from $\DP_{[a, b]}$, $a < b$, and let $\mathcal{I} = \set{a, x_2, x_3, \dots, x_m, b}$ be a partition of the interval $[a, b]$.
     
     \newcommand{\Gseg}[1][]{G_{\text{seg,$\ifstrempty{#1}{\mathcal{I}}{#1}$}}}
     Define the \emph{segment game} $\Gseg$ as a multi-objective game with the same strategies as in $G$, where each player $k$ has the utility function:
     \begin{gather}
-        u_{\text{seg}, k}: S \to \R^m, s \mapsto -\bigpars{E_{[x_1, x_2)}(u_k(s)), E_{[x_2, x_3)}(u_k(s)), \dots, E_{[x_m, b]}(u_k(s))}
+        u_{\text{seg}, k}: S \to \R^m, s \mapsto -\bigpars{E_{[a, x_2)}(u_k(s)), E_{[x_2, x_3)}(u_k(s)), \dots, E_{[x_m, b]}(u_k(s))}.
         \label{eq:segmentsExpectationVector}
     \end{gather}
-    We are negating the vector as we are in the context of loss distributions, but want to stick to the convention that utilities should be maximized.
-    As outlined in the previous section, we can find Pareto-Nash equilibria  of $\Gseg$ by weighting the different objectives and then solving the resulting real-valued game.
+    We negate the vector as we are in the context of loss distributions, but want to stick to the convention that utilities should be maximized.
+    As outlined in the previous section, we can find Pareto-Nash equilibria  of $\Gseg$ by weighing the different objectives and then solving the resulting real-valued game.
     This approach is implemented for the thesis in the language \texttt{R}, and the following describes the details of the implementation.
     
     % TODO cite something about HyRiM?
-    The \texttt{R} package \emph{HyRiM}  by Stefan Rass, Sandra König and Ali Alshawish was developed along with the papers \cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassGameRiskManagIII} and implements algorithms and data structures for distribution-valued games.
-    In particular, it provides a class that represents finitely-supported discrete and absolutely continuous loss distributions, where absolutely continuous distributions are approximated by a kernel density estimation method. It also provides a class that represents distribution-valued games, and implements the computation of Nash equilibria for real-valued games.
+    The \texttt{R} package \emph{HyRiM} \cite{bib:hyrimPackage} by Stefan Rass, Sandra König and Ali Alshawish was developed along with the papers \cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassGameRiskManagIII} and implements data structures and algorithms for distribution-valued games.
+    In particular, it provides the class \texttt{lossDistribution} that represents finitely-supported discrete and absolutely continuous loss distributions. Absolutely continuous distributions are approximated by a kernel density estimation method: Given a finite number of samples, their distribution's density function is approximated as a convex combination of Gaussian densities. The package also provides the class \texttt{mosg} that represents distribution-valued games, and implements the computation of Nash equilibria for real-valued games. The abbreviation stands for \emph{multi-objective security game}, as the package (unlike the presentation in this thesis) allows to define games with multiple distribution-valued objectives.
     
     We implement the multi-objective segmentation-based games in the context of the HyRiM package, and as a possible extension to it. As the package focuses on zero-sum games, we also restrict ourselves to zero-sum segmented games.
-    Multi-objective segmented games are represented by the \texttt{moseg} class. Such a game can be created from a single-objective distribution-valued game, represented in HyRiM by the \texttt{mosg} class, and a vector of partition points.
+    Multi-objective segmented games are represented by the \texttt{moseg} class. Such a game can be created from a single-objective distribution-valued game of the built-in \texttt{mosg} class, and a vector of partition points.
     Loss distributions are turned into real-valued expectation vectors by \eqref{eq:segmentsExpectationVector}: this is implemented in the function \texttt{segmentedLossDistribution}, which takes in a \texttt{lossDistribution} object and the partition points and returns the expectation vector.
-    Computing the expected value is straightforward in the case of finitely-supported discrete distributions as a sum; for absolutely continuous distributions, numerical integration is used 
-    (however this is not implemented yet).
+    Computing the expected value is straightforward in the case of finitely-supported discrete distributions as a sum. For absolutely continuous distributions, the numerical integration function \texttt{integrate} provided by \texttt{R} is used.
     Finally, the method \texttt{moseg.paretoNashEquilibrium} computes a Pareto-Nash equilibrium of a game of the \texttt{moseg} class, given a vector of weights as inputs.
     It first scalarizes the game based on the weights.
-    Then for the actual equilibrium computation, it utilizes the HyRiM built-in method \texttt{mgss} which besides distribution-valued games supports equilibrium computation for real-valued games.
+    Then for the actual equilibrium computation, it utilizes the HyRiM built-in method \texttt{mgss} which implements equilibrium computation for real-valued games.
+    
+    The three methods are implemented in the file \texttt{multiobjectiveSegmentGame.R}. The source code is shown on the following pages.
+    
     
     \paragraph{Creation of Segmented Game}
     The code for creating a \texttt{moseg} game:
@@ -2468,13 +2470,20 @@ find it, neither can the market.” There are various exact and numerical algori
     \lstinputlisting[language=R, firstline=13, lastline=31]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
     
     \paragraph{Computing Expectation Vectors}
-    The code for converting a \texttt{lossDistribution} in a segment expectation vector:
-    \lstinputlisting[language=R, firstline=67]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
+    The code for converting a \texttt{lossDistribution} to a segment expectation vector is given in the next listing. The implementation relaxes the requirement made in the definition of $\Gseg$ that the interval $[a, b]$ must cover the whole support of all distributions involved: Since absolutely continuous distributions are estimated as combination of Gaussian kernels, their support will always be the whole real line. Instead of placing an arbitrary restriction on the partition (e.g., 99\% of the probability mass must lie in $[a, b]$), we prefer to give the user the flexibility to choose the partition freely. To make this behavior consistent, the same is allowed for discrete distributions.
+    \lstinputlisting[language=R, firstline=67, deletekeywords={density}]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
     
     \paragraph{Computing Pareto-Nash Equilibria}
     The code for computing Pareto-Nash equilibrium of a \texttt{moseg} based on weights:
-    \lstinputlisting[language=R, firstline=42, lastline=55]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
+    \lstinputlisting[language=R, firstline=42, lastline=55, deletekeywords={weights}]{Code/leqtw-multiobjective/multiobjectiveSegmentGame.R}
     
+    
+    \paragraph{Examples}
+    Examples of using the code are supplied in the file \emph{mosegExamples.R}.
+    There are two examples: The first example constructs a 2x2 two-player zero-sum game with discrete distributions supported on $\set{1, \dots, 10}$ as payoffs.
+    The second example constructs a 2x2 two-player zero-sum game with absolutely continuous distributions as payoffs.
+    In both cases, a segmented game is created and the Pareto-Nash equilibrium given a fixed weights vector is computed.
+    For comparison, the “MGSS” (\emph{Multi-Goal Security Strategy}) solution the HyRiM-built-in method \texttt{mgss} computes is output as well.
     
 %    \chapter{Distribution-Valued Game Theory in Security of Critical Infrastructures}
     
