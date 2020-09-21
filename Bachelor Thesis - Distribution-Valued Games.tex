@@ -5,7 +5,8 @@
 % Use biber as bibliography tool
 % !TeX TXS-program:bibliography = txs:///biber
 
-\documentclass[a4paper]{scrreprt}
+%\documentclass[a4paper,DIV=11,twoside,BCOR=10mm]{scrreprt}
+\documentclass[a4paper,DIV=11]{scrreprt}
 
 \usepackage{graphicx}
 \input{todonotes-preamble.tex}
@@ -15,18 +16,22 @@
 \usepackage{csquotes} % needed for biblatex
 
 \usepackage{setspace}
-\usepackage[headsepline]{scrlayer-scrpage}
 \usepackage{mathtools} % \bigtimes
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{thmtools}
 
+\usepackage{textcomp}
+\usepackage{eurosym}
+
 
 
 % no ident, combined with reasonable paragraph spacing
 \setstretch{1.18} % 1.213 is \onehalfspacing
-\setlength{\parindent}{0em}
-\setlength{\parskip}{1.7ex}
+
+\usepackage{parskip}
+%\setlength{\parindent}{0em}
+%\setlength{\parskip}{1.7ex}
 
 \addbibresource{Bachelor-Thesis.bib}
 
@@ -91,6 +96,7 @@
 %    Refname={Definition,Definitions}
 %]{defn}
 
+\usepackage[headsepline]{scrlayer-scrpage}
 \ihead{Bachelor Thesis - Vincent Bürgin}
 \ohead{[Work in Progress]}
 
@@ -102,7 +108,9 @@
 
 \begin{document}
     \maketitle
+    \setstretch{1.08}
     \tableofcontents
+    \setstretch{1.18}
     
     \chapter{Introduction}
     Game theory is a field that studies games which are played by multiple independent players with different objectives, and analyzes the players' strategic possibilities.
@@ -128,10 +136,11 @@
     Regarding further related work, there are of course many publications on classical (real-valued) game theory, and the books mainly used for this thesis are \cites{bib:fudenbergGameTheory,bib:nisanAlgorithmicGameTheory,bib:matsumotoGameTheory}.
     There are however surprisingly few publications that concern models similar to distribution-valued games, or even other generalized payoffs that are not real numbers. There are multiple well-known types of games that include randomness, but none of them match the model of distribution-valued games: 
     There is the notion of \emph{stochastic games} (see \cite{bib:shapleyStochasticGames}) which are played in multiple rounds and include a game state that changes between the rounds and determines the payoff structure. In these games, only the state transitions depend on chance, but not the payoffs. 
-    Another variant are \emph{moves by nature} in the theory of \emph{extensive-form games}, which occur for example in \emph{Bayesian games} (see \cite[Chapter 6 and Section 8.3]{bib:fudenbergGameTheory}): While payoffs can depend on chance in such models, an important difference lies in their equilibrium concepts, since the payoff distributions are condensed to an expected value before comparing them, unlike the comparison by stochastic orders in our model. 
+    Another variant are \emph{moves by nature} in the theory of \emph{extensive-form games}, which occur for example in \emph{Bayesian games} (see \cite[Chapter 6 and Section 8.3]{bib:fudenbergGameTheory}): While payoffs can depend on chance in such models, an important difference lies in their equilibrium concepts, since the payoff distributions are condensed to an expected value before comparing them, unlike the comparison by \emph{stochastic orders} in our model. 
     The models closest to Rass' distribution-valued games published prior to it seem to be \emph{stochastic cooperative games} which use distribution-valued outcomes rated by stochastic orders, and \emph{non-cooperative games with fuzzy-number payoffs}. 
     The former (e.g. \cite{bib:suijsCooperativeGamesWithStochasticPayoffs,bib:fernandezCoresOfStochasticCoopGamesWithStochasticOrders}) however concern only cooperative games whose theory differs from the theory of non-cooperative games that our model lives in. 
     The latter uses fuzzy numbers instead of probability distributions (e.g. \cite{bib:maedaCharacterizationOfEquilibriumFuzzyPayoff, bib:cevikelSolutionsFuzzyMatrixGames}): The exact relationship between fuzzy and probabilistic methods is rather complicated (see e.g. the discussion in \cite{bib:kandelDistinctionBetweenFuzzyAndStatisticalMethods}), yet they are certainly different concepts.
+    Stochastic orders are discussed in \cite{bib:shakedStochasticOrders}.
     
     There is also not much literature on the more general case of games with payoffs in an arbitrary set ordered by a preorder.
     This thesis defines its own generalized model in Section \ref{sec:generalizedPayoffGames} so we can properly work with such games without ambiguity about the definitions. Similar definitions are given in \cite{bib:rozenEquilibriaInGamesWithOrderedOutcomes}, and apparently already in the much older Russian-language article \cite{bib:vorobevThePresentStateOfGameTheory} it cites, but at least \cite{bib:rozenEquilibriaInGamesWithOrderedOutcomes} does not include a definition for mixed extensions as general as we need.
@@ -142,13 +151,19 @@
     The tail order itself is defined based on moment sequences of probability distributions: A relevant question for the thesis thus is which real sequences are moment sequences, a question known as the \emph{moment problem}. The literature on this subject is rich, and there are both classical and more recent publications, e.g. \cite{bib:hausdorffMomentprobleme,bib:akhiezerClassicalMomentProblem,bib:chiharaIndeterminateHamburgerMomentProblems,bib:schmuedgenTheMomentProblem}. 
     However the question whether two moment sequences can alternate, which is relevant to the tail order and is answered in Subsection \ref{subsec:tailOrderTotality}, seems not to have been considered in the literature before.
     
+    \enlargethispage*{\baselineskip}
     Finally, the theory of multi-objective games and Pareto-Nash equilibria we put to use in {Chapter \ref{chap:segmentingLossDistributions}} is well-developed, starting with the papers \cite{bib:blackwellVectorPayoffs} and \cite{bib:shapleyMultiobjectiveEquilibriumPoints}. The more recent \cite{bib:paretoNashEquilibria} generalizes some theorems from the earlier papers. Furthermore, an overview of solution concepts other than Pareto-Nash equilibria is given by \cite{bib:ghoseSolutionConceptsMultiobjective}.
     
     
     \chapter{Mathematical Preliminaries: Probability and Decision Theory}
     \label{chap:mathematicalPreliminaries}
     
-    \todo{Introduce Notations $[n]$, $\Rp$, alternating sequences and functions}
+    The following pages present basic concepts from probability and decision theory that are relevant as background for the thesis.
+    The first section contains standard definitions from probability and measure theory that can be found in textbooks such as \cite{bib:billingsleyProbabilityAndMeasure}.
+    The section about decisions under uncertainty and risk are adopted from \cite[Sections 3.5 - 5.3]{bib:doersamGrundlagenDerEntscheidungstheorie} and \cite[Sections I.1, I.2]{bib:wakkerProspectTheory}.
+    The thesis uses standard mathematical notation, yet some notations used are worth mentioning:
+    We write $\N = \set{1, 2, 3, \dots}$ for the natural numbers not including zero, and $\N_0 \coloneqq \N \cup \set{0}$.
+    The non-negative real numbers are denoted by $\Rp$. If $n \in \N$, we write $[n] \coloneqq \set{1, 2, \dots, n}$ for the first $n$ natural numbers.
     
     \section{Probability Theory}
 %    \todo{Briefly introduce required basic concepts like (probability) measures, random variables, the Borel sigma algebra, Lebesgue integration, moments, etc.}
@@ -168,7 +183,6 @@
     One resorts to the \emph{Borel sigma algebra} $\B$, defined as the smallest sigma algebra containing all intervals $[a, b] \subseteq \R$.
     The sets $B \in \B$ are called \emph{Borel sets}, and measures on $\B$ \emph{Borel measures}.
     The most ubiquitous Borel measure is the \emph{Lebesgue measure} $\lambda$ which assigns Borel sets their natural “volume” and is uniquely determined as the Borel measure mapping closed intervals to their length, i.e. $\lambda([a, b]) \coloneqq b-a$, $a \leq b$.
-    % TODO does lambda also need to map half-open/open intervals to their lengths for this to be unique?
     The \emph{point-mass} (or \emph{Dirac}) \emph{measure} $\delta_x$ is the Borel probability measure assigning all probability mass to one point $x \in \R$, i.e. $\delta_x(B) = \1_B(x)$.
 
     A function $f: \Omega \to \R$ is \emph{Borel-measurable} if $\forall B \in \B: f\inv(B) \in \A$.
@@ -206,19 +220,51 @@
     $P$ is \emph{continuous} if its distribution function $F$ is continuous, or equivalently $P(\set{X = c}) = 0$ for all $c \in \R$.
     Absolutely continuous probability measures are continuous, but the converse is not true in general (a counterexample is the \emph{Cantor distribution}): In particular, there are probability measures which are neither AC nor discrete (nor a mixture of AC and discrete measures).
     Both absolute continuity and discreteness are special cases of a more general concept: $P$ has a density $f$ \emph{with respect to a measure $\mu$} if $\forall B \in \B: P^X(B) = \lintegral{B}{f(x)}{\mu(x)}$; For discrete distributions, the mass function $f$ can be seen as a density with respect to the \emph{counting measure} $\#$ which assigns to each set its cardinality.
-    If $P$ has a $\mu$-density $f$, this allows to compute the integral of some $P$-integrable function $g$ with respect to $P$ as $\lintegral{A}{g}{P} = \lintegral{A}{f g}{\mu}$.
+    If $P$ has a $\mu$-density $f$, this allows to compute the integral of some $P$-integrable function $g$ with respect to $P$ as $\lintegral{A}{g}{P} = \lintegral{A}{f g}{\mu}$. 
+    
+    Some set $A \subseteq \R$ is \emph{null set} of a measure $\mu$ if $\mu(\tilde{A}) = 0$ for some a measurable set $\tilde{A} \supseteq A$.
+    A condition holds \emph{almost surely} with respect to a probability measure $P$ if the set where it does not hold is a null set.
+    If $P$ has a $\mu$-density $f$, this implies that all null sets with respect to $\mu$ are null sets with respect to $P$ ($P$ is \emph{absolutely continuous} with respect to $\mu$).
+    A probability measure $P$ is \emph{supported} on a measurable set $A$ if $P(A) = 1$. If $P$ is a Borel probability measure on $\R$, we write $\supp(P)$ for the \emph{support} of $P$: We use the convention that $\supp(P)$ is the smallest closed set with probability one, i.e. intersection of all closed $B \in \B$ such that $P(B) = 1$.
     
     Define the \emph{expected value} of a random variable/Borel probability measure as $E(X) \coloneqq \lintegral{\Omega}{X}{P} = \lintegral{\R}{x}{P^X(x)} \eqqcolon E(P^X)$. It is only defined if $X$ is integrable, i.e. $E(\abs{X}) = \lintegral{\Omega}{\abs{X}}{P} < \infty$. 
     The expected value is the first of the distribution's \emph{moments}:
     If $p \in \N_0$, we say that $X$ is \emph{$p$-integrable}, or $X \in \mathcal{L}^p$, if $E(\abs{X}^p) < \infty$;
     In this case, define the \emph{$p$-th moment} of $X$ as $E(X^p)$. Analogously, define the $p$-th moment of a Borel measure $P$ by $m_p(P) \coloneqq \lintegral{\R}{x^p}{P(x)}$ if $\lintegral{\R}{\abs{x}^p}{P(x)} < \infty$. $P$ is a probability measure if and only if $m_0(P) = 1$, because $m_0(P) = P(\R)$.
+    While $\mathcal{L}^p$ contains all random variables over a fixed probability space that have a moment of $p$-th order, there is no standard notation for the set of Borel probability measures that have moments of $p$-th order. In this thesis, we denote this set by $M^p$, and write $M \coloneqq \bigcap_{p \in \N} M^p$ for the set of Borel probability measures that have moments of all orders.
     
     % TODO do we need “almost surely”?
     % TODO Definitely introduce supp!
     % TODO Give references/Check if the concepts are properly supported
     
     \section{Decision Theory}
-    \todo{(Possibly) introduce concepts like preference relations, utility functions, etc.}
+    
+    Decision theory is the theory of selecting one of multiple alternatives in a scenario where the exact outcomes of the alternatives are not uncertain.
+    There is a state space $S$, also called \emph{states of nature}: Exactly one of the states is considered to be true, but it is not unknown which.
+    There is a set of \emph{outcomes} which we will assume to be $\R$.
+    The alternatives one has to decide between are called \emph{prospects} or \emph{lotteries}, and are modeled as maps $x: \S \to \R$. Prospects are assumed to only take finitely many values. There is a short notation for prospects: for example if $S = \set{s_1, s_2, s_3}$, one writes $(s_1: 50, s_2: 30, s_3: 121)$ for the prospect that assigns to the three states the values $50, 30$, and $21$, respectively.
+    
+    The theory distinguishes between \emph{decisions under uncertainty} and \emph{decisions under risk}. The difference is that under \emph{risk}, the states of nature have probabilities assigned to them, while under \emph{uncertainty}, no probabilities are assumed.
+    A common way to transform a probability under uncertainty into one under risk is to assume that all states of nature are equally likely (\emph{Laplace's method}).
+    There are other methods to make a decision under uncertainty: The \emph{maximin} method chooses the prospect with the maximal outcome in the worst case. The \emph{maximax} method chooses the prospect with the maximal outcome in the best case. \emph{Huwicz' rule} interpolates between the worst-case and the best-case result of each prospect with a parameter $\lambda$, and chooses the prospect where this value is maximal. The \emph{Savage-Niehans} or \emph{regret minimization rule} computes the best possible outcome for each state, assigns each outcome of a prospect the difference from the best outcome under the respective state (the \emph{regret} a decision maker feels in this case), and chooses a prospect by applying the minimax method to the differences.
+    All criteria have shortcomings, as no criterion manages to satisfy every entry of a list of axioms one would like to impose on a rational decision rule:
+    For the maximin and maximax methods and Hurwicz' rule, the decision can change if a constant is added to all outcomes of a certain state, and also a prospect that is dominated by another one, and strictly so in at least one entry, can still be chosen.
+    The Savage-Niehans rule can change its preference between prospects $a$ and $b$ if a third prospect $c$ is added.
+    Laplace's rule can change its decision when two states of nature with identical outcomes are merged to a single state.
+    
+    For decisions under risk, the short notation is changed to represent the probabilities instead of the states, e.g. $(5\%: 50, 10\%: 30, 85\%: 121)$.
+    Prospects can be interpreted as random variables in this model, and it seems natural to compare them by their \emph{expected values}. However, this method is not considered to accurately represent every decision maker's attitude to risk:
+    For example, it seems plausible that many people would prefer (100\%: 10 000\,\euro) over (1\%:  1 000 001\,\euro, 99\%:  0\,\euro), even though the latter prospect has a greater expected value.
+    Bernoulli argued that monetary rewards have diminishing marginal returns: The more money one gets, the less one cares about getting an additional unit. In other words, the \emph{utility} the money has for the decision maker increases less than proportional to the level of the amount.
+    In formal terms, one associates with a decision maker a \emph{utility function} $u: \R \to \R$ that is a monotonically increasing function from the outcome set to the reals.
+    To decide between two prospects by \emph{expected utility}, one applies a utility function $u$ to the outcomes and decides between the resulting prospects by expected value.
+    A utility function that is \emph{concave}, i.e. grows slower than proportional to its argument, is associated with \emph{risk-averse} behavior.
+    On the other hand, \emph{convex} utility functions are associated with \emph{risk-loving} behavior. Commonly, functions such as $x \mapsto x^2, x \mapsto \sqrt{x}$, or $x \mapsto \ln(x)$ are used.
+    
+    More general preferences between prospects can be captured by defining a binary \emph{preference relation} $\preccurlyeq$ between prospects:
+    A relationship $x \succcurlyeq y$ expresses that the decision maker “is willing to choose $x$ from $\set{x, y}$” (\cite[p. 14]{bib:wakkerProspectTheory}).
+    Reasonable assumptions for preference relations include \emph{reflexivity} and \emph{transitivity}, in which case the preference relation is a \emph{preorder} on the prospects.
+    The theory as described in \cite{bib:wakkerProspectTheory} restricts prospects such that they can only take finitely many values. If interpreted as random variables, this means that only random variables with finite support are considered. In Chapter \ref{chap:gamesWithDistributionalPayoffs}, we will drop this restriction and define preference relations between arbitrary Borel probability distributions on the real numbers, then called \emph{stochastic orders}.
     
     
     \chapter{Non-Cooperative Game Theory}
