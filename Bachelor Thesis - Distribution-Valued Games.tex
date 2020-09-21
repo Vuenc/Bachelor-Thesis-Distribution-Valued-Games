@@ -21,6 +21,8 @@
 \usepackage{subcaption}
 \usepackage{thmtools}
 
+
+
 % no ident, combined with reasonable paragraph spacing
 \setstretch{1.18} % 1.213 is \onehalfspacing
 \setlength{\parindent}{0em}
@@ -103,8 +105,48 @@
     \tableofcontents
     
     \chapter{Introduction}
+    Game theory is a field that studies games which are played by multiple independent players with different objectives, and analyzes the players' strategic possibilities.
+    It has a wide range of applications in economics and risk management, and can be fruitfully used in cyber security as well.
+    A \emph{game} models a situation that is determined by the actions its players take independently: every player has a set of strategies to choose from, and it depends on the combination of all the strategies that the players choose to play which outcomes, or payoffs, the players obtain. In the classical setting, the payoffs are represented by numbers: this can for example be interpreted as a monetary reward the player gets, or as a more abstract \emph{utility} the outcome situation has for the player.
+    
+    However real-world settings tend to involve a lot of uncertainty, and it may be hard to specify a clear-cut number as outcome of a certain situation. The economical branch of decision theory provides tools for dealing with stochastic outcomes instead: It makes use of \emph{preference relations} between random experiments (\emph{lotteries}), and it is analyzed empirically which lotteries people tend to prefer in experiments.
+    
+    A natural idea is to extend the existing theory of real-valued games by allowing probability distributions as payoffs, and such a model will be the basis for this bachelor thesis. This model of \emph{distribution-valued games} was first introduced and used in several papers by Stefan Rass et al. The idea is that the outcomes of the players are stochastic experiments, modeled by probability distributions, and each player’s preferences for particular outcomes are represented by a preference relation on the distributions, a \emph{stochastic order}. As an example, the preference of a player might express that the player tries to maximize the expected gain, but is also willing to sacrifice some expected gain if this reduces the risk of very unfortunate outcomes.
+    The thesis focuses on a particular stochastic order, which we call the tail order: It was introduced in \cite{bib:rassGameRiskManagI} together with distribution-valued games, and expresses preferences that are maximally risk-averse. It is intended to be used on loss (instead of payoff) distributions, and it prefers one distribution over another if the other distribution assigns some (arbitrarily tiny) larger probability to a higher loss: In other words, its aim is to minimize the worst-case loss. 
+    The ordering is defined based on moment sequences, and an analysis of its properties makes up a substantial part of this thesis. In particular, we show that not all of its properties that were claimed when it was first introduced hold true: For one, we show that an asserted characterization of the ordering based on the density functions of the involved distributions only holds in one direction in form of a sufficient condition. This result leads to the interesting question between which distributions the ordering is total: in particular, the thesis shows that even the set of distributions with bounded support contains distributions incomparable by the ordering. The second point we go into is that not all distribution-valued games with tail-order preferences have Nash equilibria: In particular, we show that they can only have mixed-strategy equilibria under very specific conditions.
+    Finally, the thesis presents an alternative stochastic ordering based on segmenting loss distributions which was constructed by Ali Alshawish: This ordering was introduced with the goal of tweaking the tail order such that risk attitudes not maximally pessimistic are possible. The thesis then proposes a new approach of using the segmentation idea to turn a distribution-valued game into a multi-objective real-valued game, and shows how such games can be solved via the existing theory of Pareto-Nash equilibria.
+    
+    The primary contributions of this thesis are that it presents a complete formalization of distribution-valued games (Sections \ref{sec:generalizedPayoffGames} and \ref{sec:distributionValuedNormalFormGames}), critically analyzes the tail order, provides counterexamples to several misconceptions in the original publications about this ordering (Sections \ref{sec:stochasticTailOrder} and \ref{sec:equilibriaInTailOrderedGames}), and proposes as an alternative solution concept for distribution-valued games the Pareto-Nash equilibria of a game obtained by distribution segmentation (Chapter \ref{chap:segmentingLossDistributions}).
+    To provide the basis for the discussions in those chapters, Chapter \ref{chap:nonCooperativeRealValuedGameTheory} reviews the basics of classical non-cooperative game theory. This serves as introduction to the concepts that are later generalized, and we also introduce some results that are later needed for the analysis of Nash equilibria with respect to the tail order.
+    Chapter \ref{chap:mathematicalPreliminaries} introduces mathematical preliminaries: We shortly go over important concepts from probability theory that the later chapters rely on, and review basic notions from decision theory.
+    
+    
+    \subsubsection{Related Work}
+    
+    Directly related to this work are the papers by Stefan Rass et al \cites{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions} that introduce the tail order and use it in the context of risk management, and by Ali Alshawish et al \cite{bib:alshawishQuasiPurificationOfMixedGameStrategies,bib:tweakableStochasticOrders} which use the tail order and define the related \emph{tweakable stochastic order}, which serves as a basis for the ideas of Chapter \ref{chap:segmentingLossDistributions}.
+    
+    Regarding further related work, there are of course many publications on classical (real-valued) game theory, and the books mainly used for this thesis are \cites{bib:fudenbergGameTheory,bib:nisanAlgorithmicGameTheory,bib:matsumotoGameTheory}.
+    There are however surprisingly few publications that concern models similar to distribution-valued games, or even other generalized payoffs that are not real numbers. There are multiple well-known types of games that include randomness, but none of them match the model of distribution-valued games: 
+    There is the notion of \emph{stochastic games} (see \cite{bib:shapleyStochasticGames}) which are played in multiple rounds and include a game state that changes between the rounds and determines the payoff structure. In these games, only the state transitions depend on chance, but not the payoffs. 
+    Another variant are \emph{moves by nature} in the theory of \emph{extensive-form games}, which occur for example in \emph{Bayesian games} (see \cite[Chapter 6 and Section 8.3]{bib:fudenbergGameTheory}): While payoffs can depend on chance in such models, an important difference lies in their equilibrium concepts, since the payoff distributions are condensed to an expected value before comparing them, unlike the comparison by stochastic orders in our model. 
+    The models closest to Rass' distribution-valued games published prior to it seem to be \emph{stochastic cooperative games} which use distribution-valued outcomes rated by stochastic orders, and \emph{non-cooperative games with fuzzy-number payoffs}. 
+    The former (e.g. \cite{bib:suijsCooperativeGamesWithStochasticPayoffs,bib:fernandezCoresOfStochasticCoopGamesWithStochasticOrders}) however concern only cooperative games whose theory differs from the theory of non-cooperative games that our model lives in. 
+    The latter uses fuzzy numbers instead of probability distributions (e.g. \cite{bib:maedaCharacterizationOfEquilibriumFuzzyPayoff, bib:cevikelSolutionsFuzzyMatrixGames}): The exact relationship between fuzzy and probabilistic methods is rather complicated (see e.g. the discussion in \cite{bib:kandelDistinctionBetweenFuzzyAndStatisticalMethods}), yet they are certainly different concepts.
+    
+    There is also not much literature on the more general case of games with payoffs in an arbitrary set ordered by a preorder.
+    This thesis defines its own generalized model in Section \ref{sec:generalizedPayoffGames} so we can properly work with such games without ambiguity about the definitions. Similar definitions are given in \cite{bib:rozenEquilibriaInGamesWithOrderedOutcomes}, and apparently already in the much older Russian-language article \cite{bib:vorobevThePresentStateOfGameTheory} it cites, but at least \cite{bib:rozenEquilibriaInGamesWithOrderedOutcomes} does not include a definition for mixed extensions as general as we need.
+    It should be remarked though that \cite[Section 1.2.1]{bib:nisanAlgorithmicGameTheoryCh1Basic} mentions an even more general model which, instead of using payoffs, defines the players' preferences directly between the strategy profiles.
+    
+    The tail-ordered games defined by Rass are closely related to games with vector-valued payoffs ordered by a lexicographic order, as will be worked out in Section \ref{sec:equilibriaInTailOrderedGames}. No literature on such lexicographically-ordered games could be found either:
+    The closest examples are the articles \cites{bib:salvadorLeximin, bib:fiestrasProtectivePrudentBehaviour} about \emph{leximin} preferences used in social choice theory and the related concept of \emph{protective behavior} in games, and the article \cite{bib:bouyerConcurrentGamesWithOrderedObjectives} which concerns graph games and orders objectives, among others, lexicographically.
+    The tail order itself is defined based on moment sequences of probability distributions: A relevant question for the thesis thus is which real sequences are moment sequences, a question known as the \emph{moment problem}. The literature on this subject is rich, and there are both classical and more recent publications, e.g. \cite{bib:hausdorffMomentprobleme,bib:akhiezerClassicalMomentProblem,bib:chiharaIndeterminateHamburgerMomentProblems,bib:schmuedgenTheMomentProblem}. 
+    However the question whether two moment sequences can alternate, which is relevant to the tail order and is answered in Subsection \ref{subsec:tailOrderTotality}, seems not to have been considered in the literature before.
+    
+    Finally, the theory of multi-objective games and Pareto-Nash equilibria we put to use in {Chapter \ref{chap:segmentingLossDistributions}} is well-developed, starting with the papers \cite{bib:blackwellVectorPayoffs} and \cite{bib:shapleyMultiobjectiveEquilibriumPoints}. The more recent \cite{bib:paretoNashEquilibria} generalizes some theorems from the earlier papers. Furthermore, an overview of solution concepts other than Pareto-Nash equilibria is given by \cite{bib:ghoseSolutionConceptsMultiobjective}.
+    
     
     \chapter{Mathematical Preliminaries: Probability and Decision Theory}
+    \label{chap:mathematicalPreliminaries}
     
     \todo{Introduce Notations $[n]$, $\Rp$, alternating sequences and functions}
     
@@ -542,7 +584,7 @@
     The existence of a mixed-strategy Nash equilibrium in every game (Theorem \ref{thm:existenceOfMixedStrategyEquilibria}) was first proved by John Nash in a one-page article \cite{bib:nashOnePageProofOfEquilibria}.
     His proof is based on the characterization of Nash equilibria by best responses (Theorem \ref{thm:nashEquilibriumCharacterizationByBestResponses}) and non-constructively finds an equilibrium point by Kakutani's Fixed Point Theorem, a generalization of Brouwer's Fixed Point Theorem to set-valued functions.
     
-    \begin{defn}[eg. {\cite[p.30]{bib:fudenbergGameTheory}}]
+    \begin{defn}[e.g. {\cite[p.30]{bib:fudenbergGameTheory}}]
         % TODO find a good reference for the closed-graph-formulation of Kak'sFP
         Let $S \subseteq \R^n$. A set-valued function $\phi: S \to \Pot(S)$ \emph{has a closed graph} if for all convergent sequences $(x_n)_{n \in \N}$, $(y_n)_{n \in \N}$ in $S$,
         \begin{gather*} 
@@ -728,6 +770,7 @@ find it, neither can the market.” There are various exact and numerical algori
     
     % TODO part on Game Theory in Network Security: here as a) chapter, b) section, or c) not here but in the application chapter?  
     \chapter{Games with Distributional Payoffs}
+    \label{chap:gamesWithDistributionalPayoffs}
     The previous chapter established the basic concepts of standard game theory, where payoffs are real numbers.
     The goal of this chapter is to introduce and analyze a theory of games that instead have probability distributions as payoffs.
     To specify the players' preferences for outcomes in this setting, we use stochastic orders which compare probability distributions.
@@ -999,6 +1042,7 @@ find it, neither can the market.” There are various exact and numerical algori
 
     
     \section{The Stochastic Tail Order}
+    \label{sec:stochasticTailOrder}
     We have laid out the foundations of distribution-valued games in the last section, but the usefulness of the model mostly depends on choosing the right stochastic orders.
     The stochastic orders we have seen so far are not satisfying in many cases: The expected value ordering $\leqE$ basically leads us back to the theory of real-valued games by taking expected values. The usual stochastic order $\leqst$ takes more information from the distributions into account, but fails to compare many distributions since a decision is only made for distributions where one distribution function dominates the other in a strong way.
     In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers (\cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}) defined the stochastic tail order, which we will denote by $\leqtail$.
@@ -1010,7 +1054,6 @@ find it, neither can the market.” There are various exact and numerical algori
     \label{subsec:tailOrderDefinitionAndBasicProperties}
     Recall that $m_k(P) \coloneqq \lintegral{R}{x^k}{P}$ denotes the $k$-th moment of $P \in \DP$ if $\lintegral{R}{\abs{x}^k}{P} < \infty$, and $M$ denotes the set of probability measures from $\DP$ that have moments of all orders.
     \begin{defn}[{Stochastic Tail Order, cf. \cite[Definition 2]{bib:rassTotalOrderingOnLossDistributions}}]
-        % TODO does the tail order definition make sense for distributions taking values < 1, or < 0?
         The \emph{stochastic tail order} $\leqtail$ is defined for $P_1, P_2 \in \DP$ by the following condition:
         \begin{multline*}
             P_1 \leqtail P_2 \colonlra \\
@@ -1038,18 +1081,9 @@ find it, neither can the market.” There are various exact and numerical algori
      \footnote{The moment-generating function of a probability measure $P \in \DP$ is given by $M(s) \coloneqq \lintegral{\R}{e^{sx}}{P(x)}$ for $s \in \R$ if the integral is finite, cf. \cite[(21.21)]{bib:billingsleyProbabilityAndMeasure}}.
     However, these results do not guarantee the antisymmetry of $\leqtail$ on the respective subset of $\DP$, as it is possible for $\leqtail$ to be indifferent between two distributions with different moment sequences if they disagree only finitely often. It is not clear if such a case can actually occur, so the whether or not $\leqtail$ is antisymmetric between distributions with bounded support, or another sufficiently large subset of $\DP$, remains open for now.
     
-%    In consequence, $\leqtail$ is antisymmetric on the set of distributions for which the moment-generating function exists in a neighborhood of zero (see for the definition of a moment-generating function).Most importantly, this includes distributions whose support is a bounded subset of $[0, \infty)$.
-    
-%    any pair of probability measures for both of which both have their moment generating functions $t \ existing in a neighborhood around 0, equal moment sequences imply equal distributions: 
-    % TODO wait, but moment sequences only need to be eventually equal for violated anti-symmetry?
-%    Therefore $\leqtail$ is anti-symmetric on any subset $D \subseteq \DP$ of distributions having moment generating functions.
-    % TODO Introduce moment generating functions somewhere earlier
-    % TODO Formalize Rass' (?) result about moment generating functions, at least in a lemma without proof
-    % TODO give examples about for how a wide range of distributions the generating functions result implies anti-symmetry
     In a similar way, we can try to identify a sufficiently large class of distributions on which $\leqtail$ is total. We will discuss this question in more detail later in Subsection \ref{subsec:tailOrderTotality}.
     
-    % TODO is Characterization a valid term?
-    \subsection{Characterization of Tail Order Preference}
+    \subsection{Sufficient Conditions for Tail Order Preference}
 %    \newcommand{\Fgeq}{\mathfrak{F}_{\geq 1}} % The set of distributions \geq 1
     Before we do so, let us first get a better understanding of what the tail order means apart from moment sequences.
     In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values in $[1, \infty)$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Additionally, the support is assumed to be bounded. Also, the discussion focuses on discrete distributions with finite support, or absolutely continuous distributions with additional requirements continuity/differentiability constraints on the densities.
@@ -1575,7 +1609,7 @@ find it, neither can the market.” There are various exact and numerical algori
     The Hamburger moment problem is too general for our case, since negative values in the support can lead to alternating moment sequences, making the tail order non-total.
     However, we can make use of a result relating Stieltjes and Hamburger moment sequences:
     A moment sequence is called \emph{Hamburger-}/\emph{Stieltjes-determinate} if there is a \emph{unique} measure of the respective type generating the sequence \cite[p.68]{bib:schmuedgenTheMomentProblem}
-    \footnote{More specifically, a unique \emph{Radon measure}, see \cite[A.1]{bib:schmuedgenTheMomentProblem} for a definition. This makes no difference in our case: Every (locally) finite Borel measure on $\R$, and therefore every probability measure in $\DP$, is a Radon measure (eg. \cite[Proposition II.3.1]{bib:malliavinIntegrationAndProbability}). Also, a moment sequence belongs to a probability measure if and only if $m_0 = 1$.}.
+    \footnote{More specifically, a unique \emph{Radon measure}, see \cite[A.1]{bib:schmuedgenTheMomentProblem} for a definition. This makes no difference in our case: Every (locally) finite Borel measure on $\R$, and therefore every probability measure in $\DP$, is a Radon measure (e.g. \cite[Proposition II.3.1]{bib:malliavinIntegrationAndProbability}). Also, a moment sequence belongs to a probability measure if and only if $m_0 = 1$.}.
     The result we will use is that Stieltjes-determinateness in general does not imply Hamburger-determinateness:
     
     \begin{thm}[See {\cite[Fact A]{bib:linMomentProblemRecentDevelopments}}, citing {\cite[p.240]{bib:akhiezerClassicalMomentProblem}} and \cite{bib:chiharaIndeterminateHamburgerMomentProblems}]
@@ -1818,6 +1852,7 @@ find it, neither can the market.” There are various exact and numerical algori
      
     
     \section{Nash Equilibria in Tail-Ordered Games}
+    \label{sec:equilibriaInTailOrderedGames}
     We will now analyze Nash equilibria of distribution-valued games with respect to the stochastic tail order.
     An important result of this section is that, unlike their real-valued counterparts, these games fail to have mixed-strategy Nash equilibria in general.
     
@@ -2238,6 +2273,7 @@ find it, neither can the market.” There are various exact and numerical algori
     However in the limit, the $\Gproj{3}$-payoffs of both rows become equal, and the second coordinate makes the first row preferable for $\leqRlex$ (as already calculated in \ref{ex:reflectedLexicographicallyOrderedGameWithoutEquilibria} before). Therefore $(1, 0)$ is the unique best response to $s_2$. This shows that $r$ does not have a closed graph.
     
     \chapter{Tweaking the Stochastic Order: Segmenting Loss Distributions}
+    \label{chap:segmentingLossDistributions}
     
     \section{The Tweakable Stochastic Order}
     A modification of the ideas on distribution-valued games and the stochastic order was proposed by Ali Alshawish in \cite{bib:tweakableStochasticOrders}.
@@ -2485,8 +2521,16 @@ find it, neither can the market.” There are various exact and numerical algori
     In both cases, a segmented game is created and the Pareto-Nash equilibrium given a fixed weights vector is computed.
     For comparison, the “MGSS” (\emph{Multi-Goal Security Strategy}) solution the HyRiM-built-in method \texttt{mgss} computes is output as well.
     
-%    \chapter{Distribution-Valued Game Theory in Security of Critical Infrastructures}
     
-%    \nocite{*}
+    \chapter{Conclusion}
+    The model of distribution-valued games provides a valuable tool to model games in uncertain situations where the exact outcomes can not be known beforehand, and can only be modelled on a stochastic basis. Of course, the usefulness of this model depends heavily on the ability to specify suitable preferences in the form of stochastic orders, and the thesis shows that this is a critical point and that the currently considered orderings have some shortcomings. In particular, two problems with the tail order were identified: The first issue is that the order is not total unless one restricts the order space, and in particular for any non-degenerate interval $[a, b] \subseteq [0, \infty)$, there are incomparable distributions supported on $[a, b]$. The second issue is that tail-ordered games can fail to have Nash equilibria, and that mixed-strategy Nash equilibria only exist for games with a specific structure. 
+    
+    Neither of the two issues is grave enough to stop the tail order from being useful: The first problem is rather of mathematical than of practical importance, and it seems plausible that the cases where the order exhibits incomparability will rarely, if ever, occur in practice. The problem can even be circumvented altogether if one identifies a smaller class of admissible distributions, and shows that the ordering is total within that class (of course, some work is required if one wants to show the totality on such a smaller class -- further work could try to identify easy-to-check sufficient conditions for the order to be total on such a class). The second problem is more severe: The famous theorem by John Nash that all real-valued games have at least one Nash equilibrium is a cornerstone of the classical theory, and it certainly has practical implications that there is no equivalent for tail-ordered distribution-valued games. Yet  the fact that the strict conditions only apply to mixed-strategy Nash equilibria somewhat mitigates the issue, since many distribution-valued games can still have pure Nash equilibria.
+    So both problems can be circumvented to a certain extent -- anyway, their existence shows that some care has to be taken when using tail-ordered games, and that not all guarantees that make life easy in the real-valued theory continue to hold in the distribution-valued case.
+    
+    It must also be kept in mind that the tail order is only one possible approach to expressing preferences in distribution-valued games, and one possible route for further work on the topic would be to analyze the behavior with respect to different orderings. An example of this is the tweakable stochastic order $\leqtw$ we showed in Chapter 5. We subsequently turned the game into a multi-objective game and used Pareto-Nash equilibria to solve it, which is an example of how a different solution concept can be used to guarantee the existence of solutions -  however, this solution concept does not use a lexicographic comparison anymore.
+    Further work could try to find another solution concept more fitting than the Nash equilibrium for distribution-valued games, that still uses lexicographic comparisons in the spirit of tail-order Nash equilibria, yet is guaranteed to always exist.
+    In summary, some questions about the model of distribution-valued games could be cleared up in this thesis, yet there is a lot of potential for future work on the subject.
+    
     \printbibliography
 \end{document}
