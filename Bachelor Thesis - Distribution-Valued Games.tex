@@ -6,7 +6,7 @@
 % !TeX TXS-program:bibliography = txs:///biber
 
 %\documentclass[a4paper,DIV=11,twoside,BCOR=10mm]{scrreprt}
-\documentclass[a4paper,DIV=11]{scrreprt}
+\documentclass[a4paper,DIV=11,abstracton,twoside=semi]{scrreprt}
 
 \usepackage{graphicx}
 \input{todonotes-preamble.tex}
@@ -23,11 +23,16 @@
 
 \usepackage{textcomp}
 \usepackage{eurosym}
-
+\usepackage{adjustbox}
+\usepackage{changepage}
 
 
 % no ident, combined with reasonable paragraph spacing
 \setstretch{1.18} % 1.213 is \onehalfspacing
+
+% Can be used to include lower-resolution pictures for better compilation times. Remove % at second line to enable, do not comment out first line.
+\let\realincludegraphics\includegraphics
+%\renewcommand{\includegraphics}[2][]{\realincludegraphics[#1]{Lowres#2}}
 
 \usepackage{parskip}
 %\setlength{\parindent}{0em}
@@ -103,20 +108,92 @@
 %]{defn}
 
 \usepackage[headsepline]{scrlayer-scrpage}
-\ihead{Bachelor Thesis - Vincent Bürgin}
-\ohead{[Work in Progress]}
-
-\let\realincludegraphics\includegraphics
-\renewcommand{\includegraphics}[2][]{\realincludegraphics[#1]{Lowres#2}}
+\ihead{Bachelor Thesis -- Distribution-Valued Games}
+\ohead{Vincent Bürgin}
 
 \title{\huge Distribution-Valued Games}
 \subtitle{\LARGE Overview, Analysis, and a \\Segmentation-Based Approach}
 
 \begin{document}
-    \maketitle
+    \begin{titlepage}
+        \newcommand{\authornamefirst}{Vincent}
+        \newcommand{\authornamelast}{Bürgin}
+        \newcommand{\worktitle}{Distribution-Valued Games}
+        \newcommand{\worksubtitle}{Overview, Analysis, and a Segmentation-Based Approach}
+        \newcommand{\thesistype}{Bachelor Thesis}
+        \newcommand{\thesisdate}{September 25, 2020}
+        \newcommand{\thesisprofDeMeer}{Prof. Dr.-Ing. Hermann de Meer}
+        \newcommand{\thesisprofWirth}{Prof. Dr. Fabian Wirth}
+        \newcommand{\supervisor}{Ali Alshawish,~M.~Sc.}
+        \newcommand{\chairDeMeer}{Chair of Computer Networks \& Communications}
+        \newcommand{\chairWirth}{Chair of Dynamical Systems}
+        \vspace{1cm}
+        
+        \begin{center}
+            \begin{tabular}{c}
+                \includegraphics[width=6.5cm]{Pictures/logouni.pdf}
+            \end{tabular}
+            
+            \vspace{3cm}
+            \Large University of Passau \\
+            \Large Faculty of Computer Science and Mathematics \\
+            \vspace{0.3cm}
+            {\Large \textbf{\chairDeMeer} } \\
+            {\large \thesisprofDeMeer } \\[0.4cm]
+            {\Large \textbf{\chairWirth} } \\
+            {\large \thesisprofWirth}
+        \end{center}
+        
+        \vspace{2.5cm}        
+        \begin{center}
+            {\textbf{\huge \thesistype}} % Master Thesis, Programming Project
+        \end{center}
+        
+        \begin{center}
+%            \settowidth{\baselineskip}{0.4cm}
+            {
+                \LARGE \worktitle \\[0.25cm]
+                \Large \worksubtitle
+            }  \\[0.8cm]
+            {\Large
+                \authornamefirst~\authornamelast
+            }
+        \end{center}
+        
+        \vfill { \vfill {\large
+                \begin{tabular}[l]{llll}
+                    Date:       & \thesisdate %%(\LaTeX{}$2_\epsilon$ run \today)
+                    \smallskip \\
+                    Supervisors:   & \thesisprofDeMeer \\
+                    &\thesisprofWirth \\
+                    & \supervisor
+            \end{tabular}}
+        }
+    \end{titlepage}
+    
+    
+    \newpage\thispagestyle{empty}~
+
+    \begin{abstract}
+        The paper \cite{bib:rassGameRiskManagI} introduced \emph{distribution-valued games}. This game-theoretic model uses probability distributions as payoffs for games in order to express uncertainty about the payoffs. 
+        The player's preferences for different payoffs are expressed by a stochastic order which we call the \emph{tail order}.
+        
+        This thesis formalizes distribution-valued games with preferences expressed by general stochastic orders, and specifically analyzes properties of the tail order.
+        It identifies sufficient conditions for tail-order preference to hold, but also finds that some claims in \cite{bib:rassGameRiskManagI} about the tail order are incorrect, for which counter-examples are constructed.
+        In particular, the tail order is shown not to be a total ordering on a certain set of distributions. It is also shown that not all tail-ordered games have mixed-strategy Nash equilibria, and in fact almost all tail-ordered games with finitely-supported payoff distributions only have a Nash equilibrium if they have a pure Nash equilibrium.
+        
+        The thesis subsequently extends an idea from \cite{bib:tweakableStochasticOrders} and proposes a different solution concept for distribution-valued games. This concept is based on constructing multi-objective real-valued games from distribution-valued games by segmenting their payoff distributions.
+    \end{abstract}
+
+
+    
+    \newpage\thispagestyle{empty}~
+
     \setstretch{1.08}
     \tableofcontents
     \setstretch{1.18}
+    
+    \newpage\thispagestyle{empty}~
     
     \chapter{Introduction}
     Game theory is a field that studies games which are played by multiple independent players with different objectives, and analyzes the players' strategic possibilities.
@@ -328,9 +405,9 @@
     \end{defn}
 
     In a zero-sum game, the two players play strictly “against each other”, and are adversaries in every possible scenario:
-    one player wins exactly what the other loses, and there is no outcome that corresponds to mutual benefit. As \cite{bib:fudenbergGameTheory} notes, the important feature of these games is that the payoffs sum to a constant: 
-    This is because positive affine transformations ($x \mapsto ax + b$, $a > 0$) of all the payoffs keep the Nash equilibria of the game unchanged.
-    Choosing the constant that the payoffs sum to as zero is only for normalization.
+    one player wins exactly what the other loses, and there is no outcome that corresponds to mutual benefit. As \cite{bib:fudenbergGameTheory} notes, the important feature of these games is that the payoffs sum to a constant. 
+%    This is because positive affine transformations ($x \mapsto ax + b$, $a > 0$) of all the payoffs keep the Nash equilibria of the game unchanged.
+    Choosing this constant as zero is only for normalization.
     
     \section{Solution Concepts}
     To reason about rational strategies, as done in Example \ref{ex:gameTheoryIntroductoryExample}, we use arguments which strategies are preferable to the players. Such arguments are formalized by \emph{solution concepts}.
@@ -1033,7 +1110,18 @@ find it, neither can the market.” There are various exact and numerical algori
     \end{defn}
     The underlying semantics are that a distribution-valued game models a situation where the outcomes have some probabilistic uncertainty associated with them, whose distribution is known before-hand: When playing the game, first an outcome distribution for each player is determined by the selected strategies, and then the players gets their actual real-valued payoff drawn from their distributions independently.
     However, the drawing from the outcome distributions at the last step is not explicitly modeled. The stochastic orders of the players reflect how each player values particular outcome distributions.
-%    The sampling done as last step is necessarily independent, since we only specify marginal distributions and therefore have no notion of the outcomes sampled from different such distributions stochastically depending on each other.
+    \autoref{fig:distributionValuedGame} shows an example of a distribution-valued game.
+    
+    \begin{figure}
+        \centering
+        \begin{tabular}{c|c|c|}
+            &        $b_1$        &        $b_2$        \\ \hline
+            \raisebox{45pt}{$a_1$} & \shortstack{\adjustbox{margin=5pt 5pt 5pt 8pt}{\includegraphics[width=0.40\textwidth]{Pictures/example-distval-game-F1}}  \\ $\scriptstyle U([0, 5])$ \\~ } & \shortstack{\adjustbox{margin=5pt 5pt 5pt 8pt}{\includegraphics[width=0.40\textwidth]{Pictures/example-distval-game-F2}}  \\ $\scriptstyle \text{Half-Normal distribution}$ \\~ } \\\hline
+            \raisebox{45pt}{$a_2$} & \shortstack{\adjustbox{margin=5pt 5pt 5pt 8pt}{\includegraphics[width=0.40\textwidth]{Pictures/example-distval-game-F3}}  \\ $\scriptstyle \text{Geom}(1/3)$ \\~ } & \shortstack{\adjustbox{margin=5pt 5pt 5pt 8pt}{\includegraphics[width=0.40\textwidth]{Pictures/example-distval-game-F4}}  \\ $\scriptstyle U(\set{1, 2, 3})$ \\~ } \\ \hline
+        \end{tabular}
+        \caption{A distribution-valued 2x2-game with both AC and discrete distributions as payoffs (represented by their distribution functions).}
+        \label{fig:distributionValuedGame}
+    \end{figure}
 
     The definitions of Nash equilibria, zero-sum games and mixed extensions of distribution-valued games can be adopted from Section \ref{sec:generalizedPayoffGames}.
     In particular, mixed extensions can be defined because $\DP$ is a convex subset of the real vector space of signed finite Borel measures: A convex combination of several distributions from $\DP$, obtained by a mixed strategy, corresponds to the mixing of the involved distributions.
@@ -1061,13 +1149,13 @@ find it, neither can the market.” There are various exact and numerical algori
     Games constructed like $\hat{G}^{(\DP)}$ in the previous example might be interesting in their own right, with respect to other stochastic orders than $\leqE$:
     The model allows to talk about the “payoff distribution” of the real-valued game $G$, and rate outcomes by other orders than the expected value. 
     In decision-theoretic terms, this allows to model risk-averse and risk-seeking attitudes, as opposed to the risk-neutral attitude of expected value. We will however not further pursue this line of thought, as our main interest lies in mixed extensions of games where the pure-strategy payoffs already are non-trivial distributions.
-
     
     \section{The Stochastic Tail Order}
     \label{sec:stochasticTailOrder}
     We have laid out the foundations of distribution-valued games in the last section, but the usefulness of the model mostly depends on choosing the right stochastic orders.
     The stochastic orders we have seen so far are not satisfying in many cases: The expected value ordering $\leqE$ basically leads us back to the theory of real-valued games by taking expected values. The usual stochastic order $\leqst$ takes more information from the distributions into account, but fails to compare many distributions since a decision is only made for distributions where one distribution function dominates the other in a strong way.
-    In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers (\cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}) defined the stochastic tail order, which we will denote by $\leqtail$.
+    In an attempt to extend the idea of the usual stochastic order $\leqst$, Stefan Rass in a series of papers (\cite{bib:rassGameRiskManagI,bib:rassGameRiskManagII,bib:rassTotalOrderingOnLossDistributions}) defined an ordering which we call the \emph{stochastic tail order} and denote by $\leqtail$
+    \footnote{The papers by Rass do not give a name to the ordering. We use the name \emph{tail order} because it compares distributions by their tails, which will become clear soon.}.
     It was introduced in the context of risk assessment for critical infrastructure, where risks with higher impact are to  be avoided at all costs, even if very unlikely.
     Therefore it is usually not applied to compare \emph{payoff distributions}, but rather to compare \emph{loss} (or \emph{cost}) \emph{distributions}. This detail does not affect our presentation of the theory, however, as we can simply consider or distribution-valued games to be ordered with respect $\geqtail$ instead of $\leqtail$ if the “payoffs” are supposed to represent losses.
     The tail order is defined based on moment sequences, but we will later show that in many cases, it be understood as a kind of lexicographic ordering: The original goal for its introduction was to have an ordering that applies the criterion of $\leqst$, but only from some point $x_0$ on, such that more distributions are actually comparable (see \cite{bib:rassTotalOrderingOnLossDistributions}). This works to some extent, however in this section we will also see that some of its properties claimed in \cite{bib:rassTotalOrderingOnLossDistributions} can fail in pathological cases.
@@ -1110,7 +1198,7 @@ find it, neither can the market.” There are various exact and numerical algori
     \subsection{Sufficient Conditions for Tail Order Preference}
 %    \newcommand{\Fgeq}{\mathfrak{F}_{\geq 1}} % The set of distributions \geq 1
     Before we do so, let us first get a better understanding of what the tail order means apart from moment sequences.
-    In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values in $[1, \infty)$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Additionally, the support is assumed to be bounded. Also, the discussion focuses on discrete distributions with finite support, or absolutely continuous distributions with additional requirements continuity/differentiability constraints on the densities.
+    In \cite{bib:rassGameRiskManagI}, the discussion is restricted to random variables taking values in $[1, \infty)$, since the behavior of moment sequences differs greatly for values between $[0, 1)$, or even negative values. Additionally, the support is assumed to be bounded. Also, the discussion focuses on discrete distributions with finite support, or absolutely continuous distributions with additional continuity/differentiability constraints on the densities.
     We will not need such strict assumptions everywhere, and will always mention the exact requirements.
     
     An important intuition for understanding the tail order is that it behaves essentially like a lexicographic ordering on the density functions in many cases: In more specific words, if the density function of one distribution overtakes the density function of another at some point, and dominates from there on, then the first distribution will be greater with respect to $\leqtail$.
@@ -1276,11 +1364,12 @@ find it, neither can the market.” There are various exact and numerical algori
     However, the reader might have noticed that the definition of $\leqst$ used distribution function dominance (see Example \ref{ex:stochasticOrdersLeqELeqst}), yet all our sufficient conditions use dominance of the mass or density functions.
     It is not clear whether a sufficient condition in the form of 
     \begin{gather*}
-        F_1(x) \geq F_2(x) \forall x \geq x_0, \lambda({F_1 > F_2} \cap [x_0, \infty)) \implies P_1 \lesstail P_2
+        F_1(x) \geq F_2(x) ~ \forall x \geq x_0, \lambda({F_1 > F_2} \cap [x_0, \infty)) > 0 \implies P_1 \lesstail P_2
     \end{gather*}
-    holds, either on all of $\Dgeqone \cap M$ or on the subset of distributions with bounded support.
+    holds, either on all of $(\Dgeqone \cap M)$ or on the subset of distributions with bounded support.
     We will not further investigate this issue, but it might be an interesting question for follow-up work.
-    However, we will also show with our counterexamples that even such a condition was sufficient, it could not be turned into an equivalence.
+    However, we will also show with our counterexamples that even if such a condition was sufficient, it could not be turned into an equivalence.
+    \cite[Theorem 2.15]{bib:rassGameRiskManagI} shows that the reverse direction holds under the assumption that one density eventually dominates, but we show that it does not hold in general.
     
     The specific statements we disprove in our counterexamples are as follows, where we assume that $P_1, P_2 \in \DRass$, $P_1 \neq P_2$ and $P_1, P_2$ have probability mass functions or probability density functions $f, g$, and distribution functions $F, G$, respectively.
     % This code is necessary for items with custom labels to be  referenced.
@@ -1453,7 +1542,7 @@ find it, neither can the market.” There are various exact and numerical algori
         Furthermore, $\tilde{P}$ again satisfies the conditions we originally made on $P$: By repeating the process, we get a whole sequence of distributions which is ascending with respect to $\lesstail$ and no two distributions in it satisfy the sufficient condition of Theorem \ref{thm:acTailOrderSuffConditions} (and for any two \emph{consecutive} elements, the distribution functions alternate as well).
         \qed
     \end{ex}
-
+    \newpage
     \begin{ex}
         \textbf{
             \textsl{Two $\leqtail$-comparable absolutely continuous distributions with alternating density and distribution functions, continuous densities and bounded support.}
@@ -1879,7 +1968,7 @@ find it, neither can the market.” There are various exact and numerical algori
     While the example concerned a zero-sum game, i.e. a vector-valued game with respect to the orders ${(\leqRlex,\geqRlex)}$, we will instead focus on games with respect to ${(\leqRlex,\leqRlex)}$ for simplicity. This is not an essential difference: 
     For any vector-valued bimatrix game $G$, we can define $\hat{G}$ as the game where the payoffs of player 2 are negated -- then $G_{{(\leqRlex,\geqRlex)}}$ and $\hat{G}_{{(\leqRlex,\leqRlex)}}$ are isomorphic, and we can apply the following results to $\hat{G}_{{(\leqRlex,\leqRlex)}}$ and thereby obtain information about the Nash equilibria of $G_{{(\leqRlex,\geqRlex)}}$.
     The same approach of course works for $G_{{(\geqRlex,\leqRlex)}}$, which captures the assumption of loss distributions instead of payoff distributions made in \cite{bib:rassGameRiskManagI}. 
-    Also, that we use the \emph{reflected} lexicographic order instead of the usual lexicographic order is merely because it corresponds to the tail order more naturally; all results in this section can be rephrased for vector-valued games ordered by $\leqLex$.
+    Also, we use the \emph{reflected} lexicographic order instead of the usual lexicographic order merely because it corresponds to the tail order more naturally; all results in this section can be rephrased for vector-valued games ordered by $\leqLex$.
     Recall from Definition \ref{def:distributionValuedGame} that we write $G_{\leqRlex}$ as a short notation for $G_{(\leqRlex, \leqRlex)}$.
     
     \begin{lemma}
@@ -1917,7 +2006,7 @@ find it, neither can the market.” There are various exact and numerical algori
         Then the following implication holds:
         \begin{align}
             \label{eq:allProjectedGamesHaveTheNashEquilibrium}
-                            &\forall i = 1, \dots, m-1: \Gproj{i} \text{ has the Nash equilibrium } (s_1, s_2) \\
+                            &\forall i \in [m-1]: \Gproj{i} \text{ has the Nash equilibrium } (s_1, s_2) \\
             \Rightarrow\quad &G_{\leqRlex} \text{ has the Nash equilibrium } (s_1, s_2).
         \end{align}
     \end{thm}
@@ -2025,7 +2114,7 @@ find it, neither can the market.” There are various exact and numerical algori
     \begin{cor}        
         \label{cor:degenerateGamesYieldLeqRlexEquivalence}
         Let $G$ be an $m$-dimensional vector-valued bimatrix game, let $\Gproj{m}$ have the Nash equilibrium $(s_1, s_2)$ and be non-degenerate.
-        Then $G_{\leqRlex}$ has the Nash equilibrium $(s_1, s_2)$ if and only if $\forall i \in [m-1]$, $\Gprojsub{i}$ has the Nash equilibrium $(t_1, t_2)$.
+        Then $G_{\leqRlex}$ has the Nash equilibrium $(s_1, s_2)$ if and only if for all $i \in [m-1]$, $\Gprojsub{i}$ has the Nash equilibrium $(t_1, t_2)$.
     \end{cor}
     \begin{proof}
 %        Non-degenerateness implies that in $G_m$, all pure-strategy best responses to $s_1$ are in $T_2$, and all pure-strategy best responses to $s_2$ are in $T_1$:
@@ -2090,8 +2179,18 @@ find it, neither can the market.” There are various exact and numerical algori
     A concrete example of this was already given in Example \ref{ex:reflectedLexicographicallyOrderedGameWithoutEquilibria}: The payoff vectors all sum to $1$ (i.e. represent probability distributions), so the game is isomorphic to a distribution-valued game.
     %    We did not investigate other types of distributions, but we can hardly expect things to be different there: 
     As the existence of Nash equilibria already fails to hold in the case of such simple distributions, it also fails to hold in more general cases.
-    For example, any game where the payoffs have finite common support can be converted to an isomorphic game with absolutely continuous payoffs by performing a convolution with a uniform distribution $U([-\epsilon, \epsilon])$ for some $\epsilon$ small enough. Therefore, games with absolutely continuous payoffs certainly also fail to have Nash equilibria in general.
-    % TODO Picture:  illustrate this point
+    For example, any game where the payoffs have finite common support can be converted to an isomorphic game with absolutely continuous payoffs by performing a convolution with an absolutely continuous distribution supported on $[-\epsilon, \epsilon]$ for some small enough $\epsilon$.
+    This is illustrated in \autoref{fig:discrete-ac-convolution-example}.
+    Therefore, games with absolutely continuous payoffs certainly also fail to have Nash equilibria in general.
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.47\textwidth]{Pictures/leqtail-rlex-masses-plot}
+        \raisebox{60pt}{\Large$\shortrightarrow$}
+        \includegraphics[width=0.47\textwidth]{Pictures/leqtail-rlex-densities-plot}
+        \caption{Masses of discrete distributions $P_{1}, P_{2}$ (gray/green) on $\set{2, \dots, 6}$, and densities of corresponding absolutely continuous distributions $\tilde{P}_{1}, \tilde{P}_{2}$ obtained by convolution. Here $P_{1} \greatertail P_2$, and equivalently $\tilde{P}_1 \greatertail \tilde{P}_2$.}
+        \label{fig:discrete-ac-convolution-example}
+    \end{figure}
     
     The results of this section contradict an algorithm given in \cite[Section 3.1]{bib:rassGameRiskManagII} which supposedly calculates Nash equilibria of distribution-valued games
     \footnote{More precisely, \emph{multi-goal security strategies} (MGSS) for distribution-valued games. This is in a model where multiple objectives in form of multiple distributions are allowed, but the definition of a MGSS given in \cite[Definition 4.1]{bib:rassGameRiskManagI} coincides with a Nash equilibrium if the number of objectives is one.}.
@@ -2454,4 +2553,12 @@ find it, neither can the market.” There are various exact and numerical algori
     
     \setstretch{1.08}
     \printbibliography
+    
+    
+    \checkoddpage
+    \ifthenelse{\boolean{oddpage}}{\newpage\thispagestyle{empty}~}{}
+    \let\fakeincludegraphics\includegraphics
+    \let\includegraphics\realincludegraphics
+    \includepdf{Eigenstaendigkeitserklaerung}
+    \let\includegraphics\fakeincludegraphics
 \end{document}
