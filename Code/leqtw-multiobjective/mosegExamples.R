@@ -13,13 +13,12 @@ library("HyRiM")
 # returns: Both the Pareto-Nash equilibrium of the segmented game and the mgss solution HyRiM computes for the original game
 computeParetoNashAndMgss <- function(distributionValuedGame, partitionPoints, weights) {
     output <- NULL
-    print(weights)
 
     # Creating a segmented game from the distribution-valued game:
-    segmentedGame <- moseg(sosg=distributionValuedGame, partitionPoints=partitionPoints)
+    output$segmentedGame <- moseg(sosg=distributionValuedGame, partitionPoints=partitionPoints)
 
     # Computing a Pareto-Nash equilibrium:
-    output$segmentedGameEquilibrium <- moseg.paretoNashEquilibrium(moseg=segmentedGame, weights=weights)
+    output$segmentedGameEquilibrium <- moseg.paretoNashEquilibrium(moseg=output$segmentedGame, weights=weights)
     
     # For comparison, compute the mgss HyRiM computes for the original distribution-valued game.
     output$originalMgss <- mgss(G=distributionValuedGame)
