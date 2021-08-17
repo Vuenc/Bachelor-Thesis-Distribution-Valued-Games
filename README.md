@@ -1,5 +1,5 @@
 # About
-This repo contains the LaTeX sources and code for my joint Bachelor thesis in Computer Science and Mathematics, *Distribution-Valued Games
+This repo contains the LaTeX sources and code for my joint Bachelor thesis in Computer Science and Mathematics, *Distribution-Valued Games:
 Overview, Analysis, and a Segmentation-Based Approach*, submitted at the [University of Passau](https://www.uni-passau.de/en/) in September 2020. I analyze a game theoretic approach to equip games with probability distributions as payoffs using a stochastic order.
 
 - Uploaded to arXiv: https://arxiv.org/abs/2103.13876
